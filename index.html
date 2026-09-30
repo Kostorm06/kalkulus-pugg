@@ -124,6 +124,13 @@ table.series th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;
 .readout b{color:var(--accent);font-weight:600}
 .xin input{flex:0 1 11rem;min-width:0;font-family:var(--f-mono);font-size:.85rem;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
 .xin label{font-family:var(--f-mono);font-size:.82rem}
+.custom{display:grid;gap:6px}
+.custom label{font-family:var(--f-mono);font-size:.82rem}
+.custom input{flex:1 1 12rem;min-width:0;font-family:var(--f-mono);font-size:.88rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.custom input.short{flex:0 1 5rem}
+.custom .note.err{color:var(--neg)}
+details.dtab{padding:0 18px 10px}
+details.dtab summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;color:var(--accent);padding:4px 0}
 .formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
 .legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
@@ -399,6 +406,7 @@ section[id],h3[id]{scroll-margin-top:70px}
     </div>
     <canvas id="cv-taylor" aria-label="Graf av funksjon og Taylorpolynom"></canvas>
     <div class="formula" id="taylor-formula"></div>
+    <details class="dtab"><summary>Vis utregningen: de deriverte i senteret</summary><div class="tscroll"><table class="num" id="taylor-dtab"></table></div></details>
     <div class="ctrls">
       <div class="row seg" id="taylor-fn" role="group" aria-label="Velg funksjon">
         <button type="button" data-f="sin" aria-pressed="true">sin x</button>
@@ -406,15 +414,20 @@ section[id],h3[id]{scroll-margin-top:70px}
         <button type="button" data-f="exp" aria-pressed="false">eˣ</button>
         <button type="button" data-f="ln" aria-pressed="false">ln(1+x)</button>
         <button type="button" data-f="geo" aria-pressed="false">1/(1−x)</button>
+        <button type="button" data-f="custom" aria-pressed="false">Egen funksjon</button>
+      </div>
+      <div class="custom" id="taylor-custom" hidden>
+        <div class="row">
+          <label for="tc-f">f(x) =</label>
+          <input id="tc-f" type="text" autocomplete="off" spellcheck="false" value="sin(2x)" placeholder="f.eks. sin(2x), x*e^(-x), sqrt(x)">
+          <label for="tc-a">senter a =</label>
+          <input id="tc-a" class="short" type="text" autocomplete="off" spellcheck="false" value="0">
+          <button type="button" class="btn" id="tc-go">Tegn</button>
+        </div>
+        <p class="note" id="tc-msg">Du kan bruke sin, cos, tan, e^( ), exp, ln, sqrt, arctan, pi og ^. Eksempler: <code>cos(3x)</code>, <code>x^2*sin(x)</code>, <code>1/(1+x^2)</code>, <code>sqrt(x)</code> med senter 4.</p>
       </div>
       <label class="slider">grad n <input type="range" id="taylor-n" min="0" max="15" value="3"><output id="taylor-n-out">3</output></label>
       <label class="slider">x-verdi <input type="range" id="taylor-x" min="-3" max="3" step="0.05" value="1"><output id="taylor-x-out">1.00</output></label>
-      <div class="row xin">
-        <label for="taylor-xin">Skriv inn egen x:</label>
-        <input id="taylor-xin" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="1" placeholder="f.eks. 0.5 eller pi/4">
-        <button type="button" class="btn" id="taylor-xgo">Regn ut</button>
-        <span class="note" id="taylor-xmsg"></span>
-      </div>
       <div class="readout" id="taylor-read"></div>
       <p class="note" id="taylor-note"></p>
     </div>
@@ -990,6 +1003,160 @@ function curve(ctx, v, fn, color, width=2.2, dash=null, xa, xb){
 }
 const fact = (()=>{ const f=[1]; for(let i=1;i<=30;i++) f[i]=f[i-1]*i; return k=>f[k]; })();
 
+/* ---------- Egen funksjon: parser til uttrykkstre + Taylor-koeffisienter via rekkeregning ---------- */
+function tparse(src){
+  const s = String(src).replace(/[·×]/g,'*').replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\*\*/g,'^').trim();
+  if (!s) throw new Error('Skriv inn en funksjon.');
+  const FN = ['sin','cos','tan','exp','ln','log','sqrt','arctan','atan'];
+  const raw = []; let i = 0;
+  while (i < s.length){
+    const c = s[i];
+    if (/\s/.test(c)){ i++; continue; }
+    if (/[0-9.]/.test(c)){ let j=i; while(j<s.length && /[0-9.]/.test(s[j])) j++; const t=s.slice(i,j); if(!/^(\d+\.?\d*|\.\d+)$/.test(t)) throw new Error(`Kan ikke lese tallet «${t}».`); raw.push({t:'num',v:parseFloat(t)}); i=j; continue; }
+    if (/[a-zA-Z]/.test(c)){ let j=i; while(j<s.length && /[a-zA-Z]/.test(s[j])) j++; raw.push({t:'id',v:s.slice(i,j).toLowerCase()}); i=j; continue; }
+    if ('+-*/^()!'.includes(c)){ raw.push({t:c}); i++; continue; }
+    throw new Error(`Ukjent tegn «${c}».`);
+  }
+  const toks = [];
+  raw.forEach(t => {
+    if (t.t!=='id' || FN.includes(t.v) || ['x','e','pi'].includes(t.v)) { toks.push(t); return; }
+    let w = t.v;
+    while (w.length){
+      const f = FN.find(k => w.startsWith(k)); if (f){ toks.push({t:'id',v:f}); w=w.slice(f.length); continue; }
+      const m = ['pi','x','e'].find(k => w.startsWith(k));
+      if (!m) throw new Error(`Ukjent symbol «${t.v}». Bruk x som variabel.`);
+      toks.push({t:'id',v:m}); w = w.slice(m.length);
+    }
+  });
+  let p = 0;
+  const peek = () => toks[p], eat = t => { if (toks[p] && toks[p].t===t){ p++; return true; } return false; };
+  function expr(){ let a = term(); for(;;){ if (eat('+')) a={t:'bin',op:'+',l:a,r:term()}; else if (eat('-')) a={t:'bin',op:'-',l:a,r:term()}; else return a; } }
+  function term(){ let a = unary(); for(;;){
+    if (eat('*')) a={t:'bin',op:'*',l:a,r:unary()};
+    else if (eat('/')) a={t:'bin',op:'/',l:a,r:unary()};
+    else if (peek() && (peek().t==='num'||peek().t==='id'||peek().t==='(')) a={t:'bin',op:'*',l:a,r:power()};
+    else return a; } }
+  function unary(){ if (eat('-')) return {t:'neg',a:unary()}; if (eat('+')) return unary(); return power(); }
+  function power(){ const b = postfix(); if (eat('^')) return {t:'bin',op:'^',l:b,r:unary()}; return b; }
+  function postfix(){ let a = primary(); while (eat('!')) a={t:'fact',a}; return a; }
+  function primary(){
+    const t = peek(); if (!t) throw new Error('Uttrykket slutter for tidlig.');
+    if (t.t==='num'){ p++; return {t:'num',v:t.v}; }
+    if (eat('(')){ const a=expr(); if(!eat(')')) throw new Error('Mangler en sluttparentes.'); return a; }
+    if (t.t==='id'){
+      p++;
+      if (FN.includes(t.v)){ if(!eat('(')) throw new Error(`Skriv ${t.v}(...) med parentes, f.eks. ${t.v}(2x).`); const a=expr(); if(!eat(')')) throw new Error('Mangler en sluttparentes.'); return {t:'fn',f:t.v,a}; }
+      if (t.v==='e') return {t:'num',v:Math.E};
+      if (t.v==='pi') return {t:'num',v:Math.PI};
+      return {t:'var'};
+    }
+    throw new Error('Uventet tegn i uttrykket.');
+  }
+  const ast = expr();
+  if (p < toks.length) throw new Error('Kan ikke lese hele uttrykket. Sjekk parentesene.');
+  return ast;
+}
+function tfact(n){ if (n<0||n>170||Math.round(n)!==n) return NaN; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+function tevalNum(a, x){
+  switch(a.t){
+    case 'num': return a.v; case 'var': return x;
+    case 'neg': return -tevalNum(a.a,x);
+    case 'fact': return tfact(tevalNum(a.a,x));
+    case 'bin': { const l=tevalNum(a.l,x), r=tevalNum(a.r,x);
+      return a.op==='+'?l+r : a.op==='-'?l-r : a.op==='*'?l*r : a.op==='/'?l/r : Math.pow(l,r); }
+    case 'fn': { const v=tevalNum(a.a,x);
+      return ({sin:Math.sin,cos:Math.cos,tan:Math.tan,exp:Math.exp,ln:Math.log,log:Math.log,sqrt:Math.sqrt,arctan:Math.atan,atan:Math.atan})[a.f](v); }
+  }
+}
+/* trunkerte potensrekker i (x-a): arrays med NS koeffisienter */
+const NS = 17;
+const Sc = v => { const r = new Array(NS).fill(0); r[0]=v; return r; };
+const Sadd = (a,b) => a.map((v,k)=>v+b[k]);
+const Ssub = (a,b) => a.map((v,k)=>v-b[k]);
+const Sscale = (a,c) => a.map(v=>v*c);
+const isConst = a => a.every((v,k)=> k===0 || v===0);
+function Smul(a,b){ const r=new Array(NS).fill(0); for(let k=0;k<NS;k++){ let s=0; for(let j=0;j<=k;j++) s+=a[j]*b[k-j]; r[k]=s; } return r; }
+function Sdiv(a,b){
+  if (b[0]===0) throw new Error('Funksjonen deler på null i senteret. Prøv et annet senter.');
+  const r=new Array(NS).fill(0);
+  for(let k=0;k<NS;k++){ let s=a[k]; for(let j=1;j<=k;j++) s-=b[j]*r[k-j]; r[k]=s/b[0]; }
+  return r;
+}
+function Sexp(a){ const r=new Array(NS).fill(0); r[0]=Math.exp(a[0]); for(let k=1;k<NS;k++){ let s=0; for(let j=1;j<=k;j++) s+=j*a[j]*r[k-j]; r[k]=s/k; } return r; }
+function Slog(a){
+  if (!(a[0]>0)) throw new Error('ln er ikke definert i senteret (det som står inni må være positivt der).');
+  const r=new Array(NS).fill(0); r[0]=Math.log(a[0]);
+  for(let k=1;k<NS;k++){ let s=0; for(let j=1;j<k;j++) s+=j*r[j]*a[k-j]; r[k]=(a[k]-s/k)/a[0]; }
+  return r;
+}
+function Ssincos(a){
+  const s=new Array(NS).fill(0), c=new Array(NS).fill(0); s[0]=Math.sin(a[0]); c[0]=Math.cos(a[0]);
+  for(let k=1;k<NS;k++){ let ss=0, cc=0; for(let j=1;j<=k;j++){ ss+=j*a[j]*c[k-j]; cc+=j*a[j]*s[k-j]; } s[k]=ss/k; c[k]=-cc/k; }
+  return [s,c];
+}
+function Sderiv(a){ const r=new Array(NS).fill(0); for(let k=0;k<NS-1;k++) r[k]=(k+1)*a[k+1]; return r; }
+function Sinteg(d, c0){ const r=new Array(NS).fill(0); r[0]=c0; for(let k=1;k<NS;k++) r[k]=d[k-1]/k; return r; }
+function Spow(a,b){
+  if (isConst(b)){
+    const q=b[0];
+    if (Number.isInteger(q) && q>=0 && q<=60){ let r=Sc(1); for(let i=0;i<q;i++) r=Smul(r,a); return r; }
+    if (a[0]===0) throw new Error('Funksjonen kan ikke deriveres i senteret (f.eks. √x i x = 0). Prøv et annet senter.');
+    if (a[0]<0 && !Number.isInteger(q)) throw new Error('Negativt tall opphøyd i en brøk er ikke definert i senteret.');
+    const r=new Array(NS).fill(0); r[0]=Math.pow(a[0],q);
+    for(let k=1;k<NS;k++){ let s=0; for(let j=1;j<=k;j++) s+=(q*j-(k-j))*a[j]*r[k-j]; r[k]=s/(k*a[0]); }
+    return r;
+  }
+  if (isConst(a) && Math.abs(a[0]-Math.E)<1e-15) return Sexp(b);
+  return Sexp(Smul(b, Slog(a)));
+}
+function tevalS(n, a0){
+  switch(n.t){
+    case 'num': return Sc(n.v);
+    case 'var': { const r=Sc(a0); r[1]=1; return r; }
+    case 'neg': return Sscale(tevalS(n.a,a0),-1);
+    case 'fact': { const v=tevalS(n.a,a0); if(!isConst(v)) throw new Error('Fakultet (!) kan bare brukes på tall.'); return Sc(tfact(v[0])); }
+    case 'bin': { const l=tevalS(n.l,a0), r=tevalS(n.r,a0);
+      return n.op==='+'?Sadd(l,r) : n.op==='-'?Ssub(l,r) : n.op==='*'?Smul(l,r) : n.op==='/'?Sdiv(l,r) : Spow(l,r); }
+    case 'fn': { const u=tevalS(n.a,a0);
+      switch(n.f){
+        case 'sin': return Ssincos(u)[0];
+        case 'cos': return Ssincos(u)[1];
+        case 'tan': { const [s,c]=Ssincos(u); return Sdiv(s,c); }
+        case 'exp': return Sexp(u);
+        case 'ln': case 'log': return Slog(u);
+        case 'sqrt': return Spow(u, Sc(0.5));
+        case 'arctan': case 'atan': return Sinteg(Sdiv(Sderiv(u), Sadd(Sc(1), Smul(u,u))), Math.atan(u[0]));
+      } }
+  }
+}
+/* pene koeffisienter */
+function tgcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; }
+function niceCoef(v, k){
+  // returnerer {num, den, fk} eller {dec}
+  const av = Math.abs(v);
+  for (let q=1; q<=5040; q++){ const pn=Math.round(av*q); if (pn>0 && Math.abs(pn/q-av) <= 1e-9*Math.max(av,1e-300)) return {num:pn, den:q}; }
+  if (k>=2){ const m=av*tfact(k); const mr=Math.round(m); if (mr>0 && Math.abs(m-mr)<=1e-7*m) return {num:mr, fk:k}; }
+  return {dec: av};
+}
+function coefTexFrom(nc){
+  if (nc.dec!==undefined) return {tex: String(+nc.dec.toPrecision(6)), one:false};
+  if (nc.fk!==undefined) return {tex:`\\frac{${nc.num}}{${nc.fk}!}`, one:false};
+  if (nc.den===1) return {tex:String(nc.num), one: nc.num===1};
+  return {tex:`\\frac{${nc.num}}{${nc.den}}`, one:false};
+}
+function coefText(v, k){
+  if (Math.abs(v)<1e-12) return '0';
+  const nc = niceCoef(v,k), sg = v<0?'−':'';
+  if (nc.dec!==undefined) return sg+String(+nc.dec.toPrecision(6));
+  if (nc.fk!==undefined) return `${sg}${nc.num}/${nc.fk}!`;
+  return nc.den===1 ? sg+nc.num : `${sg}${nc.num}/${nc.den}`;
+}
+function powTex(k, a){
+  if (k===0) return '';
+  const base = a===0 ? 'x' : `(x${a>0?'-':'+'}${+Math.abs(a).toPrecision(6)})`;
+  return k===1 ? base : `${base}^{${k}}`;
+}
+
 /* ---------------- Taylor lab ---------------- */
 const TF = {
   sin:{f:Math.sin, c:k=> k%2 ? ((((k-1)/2)%2)?-1:1)/fact(k) : 0, win:{x0:-7.5,x1:7.5,y0:-3,y1:3}, xr:[-7,7],
@@ -1011,7 +1178,7 @@ const TF = {
 let tState = {fn:'sin', n:3, x:1};
 const fmtX = n => String(+(+n).toFixed(4)).replace('-','−');
 const tn = document.getElementById('taylor-n'), tx = document.getElementById('taylor-x');
-function tPoly(fn, n){ const c=[]; for(let k=0;k<=n;k++) c.push(TF[fn].c(k)); return x=>{ let s=0, p=1; for(let k=0;k<=n;k++){ s+=c[k]*p; p*=x; } return s; }; }
+function tPoly(fn, n){ const F=TF[fn], a=F.a||0, c=[]; for(let k=0;k<=n;k++) c.push(F.c(k)); return x=>{ let s=0, p=1, dx=x-a; for(let k=0;k<=n;k++){ s+=c[k]*p; p*=dx; } return s; }; }
 function tFormula(){
   const F = TF[tState.fn]; const parts=[];
   for (let k=0;k<=tState.n;k++){ const t=F.term(k); if(t) parts.push(t); }
@@ -1020,6 +1187,10 @@ function tFormula(){
   parts.forEach((t,i)=>{ tex += (i===0 ? (t.s==='-'?'-':'') : t.s) + t.b; });
   const el = document.getElementById('taylor-formula');
   el.textContent = `$$${tex}$$`;
+  const a = F.a||0, aT = fmtX(a);
+  let rows = `<tr><th>k</th><th>f⁽ᵏ⁾(${aT})</th><th>÷ k!</th><th>= koeffisient</th></tr>`;
+  for (let k=0;k<=tState.n;k++){ const c=F.c(k); rows += `<tr><td>${k}</td><td>${coefText(c*tfact(k),0)}</td><td>${tfact(k)}</td><td>${coefText(c,k)}</td></tr>`; }
+  document.getElementById('taylor-dtab').innerHTML = rows;
   typeset([el]);
 }
 function drawTaylor(){
@@ -1047,33 +1218,53 @@ function drawTaylor(){
   r.innerHTML = `<span>f(${fmtX(x)}) = <b>${f6(fx)}</b></span><span>P<sub>${tState.n}</sub>(${fmtX(x)}) = <b>${f6(px)}</b></span><span>|feil| = <b>${isFinite(err)?(err<1e-4&&err>0?err.toExponential(2):err.toFixed(6)):'—'}</b></span>`;
   document.getElementById('taylor-note').textContent = F.note;
 }
+function buildCustom(){
+  const msg = document.getElementById('tc-msg');
+  const src = document.getElementById('tc-f').value;
+  let ast, a, S;
+  try {
+    ast = tparse(src);
+    a = tevalNum(tparse(document.getElementById('tc-a').value || '0'), 0);
+    if (!isFinite(a)) throw new Error('Senteret må være et tall.');
+    S = tevalS(ast, a);
+    if (!S.every(isFinite)) throw new Error('Funksjonen kan ikke deriveres i senteret. Prøv et annet senter.');
+  } catch(e){ msg.textContent = e.message; msg.classList.add('err'); return false; }
+  msg.classList.remove('err');
+  msg.textContent = 'Tegnet. Koeffisientene under er funnet ved å derivere funksjonen i senteret, akkurat som i oppskriften.';
+  const f = x => { try { const v = tevalNum(ast, x); return isFinite(v) ? v : NaN; } catch(e){ return NaN; } };
+  const x0 = a-4, x1 = a+4, ys = [];
+  for (let i=0;i<=400;i++){ const y=f(x0+(x1-x0)*i/400); if (isFinite(y)) ys.push(y); }
+  ys.sort((p,q)=>p-q);
+  let y0 = ys.length ? ys[Math.floor(ys.length*0.03)] : -3, y1 = ys.length ? ys[Math.floor(ys.length*0.97)] : 3;
+  y0 = Math.min(y0, 0); y1 = Math.max(y1, 0);
+  if (y1-y0 < 2){ const m=(y0+y1)/2; y0=m-1.5; y1=m+1.5; }
+  const pad = (y1-y0)*0.25; y0 -= pad; y1 += pad;
+  TF.custom = {
+    f, a, c: k => (Math.abs(S[k]) < 1e-13 ? 0 : S[k]), win:{x0,x1,y0,y1}, xr:[x0+0.05, x1-0.05],
+    term: k => { const c = S[k]; if (Math.abs(c) < 1e-13) return null;
+      const ct = coefTexFrom(niceCoef(c,k)), pt = powTex(k,a);
+      return {s: c<0?'-':'+', b: k===0 ? ct.tex : (ct.one ? pt : ct.tex + pt)}; },
+    note: `Egen funksjon med senter a = ${fmtX(a)}. Hvor langt ut rekka virker, avhenger av funksjonen.`
+  };
+  return true;
+}
 function setTaylorFn(fn){
+  document.getElementById('taylor-custom').hidden = fn !== 'custom';
+  if (fn === 'custom' && !buildCustom()){ if (!TF.custom) return; }
+  if (fn === 'custom') tState.x = TF.custom.a + 1;
   tState.fn = fn; const F = TF[fn];
   tx.min = F.xr[0]; tx.max = F.xr[1];
   tState.x = Math.min(Math.max(tState.x, F.xr[0]), F.xr[1]); tx.value = tState.x;
   document.getElementById('taylor-x-out').textContent = (+tState.x).toFixed(2);
-  document.getElementById('taylor-xin').value = fmtX(tState.x); document.getElementById('taylor-xmsg').textContent = '';
   document.querySelectorAll('#taylor-fn button').forEach(b => b.setAttribute('aria-pressed', b.dataset.f===fn));
   drawTaylor(); tFormula();
 }
 document.querySelectorAll('#taylor-fn button').forEach(b => b.addEventListener('click', ()=> setTaylorFn(b.dataset.f)));
+document.getElementById('tc-go').addEventListener('click', ()=> setTaylorFn('custom'));
+['tc-f','tc-a'].forEach(id => document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') setTaylorFn('custom'); }));
 let fTimer;
 tn.addEventListener('input', ()=>{ tState.n=+tn.value; document.getElementById('taylor-n-out').textContent=tn.value; drawTaylor(); clearTimeout(fTimer); fTimer=setTimeout(tFormula,120); });
-tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); document.getElementById('taylor-xin').value=fmtX(tState.x); document.getElementById('taylor-xmsg').textContent=''; drawTaylor(); });
-function setOwnX(){
-  const inp = document.getElementById('taylor-xin'), msg = document.getElementById('taylor-xmsg');
-  let v;
-  try { v = xparse(inp.value)({}); } catch(e){ msg.textContent = e.message; return; }
-  if (!isFinite(v)){ msg.textContent = 'Kunne ikke regne ut den verdien.'; return; }
-  const F = TF[tState.fn];
-  tState.x = v;
-  tx.value = Math.min(Math.max(v, F.xr[0]), F.xr[1]);
-  document.getElementById('taylor-x-out').textContent = v.toFixed(2);
-  msg.textContent = (v < F.win.x0 || v > F.win.x1) ? 'x er utenfor det grafen viser, men tallene under stemmer.' : '';
-  drawTaylor();
-}
-document.getElementById('taylor-xgo').addEventListener('click', setOwnX);
-document.getElementById('taylor-xin').addEventListener('keydown', e => { if (e.key==='Enter') setOwnX(); });
+tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); drawTaylor(); });
 
 /* ---------------- Integration lab ---------------- */
 const IF = {
