@@ -131,6 +131,8 @@ table.series th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;
 .custom .note.err{color:var(--neg)}
 details.dtab{padding:0 18px 10px}
 details.dtab summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;color:var(--accent);padding:4px 0}
+.subst{padding:0 18px 8px;overflow-x:auto}
+.subst .label{margin-bottom:-4px}
 .formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
 .legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
@@ -406,6 +408,7 @@ section[id],h3[id]{scroll-margin-top:70px}
     </div>
     <canvas id="cv-taylor" aria-label="Graf av funksjon og Taylorpolynom"></canvas>
     <div class="formula" id="taylor-formula"></div>
+    <div class="subst"><div class="label">Sett inn x-verdien fra glidebryteren</div><div id="taylor-subst"></div></div>
     <details class="dtab"><summary>Vis utregningen: de deriverte i senteret</summary><div class="tscroll"><table class="num" id="taylor-dtab"></table></div></details>
     <div class="ctrls">
       <div class="row seg" id="taylor-fn" role="group" aria-label="Velg funksjon">
@@ -1192,6 +1195,30 @@ function tFormula(){
   for (let k=0;k<=tState.n;k++){ const c=F.c(k); rows += `<tr><td>${k}</td><td>${coefText(c*tfact(k),0)}</td><td>${tfact(k)}</td><td>${coefText(c,k)}</td></tr>`; }
   document.getElementById('taylor-dtab').innerHTML = rows;
   typeset([el]);
+  tSubst();
+}
+function tSubst(){
+  const F = TF[tState.fn], a = F.a||0, n = tState.n;
+  const x0 = Math.round(tState.x*100)/100, d = x0 - a;
+  const xs = String(x0);
+  const put = body => body.replace(/x/g, (m, off, str) => {
+    const prev = str[off-1];
+    const val = (a===0 && x0<0) ? `(${xs})` : xs;
+    return (prev && /[0-9}]/.test(prev) ? '\\cdot ' : '') + val;
+  });
+  const parts = [], vals = [];
+  for (let k=0;k<=n;k++){ const t = F.term(k); if (!t) continue; parts.push({s:t.s, b:put(t.b)}); vals.push(F.c(k)*Math.pow(d,k)); }
+  const P = vals.reduce((s,v)=>s+v,0), fx = F.f(x0);
+  const num = v => { const r = Math.abs(v) < 5e-7 ? '0' : (+v.toFixed(6)).toString(); return r; };
+  let line1 = `P_{${n}}(${xs})=`, line2 = '=';
+  if (!parts.length){ line1 += '0'; line2 = ''; }
+  parts.forEach((t,i)=>{ line1 += (i===0 ? (t.s==='-'?'-':'') : t.s) + t.b; });
+  vals.forEach((v,i)=>{ const s = v<0 ? '-' : (i===0 ? '' : '+'); line2 += s + num(Math.abs(v)); });
+  const tail = `=${num(P)}`;
+  const fT = isFinite(fx) ? `$f(${xs})=${num(fx)}$, så feilen er $${num(Math.abs(fx-P))}$.` : `$f(${xs})$ er ikke definert.`;
+  const el = document.getElementById('taylor-subst');
+  el.innerHTML = `$$${line1}$$` + (parts.length>1 ? `$$${line2}${tail}$$` : (parts.length ? `$$${tail}$$` : '')) + `<p class="note">Fasit: ${fT}</p>`;
+  typeset([el]);
 }
 function drawTaylor(){
   const cv = document.getElementById('cv-taylor'); const {ctx,w,h} = setup(cv);
@@ -1264,7 +1291,8 @@ document.getElementById('tc-go').addEventListener('click', ()=> setTaylorFn('cus
 ['tc-f','tc-a'].forEach(id => document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') setTaylorFn('custom'); }));
 let fTimer;
 tn.addEventListener('input', ()=>{ tState.n=+tn.value; document.getElementById('taylor-n-out').textContent=tn.value; drawTaylor(); clearTimeout(fTimer); fTimer=setTimeout(tFormula,120); });
-tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); drawTaylor(); });
+let sTimer;
+tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); drawTaylor(); clearTimeout(sTimer); sTimer=setTimeout(tSubst,150); });
 
 /* ---------------- Integration lab ---------------- */
 const IF = {
