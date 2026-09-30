@@ -188,27 +188,62 @@ section[id]{scroll-margin-top:60px}
 <body>
 <div class="wrap">
 <header class="top">
-  <div class="label">MA-emne ved UiA · grunnlag før forelesning · Adams &amp; Essex, 10. utg.</div>
+  <div class="label">MA-178 ved UiA · Adams &amp; Essex, 10. utg.</div>
   <h1 style="margin-top:10px">Taylor, integraler og ln</h1>
-  <p class="lead">Tre temaer, forklart fra bunnen. Hvert kapittel har intuisjonen først, så formlene du må kunne, en graf du kan leke med, og regnede eksempler. Øvingsoppgavene til slutt har hint og full løsning.</p>
+  <p class="lead">Tre temaer, forklart fra bunnen. Hvert kapittel starter med idéen, viser så <strong>hvordan du løser hver type oppgave</strong> steg for steg, og slutter med oppgaver du kan øve på: både prøveoppgaver med nye tall hver gang og vanlige oppgaver med hint.</p>
   <div class="course">
-    <a href="#taylor"><span class="n">1</span><span class="t">Taylorrekker og analytiske funksjoner</span><span class="s">kap. 4.10, 9.5–9.7</span></a>
-    <a href="#integrasjon"><span class="n">2</span><span class="t">Numeriske tilnærminger til det bestemte integralet</span><span class="s">kap. 6.6–6.7</span></a>
-    <a href="#explog"><span class="n">3</span><span class="t">Eksponentialfunksjonen, logaritmen og deres Taylorrekker</span><span class="s">kap. 3.2–3.3, 9.6</span></a>
-    <a href="#prove"><span class="n">P</span><span class="t">Prøvetrening: de fem oppgavetypene fra Delprøve 3</span><span class="s">MA-178</span></a>
+    <a href="#taylor"><span class="n">1</span><span class="t">Taylorrekker og analytiske funksjoner</span><span class="s">3 av 5 på delprøven</span></a>
+    <a href="#integrasjon"><span class="n">2</span><span class="t">Numeriske tilnærminger til det bestemte integralet</span><span class="s">2 av 5 på delprøven</span></a>
+    <a href="#explog"><span class="n">3</span><span class="t">Eksponentialfunksjonen, logaritmen og deres Taylorrekker</span><span class="s">grunnlag</span></a>
   </div>
 </header>
 
 <nav class="bar" aria-label="Kapitler">
   <div class="in">
+    <a href="#formelark">Formelark</a>
     <a href="#taylor">1 Taylor</a>
     <a href="#integrasjon">2 Integrasjon</a>
     <a href="#explog">3 exp &amp; ln</a>
-    <a href="#prove">Delprøve</a>
-    <a href="#oving">Øving</a>
     <span class="prog" id="prog">0 av 0 kan du</span>
   </div>
 </nav>
+
+<section id="formelark" style="padding-top:28px">
+  <details class="sheet">
+    <summary>Formelarket du får utdelt på prøven</summary>
+    <div class="in">
+      <p class="label">Taylorrekker</p>
+      $$\begin{aligned}
+      e^x&=\sum_{k=0}^\infty\frac{x^k}{k!} && x\in(-\infty,\infty)\\
+      \cos x&=\sum_{k=0}^\infty\frac{(-1)^k}{(2k)!}x^{2k} && x\in(-\infty,\infty)\\
+      \sin x&=\sum_{k=0}^\infty\frac{(-1)^k}{(2k+1)!}x^{2k+1} && x\in(-\infty,\infty)\\
+      \frac1x&=\sum_{k=0}^\infty(-1)^k(x-1)^k && x\in(0,2)\\
+      \ln x&=\sum_{k=1}^\infty\frac{(-1)^{k-1}}{k}(x-1)^k && x\in(0,2)
+      \end{aligned}$$
+      <p class="note">Merk: arket har $\ln x$ og $1/x$ om $x=1$. Setter du $x=1+u$, får du $\ln(1+u)$ og $\frac1{1+u}$ om $u=0$, som i kapittel 3.</p>
+      <p class="label">Forholdstest (ratiotest)</p>
+      <p>Hvis $\lim_{k\to\infty}\frac{|a_k|}{|a_{k-1}|}=L$, har $\sum a_k(x-c)^k$ konvergensradius $R=1/L$.</p>
+      <p class="label">Alternerende rekker</p>
+      <p>Hvis leddene veksler fortegn, avtar i absoluttverdi og går mot 0, konvergerer rekka, og feilen etter $n$ ledd er mindre enn det første leddet du dropper: $\bigl|L-\sum_{k=0}^{n-1}b_k\bigr|<|b_n|$.</p>
+      <p class="label">Trapes og midtpunkt ($\Delta$ = bredden $h$)</p>
+      $$T_n=\Delta\Bigl[\tfrac12f(x_0)+f(x_1)+\dots+f(x_{n-1})+\tfrac12f(x_n)\Bigr],\qquad \Bigl|\int_a^bf\,dx-T_n\Bigr|\le\frac{K(b-a)^3}{12n^2}$$
+      $$M_n=\Delta\bigl[f(m_0)+f(m_1)+\dots+f(m_{n-1})\bigr],\qquad \Bigl|\int_a^bf\,dx-M_n\Bigr|\le\frac{K(b-a)^3}{24n^2}$$
+      <p class="note">$K$ er en konstant med $|f''(x)|\le K$ på $[a,b]$. Simpson står ikke på arket.</p>
+    </div>
+  </details>
+
+  <div class="box warn">
+    <h4>Skrive svar i Matric (og her)</h4>
+    <ul>
+      <li>Potens med <code>^</code>, gange med <code>*</code>, fakultet med <code>!</code>: <code>(-2^13)*x^53/13!</code></li>
+      <li>Eksponential som <code>e^(-s)</code>, og bruk parenteser rundt tellere og nevnere: <code>e^(-s)/4!*0.5^4</code></li>
+      <li>Ikke regn ut store fakulteter. La <code>13!</code> stå, slik prøven selv anbefaler.</li>
+      <li>Desimaltall med punktum. Her godtas også komma.</li>
+    </ul>
+  </div>
+
+
+</section>
 
 <!-- ============ 1 TAYLOR ============ -->
 <section class="chap" id="taylor">
@@ -370,108 +405,141 @@ section[id]{scroll-margin-top:60px}
     </div>
   </div>
 
-  <h3>Hvor stor er feilen? Restleddet</h3>
-  <p>Feilen ved å bruke $P_n$ i stedet for $f$ kalles <strong>restleddet</strong> $R_n(x)=f(x)-P_n(x)$. Taylors teorem gir en formel for det (Lagranges form):</p>
-  <div class="box key">
-    <h4>Taylors teorem med restledd</h4>
-    $$R_n(x)=\frac{f^{(n+1)}(s)}{(n+1)!}(x-a)^{n+1}\quad\text{for en } s \text{ mellom } a \text{ og } x.$$
-    <p class="note">Du vet ikke hva $s$ er. Trikset er å finne en øvre grense $K$ for $|f^{(n+1)}|$ mellom $a$ og $x$. Da er $|R_n(x)|\le \dfrac{K}{(n+1)!}|x-a|^{n+1}$.</p>
-  </div>
-  <p>Legg merke til at restleddet ser ut som «det neste leddet» i polynomet, bare med den deriverte regnet ut i et ukjent punkt $s$ i stedet for i $a$.</p>
 
-  <div class="ex">
-    <div class="q">Eksempel 1.1 — Over fant vi $P_2(0.1)=1.105$ for $e^{0.1}$. Finn en feilgrense uten å vite fasiten.</div>
-    <ol>
-      <li>For $f(x)=e^x$ er alle deriverte $e^x$, så $f^{(k)}(0)=1$. Da er $P_2(x)=1+x+\dfrac{x^2}{2}$.</li>
-      <li>$P_2(0.1)=1+0.1+0.005=1.105$.</li>
-      <li>Restledd: $R_2=\dfrac{e^s}{3!}(0.1)^3$ med $0<s<0.1$. Siden $e^s<e^{0.1}<e<3$, får vi $|R_2|<\dfrac{3}{6}\cdot 0.001=0.0005$.</li>
-      <li>Kontroll: $e^{0.1}\approx 1.105171$, så faktisk feil er $\approx 0.00017$. Innenfor grensa ✓</li>
-    </ol>
-  </div>
 
-  <h3>Fra polynom til rekke</h3>
-  <p>Lar vi $n\to\infty$ får vi <strong>Taylorrekka</strong>:</p>
-  $$f(x)\;\overset{?}{=}\;\sum_{k=0}^{\infty}\frac{f^{(k)}(a)}{k!}(x-a)^k.$$
-  <p>Spørsmålstegnet er med vilje. To ting kan gå galt: rekka kan <em>divergere</em>, eller den kan konvergere, men til noe annet enn $f(x)$. Rekka er lik $f(x)$ nøyaktig når $R_n(x)\to 0$ når $n\to\infty$.</p>
-
-  <div class="box key">
-    <h4>Analytisk funksjon</h4>
-    <p>En funksjon $f$ er <strong>analytisk i $a$</strong> hvis Taylorrekka om $a$ konvergerer <em>og er lik $f(x)$</em> på et intervall $(a-R,\,a+R)$ med $R>0$.</p>
-    <p class="note">Nesten alle funksjoner du møter ($e^x$, $\sin x$, $\cos x$, $\ln x$ for $x>0$, polynomer, rasjonale funksjoner der de er definert) er analytiske.</p>
-  </div>
-
-  <div class="box warn">
-    <h4>Klassikeren: glatt, men ikke analytisk</h4>
-    <p>La $f(x)=e^{-1/x^2}$ for $x\neq0$ og $f(0)=0$. Den kan deriveres uendelig mange ganger, og <em>alle</em> deriverte i 0 er 0. Da blir Maclaurinrekka $0+0x+0x^2+\dots=0$. Men $f(x)>0$ for alle $x\neq0$. Rekka konvergerer overalt, bare til feil funksjon. Derfor er $f$ ikke analytisk i 0.</p>
-  </div>
-
-  <h3>Konvergensradius</h3>
-  <p>En potensrekke $\sum c_k(x-a)^k$ konvergerer for $|x-a|<R$ og divergerer for $|x-a|>R$. Tallet $R$ er <strong>konvergensradien</strong>. Du finner den nesten alltid med forholdstesten:</p>
-  $$\lim_{k\to\infty}\left|\frac{c_{k+1}(x-a)^{k+1}}{c_k(x-a)^k}\right| = L\,|x-a| < 1 \;\Longrightarrow\; R=\frac1L.$$
-  <p>Endepunktene $x=a\pm R$ må sjekkes hver for seg (ofte harmonisk rekke eller alternerende rekke).</p>
-
-  <div class="ex">
-    <div class="q">Eksempel 1.2 — Finn konvergensintervallet til $\displaystyle\sum_{k=1}^\infty \frac{x^k}{k\,3^k}$.</div>
-    <ol>
-      <li>Forholdet: $\left|\dfrac{x^{k+1}}{(k+1)3^{k+1}}\cdot\dfrac{k\,3^k}{x^k}\right| = \dfrac{k}{k+1}\cdot\dfrac{|x|}{3}\to\dfrac{|x|}{3}$.</li>
-      <li>Konvergens når $|x|/3<1$, altså $R=3$.</li>
-      <li>$x=3$: $\sum \frac1k$, harmonisk rekke, divergerer. $x=-3$: $\sum \frac{(-1)^k}{k}$, alternerende, konvergerer.</li>
-      <li>Intervall: $[-3,\,3)$.</li>
-    </ol>
-  </div>
-
-  <h3>Rekkene du må kunne utenat</h3>
+  <h3>Rekkene du får på formelarket</h3>
+  <p>I praksis regner du nesten aldri ut de deriverte selv. Du tar en rekke du allerede har, og <strong>bytter ut $x$</strong> med noe annet. Disse står på formelarket (eller bør sitte i hodet):</p>
   <div class="tscroll">
   <table class="series">
-    <tr><th>Funksjon</th><th>Maclaurinrekke</th><th>Gjelder for</th></tr>
-    <tr><td>$e^x$</td><td>$\displaystyle 1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\dots=\sum_{k=0}^\infty\frac{x^k}{k!}$</td><td>alle $x$</td></tr>
-    <tr><td>$\sin x$</td><td>$\displaystyle x-\frac{x^3}{3!}+\frac{x^5}{5!}-\dots=\sum_{k=0}^\infty\frac{(-1)^k x^{2k+1}}{(2k+1)!}$</td><td>alle $x$</td></tr>
-    <tr><td>$\cos x$</td><td>$\displaystyle 1-\frac{x^2}{2!}+\frac{x^4}{4!}-\dots=\sum_{k=0}^\infty\frac{(-1)^k x^{2k}}{(2k)!}$</td><td>alle $x$</td></tr>
-    <tr><td>$\dfrac{1}{1-x}$</td><td>$\displaystyle 1+x+x^2+x^3+\dots=\sum_{k=0}^\infty x^k$</td><td>$-1<x<1$</td></tr>
-    <tr><td>$\ln(1+x)$</td><td>$\displaystyle x-\frac{x^2}{2}+\frac{x^3}{3}-\dots=\sum_{k=1}^\infty\frac{(-1)^{k-1}x^k}{k}$</td><td>$-1<x\le1$</td></tr>
-    <tr><td>$\arctan x$</td><td>$\displaystyle x-\frac{x^3}{3}+\frac{x^5}{5}-\dots=\sum_{k=0}^\infty\frac{(-1)^k x^{2k+1}}{2k+1}$</td><td>$-1\le x\le1$</td></tr>
+    <tr><th>Funksjon</th><th>Rekke</th><th>Gjelder for</th></tr>
+    <tr><td>$e^x$</td><td>$\displaystyle 1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\frac{x^4}{4!}+\dots$</td><td>alle $x$</td></tr>
+    <tr><td>$\sin x$</td><td>$\displaystyle x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}+\dots$</td><td>alle $x$</td></tr>
+    <tr><td>$\cos x$</td><td>$\displaystyle 1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}+\dots$</td><td>alle $x$</td></tr>
+    <tr><td>$\dfrac{1}{1-x}$</td><td>$\displaystyle 1+x+x^2+x^3+\dots$</td><td>$-1<x<1$</td></tr>
+    <tr><td>$\ln(1+x)$</td><td>$\displaystyle x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\dots$</td><td>$-1<x\le1$</td></tr>
   </table>
   </div>
+  <div class="box key">
+    <h4>Trikset: bytt ut $x$</h4>
+    <p>Rekka for $e^x$ gjelder for hva som helst du putter inn i stedet for $x$. Skal du ha $e^{2x}$, skriver du $2x$ overalt der det sto $x$:</p>
+    $$e^{2x}=1+(2x)+\frac{(2x)^2}{2!}+\frac{(2x)^3}{3!}+\dots=1+2x+2x^2+\frac43x^3+\dots$$
+    <p>Det samme gjelder $\sin(x^2)$, $\cos(3x)$, $e^{-x}$ og så videre. <strong>Husk parentesene</strong>: $(2x)^2=4x^2$, ikke $2x^2$.</p>
+    <p class="note">Du kan også gange hele rekka med noe, for eksempel $x\cdot e^{x}=x+x^2+\frac{x^3}{2!}+\dots$</p>
+  </div>
 
-  <h3>Triks: lag nye rekker av gamle</h3>
-  <p>Du trenger sjelden å derivere $n$ ganger. Det er ofte mye raskere å bygge rekken fra tabellen over:</p>
-  <ul>
-    <li><strong>Substitusjon:</strong> bytt $x$ med $-x^2$ i $e^x$: $\;e^{-x^2}=1-x^2+\dfrac{x^4}{2!}-\dfrac{x^6}{3!}+\dots$</li>
-    <li><strong>Gange med potens:</strong> $\;x\sin x = x^2-\dfrac{x^4}{3!}+\dfrac{x^6}{5!}-\dots$</li>
-    <li><strong>Derivere ledd for ledd:</strong> $\dfrac{d}{dx}\dfrac1{1-x}=\dfrac{1}{(1-x)^2}=1+2x+3x^2+\dots$</li>
-    <li><strong>Integrere ledd for ledd:</strong> $\displaystyle\int_0^x\frac{dt}{1+t^2}=\arctan x = x-\frac{x^3}{3}+\frac{x^5}{5}-\dots$</li>
-  </ul>
-  <p>Konvergensradien endres ikke når du deriverer eller integrerer ledd for ledd (endepunktene kan endre seg).</p>
+  <h3 id="taylor-bruk">Slik løser du Taylor-oppgavene</h3>
+  <p>Det finnes bare noen få typer oppgaver. Kjenner du dem igjen, vet du hva du skal gjøre. De tre første kom alle på Delprøve 3.</p>
 
   <div class="ex">
-    <div class="q">Eksempel 1.3 — Finn Taylorpolynomet $P_3$ til $\ln x$ om $a=1$.</div>
+    <div class="label">Oppgavetype 1 · kom på prøven</div>
+    <div class="q" style="margin-top:4px">«Finn Taylorpolynomet av grad $n$ med senter i $c=0$»</div>
+    <p><strong>Du gjør:</strong> skriv opp en kjent rekke, bytt ut $x$, og stopp ved $x^n$.</p>
+    <p><em>Eksempel:</em> Finn $P_3(x)$ for $f(x)=e^{2x}$.</p>
     <ol>
-      <li>$f=\ln x$, $f'=\dfrac1x$, $f''=-\dfrac1{x^2}$, $f'''=\dfrac{2}{x^3}$.</li>
-      <li>I $x=1$: $f(1)=0$, $f'(1)=1$, $f''(1)=-1$, $f'''(1)=2$.</li>
-      <li>$P_3(x)=0+1\cdot(x-1)+\dfrac{-1}{2!}(x-1)^2+\dfrac{2}{3!}(x-1)^3 = (x-1)-\dfrac{(x-1)^2}{2}+\dfrac{(x-1)^3}{3}$.</li>
-      <li>Snarvei: sett $u=x-1$, da er $\ln x=\ln(1+u)$, og du kan lese svaret rett fra tabellen.</li>
+      <li>Kjent rekke: $e^u=1+u+\frac{u^2}{2!}+\frac{u^3}{3!}+\dots$</li>
+      <li>Bytt ut $u$ med $2x$: $\;1+2x+\frac{4x^2}{2}+\frac{8x^3}{6}+\dots$</li>
+      <li>Rydd opp og stopp ved $x^3$: $\;P_3(x)=1+2x+2x^2+\frac43x^3$.</li>
+    </ol>
+    <p><em>Fra prøven:</em> Finn $P_2(x)$ for $f(x)=\dfrac{e^x-e^{-x}}{2}$.</p>
+    <ol>
+      <li>$e^x=1+x+\frac{x^2}{2}+\dots$ og (bytt $x$ med $-x$) $\;e^{-x}=1-x+\frac{x^2}{2}-\dots$</li>
+      <li>Trekk fra: $e^x-e^{-x}=(1-1)+(x-(-x))+(\frac{x^2}{2}-\frac{x^2}{2})=2x$ (opp til $x^2$).</li>
+      <li>Del på 2: $\;P_2(x)=x$. Ja, svaret er bare <code>x</code>.</li>
+    </ol>
+    <p class="note">Finner du ingen kjent rekke som passer, bruker du oppskriften med tabell over de deriverte, som for $\sqrt x$ over.</p>
+  </div>
+
+  <div class="ex">
+    <div class="label">Oppgavetype 2 · kom på prøven</div>
+    <div class="q" style="margin-top:4px">«Finn leddet av grad $N$» (der $N$ er stort, f.eks. 53)</div>
+    <p><strong>Du gjør:</strong> finn ut <em>hvilket ledd</em> i den kjente rekka som gir $x^N$. Du skriver ikke opp hele rekka.</p>
+    <p><em>Lett versjon først:</em> Finn leddet av grad 7 i $f(x)=x\sin(x^2)$.</p>
+    <ol>
+      <li>$\sin u = u-\frac{u^3}{3!}+\frac{u^5}{5!}-\dots$ med $u=x^2$ gir $\;x^2-\frac{x^6}{3!}+\frac{x^{10}}{5!}-\dots$</li>
+      <li>Gang med $x$: $\;x^3-\frac{x^7}{3!}+\frac{x^{11}}{5!}-\dots$</li>
+      <li>Leddet med $x^7$ er $\;-\dfrac{x^7}{3!}$.</li>
+    </ol>
+    <p><em>Fra prøven:</em> Finn leddet av grad 53 i $f(x)=-x\sin(2x^4)$. Nå er det for mange ledd til å skrive opp, så vi tenker i stedet:</p>
+    <ol>
+      <li><strong>Hvilken potens av $u$?</strong> Med $u=2x^4$ gir $u^m$ potensen $x^{4m}$. Ganget med $x$ blir det $x^{4m+1}$.</li>
+      <li><strong>Løs:</strong> $4m+1=53$, så $m=13$. Vi trenger $u^{13}$-leddet i sin-rekka.</li>
+      <li><strong>Fortegn:</strong> sin-rekka har $+u,\;-u^3,\;+u^5,\;-u^7,\;+u^9,\;-u^{11},\;+u^{13}$. Så leddet er $+\frac{u^{13}}{13!}$.</li>
+      <li><strong>Sett sammen:</strong> $-x\cdot\dfrac{(2x^4)^{13}}{13!}=-\dfrac{2^{13}x^{53}}{13!}$.</li>
+    </ol>
+    <p class="note">I Matric: <code>(-2^13)*x^53/13!</code>. La fakultetet stå, ikke regn det ut.</p>
+  </div>
+
+  <div class="ex">
+    <div class="label">Oppgavetype 3 · kom på prøven</div>
+    <div class="q" style="margin-top:4px">«Bruk Lagranges feilledd til å angi $f(x)-P_n(x)$»</div>
+    <p><strong>Hva er feilleddet?</strong> Det er hvor mye polynomet bommer. Formelen ser ut akkurat som <em>det neste leddet</em> du ikke tok med, bare at den deriverte regnes ut i et ukjent punkt $s$ i stedet for i senteret $a$:</p>
+    $$f(x)-P_n(x)=\frac{f^{(n+1)}(s)}{(n+1)!}(x-a)^{n+1},\qquad s\text{ ligger mellom }a\text{ og }x.$$
+    <p><strong>Du gjør:</strong> fyll inn formelen. Du skal ikke finne $s$.</p>
+    <p><em>Fra prøven:</em> $f(x)=e^{-x}$, $P_3$ med senter $a=3$, og vi ser på $x=3.5$.</p>
+    <ol>
+      <li>$n=3$, så vi trenger den <strong>4.</strong> deriverte og $4!$.</li>
+      <li>Deriver $e^{-x}$ fire ganger: $-e^{-x},\;e^{-x},\;-e^{-x},\;e^{-x}$. Så $f^{(4)}(x)=e^{-x}$.</li>
+      <li>Bytt $x$ med $s$: $f^{(4)}(s)=e^{-s}$.</li>
+      <li>$x-a=3.5-3=0.5$.</li>
+      <li>Svar: $\;\dfrac{e^{-s}}{4!}\cdot0.5^4$. I Matric: <code>e^(-s)/4!*0.5^4</code>.</li>
     </ol>
   </div>
 
   <div class="ex">
-    <div class="q">Eksempel 1.4 — Grenseverdi med rekker: $\displaystyle\lim_{x\to0}\frac{\sin x - x}{x^3}$.</div>
+    <div class="label">Oppgavetype 4</div>
+    <div class="q" style="margin-top:4px">«Tilnærm en verdi, og finn en grense for feilen»</div>
+    <p><strong>Du gjør:</strong> sett tallet inn i polynomet. For feilen bruker du feilleddet og setter inn den <em>største</em> verdien $f^{(n+1)}(s)$ kan ha.</p>
+    <p><em>Eksempel:</em> Tilnærm $e^{0.1}$ med $P_2$.</p>
     <ol>
-      <li>Sett inn rekka: $\sin x - x = \left(x-\dfrac{x^3}{6}+\dfrac{x^5}{120}-\dots\right)-x=-\dfrac{x^3}{6}+\dfrac{x^5}{120}-\dots$</li>
-      <li>Del på $x^3$: $\;-\dfrac16+\dfrac{x^2}{120}-\dots$</li>
-      <li>La $x\to0$: grensen er $-\dfrac16$. (L'Hôpital tre ganger gir det samme, men rekker er raskere.)</li>
+      <li>$P_2(x)=1+x+\frac{x^2}{2}$, så $P_2(0.1)=1+0.1+0.005=1.105$.</li>
+      <li>Feilledd: $\frac{e^s}{3!}\cdot0.1^3$ med $s$ mellom 0 og 0.1.</li>
+      <li>$e^s$ er størst når $s$ er størst, og uansett mindre enn $e<3$. Så feilen er under $\frac{3}{6}\cdot0.001=0.0005$.</li>
+      <li>Sjekk: $e^{0.1}=1.10517$, så feilen er egentlig $0.00017$. Under grensa ✓</li>
     </ol>
   </div>
+
+  <div class="ex">
+    <div class="label">Oppgavetype 5</div>
+    <div class="q" style="margin-top:4px">«Finn grenseverdien» når du får $\frac00$</div>
+    <p><strong>Du gjør:</strong> bytt funksjonene med rekkene deres. Da forkorter mye seg bort.</p>
+    <p><em>Eksempel:</em> $\displaystyle\lim_{x\to0}\frac{\sin x - x}{x^3}$.</p>
+    <ol>
+      <li>Sett inn rekka: $\sin x - x=\bigl(x-\frac{x^3}{6}+\frac{x^5}{120}\bigr)-x=-\frac{x^3}{6}+\frac{x^5}{120}$.</li>
+      <li>Del på $x^3$: $\;-\frac16+\frac{x^2}{120}$.</li>
+      <li>La $x\to0$: siste ledd forsvinner, og svaret er $-\frac16$.</li>
+    </ol>
+  </div>
+
+  <h3>Litt teori (mindre viktig for delprøven)</h3>
+  <p><strong>Konvergensradius.</strong> Rekkene for $e^x$, $\sin x$ og $\cos x$ virker for <em>alle</em> $x$: tar du med nok ledd, kommer du så nær du vil. Rekkene for $\frac1{1-x}$ og $\ln(1+x)$ virker bare nær 0, for $-1<x<1$. Utenfor blir leddene bare større og større. Avstanden fra senteret der rekka virker, kalles <strong>konvergensradien</strong> $R$. Her er $R=1$. Prøv $\ln(1+x)$ i labben med $x$ over 1!</p>
+  <div class="ex">
+    <div class="q">Slik finner du $R$ (forholdstesten): $\displaystyle\sum_{k=1}^\infty \frac{x^k}{k\,3^k}$</div>
+    <ol>
+      <li>Del ledd nummer $k+1$ på ledd nummer $k$: $\;\dfrac{x^{k+1}}{(k+1)3^{k+1}}\cdot\dfrac{k\,3^k}{x^k}=\dfrac{k}{k+1}\cdot\dfrac{x}{3}$.</li>
+      <li>Når $k$ blir stor, er $\frac{k}{k+1}\approx1$. Det står igjen $\frac{|x|}{3}$.</li>
+      <li>Rekka virker når dette er under 1: $|x|<3$. Så $R=3$.</li>
+    </ol>
+  </div>
+  <p><strong>Analytisk funksjon.</strong> En funksjon er analytisk hvis Taylorrekka faktisk blir <em>lik</em> funksjonen nær punktet. Nesten alt du møter er analytisk. Et kjent unntak er $f(x)=e^{-1/x^2}$ (med $f(0)=0$): alle deriverte i 0 er 0, så rekka blir bare 0, men funksjonen er ikke 0. Den er derfor ikke analytisk i 0.</p>
 
   <div class="box key">
     <h4>Huskeliste kapittel 1</h4>
     <ul>
-      <li>Formelen for $P_n(x)$, og at $P_1$ er tangentlinja.</li>
-      <li>Lagranges restledd og hvordan du finner en grense $K$.</li>
-      <li>Analytisk = Taylorrekka konvergerer <em>til $f$</em>. Kjenn moteksempelet $e^{-1/x^2}$.</li>
-      <li>Forholdstesten for $R$, og sjekk endepunktene.</li>
-      <li>De seks standardrekkene, og substitusjon/derivasjon/integrasjon for å lage nye.</li>
+      <li>Taylorpolynom = verdien og de deriverte i ett punkt, delt på $k!$.</li>
+      <li>Bruk kjente rekker og <strong>bytt ut $x$</strong>. Husk parenteser.</li>
+      <li>Ledd av høy grad: løs en enkel likning for hvilken potens du trenger.</li>
+      <li>Feilleddet = «neste ledd» med $s$ i stedet for $a$.</li>
+      <li>Grenseverdier: sett inn rekka og forkort.</li>
     </ul>
   </div>
+
+  <h3>Øv: prøveoppgaver</h3>
+  <p>Samme type som på Delprøve 3, med nye tall hver gang. Skriv svaret som i Matric og trykk <strong>Sjekk</strong>.</p>
+  <div class="roundbar"><button type="button" class="btn" data-xnew="taylor">Nye tall på alle</button></div>
+  <div class="cards" id="xq-taylor"></div>
+
+  <h3>Øv: flere oppgaver</h3>
+  <div class="cards" id="ov-taylor"></div>
 </section>
 
 <!-- ============ 2 INTEGRASJON ============ -->
@@ -481,27 +549,48 @@ section[id]{scroll-margin-top:60px}
     <h2>Numeriske tilnærminger til det bestemte integralet</h2>
   </div>
 
-  <h3>Hvorfor trenger vi dette?</h3>
-  <p>Mange integraler har ingen antiderivert du kan skrive opp med vanlige funksjoner. Det kjente eksempelet er $\displaystyle\int_0^1 e^{-x^2}\,dx$. Andre ganger har du bare målepunkter, ikke en formel. Da regner vi ut integralet <em>tilnærmet</em> ved å dele intervallet i biter og bruke enkle figurer.</p>
-
+  <h3>Idéen</h3>
+  <p>Et bestemt integral $\int_a^b f(x)\,dx$ er arealet under grafen. Noen ganger klarer du ikke å regne det ut nøyaktig. Kanskje finnes det ingen antiderivert (som for $e^{-x^2}$), eller du har bare en tabell med målinger. Da deler vi arealet i smale biter og regner ut arealet av hver bit med enkle figurer.</p>
   <div class="box">
-    <h4>Oppsett (samme for alle metodene)</h4>
-    <p>Del $[a,b]$ i $n$ like biter med bredde $h=\dfrac{b-a}{n}$. Delepunktene er $x_j=a+jh$, og vi skriver $y_j=f(x_j)$.</p>
+    <h4>To ord du må kunne</h4>
+    <ul>
+      <li>$n$ = antall biter.</li>
+      <li>$h$ (på formelarket kalt $\Delta$) = bredden på hver bit: $\;h=\dfrac{b-a}{n}$.</li>
+    </ul>
+    <p class="note">Får du oppgitt $h$ i stedet for $n$, er $n=\dfrac{b-a}{h}$.</p>
   </div>
 
-  <h3>Trapesmetoden $T_n$</h3>
-  <p>Trekk en rett linje mellom $(x_{j-1},y_{j-1})$ og $(x_j,y_j)$ og regn ut arealet av trapeset. Summerer vi alle, blir hvert indre punkt med to ganger:</p>
-  $$T_n = h\left(\tfrac12 y_0 + y_1 + y_2 + \dots + y_{n-1} + \tfrac12 y_n\right).$$
+  <h3>Trapesmetoden</h3>
+  <p>Tegn rette streker mellom punktene på grafen, og regn ut arealet av trapesene. Når du legger dem sammen, blir formelen:</p>
+  $$T_n = h\Bigl[\tfrac12 f(x_0) + f(x_1) + f(x_2) + \dots + f(x_{n-1}) + \tfrac12 f(x_n)\Bigr].$$
+  <p><strong>På norsk:</strong> endepunktene teller halvt, alle punktene i midten teller helt. Gang summen med $h$.</p>
 
-  <h3>Midtpunktmetoden $M_n$</h3>
-  <p>Bruk rektangler der høyden er funksjonsverdien i midten av hver bit, $m_j=a+(j-\tfrac12)h$:</p>
-  $$M_n = h\bigl(f(m_1)+f(m_2)+\dots+f(m_n)\bigr).$$
+  <div class="ex">
+    <div class="q">Lett eksempel — $\displaystyle\int_0^2 x^2\,dx$ med $n=4$</div>
+    <ol>
+      <li>$h=\frac{2-0}{4}=0.5$. Punktene er $0,\;0.5,\;1,\;1.5,\;2$.</li>
+      <li>$f(x)=x^2$ i punktene: $0,\;0.25,\;1,\;2.25,\;4$.</li>
+      <li>$T_4=0.5\bigl[\tfrac12\cdot0+0.25+1+2.25+\tfrac12\cdot4\bigr]=0.5\cdot5.5=2.75$.</li>
+      <li>Fasit: $\frac{2^3}{3}=2.667$. Feilen er $0.083$.</li>
+    </ol>
+  </div>
 
-  <h3>Simpsons metode $S_{2n}$</h3>
-  <p>I stedet for rette linjer tilpasser vi en <strong>parabel</strong> gjennom tre og tre punkter. Det krever et <span class="hl">partall</span> delintervaller. Med $2n$ biter (bredde $h$) blir vektene $1,4,2,4,2,\dots,4,1$:</p>
-  $$S_{2n}=\frac h3\bigl(y_0+4y_1+2y_2+4y_3+\dots+2y_{2n-2}+4y_{2n-1}+y_{2n}\bigr).$$
-  <p>Nyttige sammenhenger fra Adams:</p>
-  $$T_{2n}=\frac{T_n+M_n}{2},\qquad S_{2n}=\frac{T_n+2M_n}{3}.$$
+  <h3>Midtpunktmetoden</h3>
+  <p>Lag rektangler der høyden er funksjonsverdien <em>midt</em> i hver bit:</p>
+  $$M_n = h\bigl[f(m_1)+f(m_2)+\dots+f(m_n)\bigr].$$
+  <div class="ex">
+    <div class="q">Samme eksempel med midtpunkt</div>
+    <ol>
+      <li>Midtpunktene til bitene er $0.25,\;0.75,\;1.25,\;1.75$.</li>
+      <li>$f$ der: $0.0625,\;0.5625,\;1.5625,\;3.0625$. Summen er $5.25$.</li>
+      <li>$M_4=0.5\cdot5.25=2.625$. Feilen er $0.042$, altså halvparten av trapesfeilen, og på motsatt side.</li>
+    </ol>
+  </div>
+
+  <h3>Simpsons metode (ikke på formelarket)</h3>
+  <p>Bruker parabler i stedet for rette streker og er mye mer nøyaktig. Den krever et partall $n$, og vektene er $1,4,2,4,\dots,2,4,1$:</p>
+  $$S_n=\frac h3\bigl[f(x_0)+4f(x_1)+2f(x_2)+4f(x_3)+\dots+4f(x_{n-1})+f(x_n)\bigr].$$
+  <p class="note">For $\int_0^2x^2dx$: $\frac{0.5}{3}[0+4(0.25)+2(1)+4(2.25)+4]=\frac{16}{6}=2.667$. Helt riktig, fordi Simpson er eksakt for $x^2$ og $x^3$.</p>
 
   <div class="lab" id="lab-int">
     <div class="lab-head">
@@ -527,50 +616,80 @@ section[id]{scroll-margin-top:60px}
     </div>
   </div>
 
-  <h3>Feilgrenser</h3>
-  <p>Hvor god tilnærmingen er avhenger av hvor krum funksjonen er, altså av de høyere deriverte.</p>
-  <div class="box key">
-    <h4>Feilestimater</h4>
-    <p>Hvis $|f''(x)|\le K$ på $[a,b]$:</p>
-    $$|E_T|\le\frac{K(b-a)}{12}h^2,\qquad |E_M|\le\frac{K(b-a)}{24}h^2.$$
-    <p>Hvis $|f^{(4)}(x)|\le K$ på $[a,b]$ (og $h$ er bredden på hver av de $2n$ bitene):</p>
-    $$|E_S|\le\frac{K(b-a)}{180}h^4.$$
-  </div>
+
+
+  <h3>Hvor stor kan feilen bli?</h3>
+  <p>Feilen avhenger av hvor mye grafen <em>bøyer seg</em>. Bøyningen måles med den andrederiverte $f''$. Kall den største verdien av $|f''|$ på intervallet for $K$. Da gjelder (dette står på formelarket):</p>
+  $$|\text{feil i }T_n|\le\frac{K(b-a)^3}{12n^2},\qquad|\text{feil i }M_n|\le\frac{K(b-a)^3}{24n^2}.$$
   <ul>
-    <li>Midtpunkt er typisk <strong>dobbelt så god</strong> som trapes, og feilene har motsatt fortegn. Er $f$ konveks ($f''>0$), overvurderer $T$ og undervurderer $M$.</li>
-    <li>Dobler du $n$, deler du feilen i $T$ og $M$ med omtrent <strong>4</strong> (fordi $h^2$), og feilen i Simpson med omtrent <strong>16</strong> (fordi $h^4$).</li>
-    <li>Simpson er eksakt for polynomer av grad 3 eller lavere, siden da er $f^{(4)}=0$.</li>
+    <li>Rett linje: $f''=0$, så ingen feil. Logisk, trapes treffer en rett linje perfekt.</li>
+    <li>$n^2$ i nevneren: dobler du antall biter, blir feilen fire ganger mindre.</li>
+    <li>Midtpunkt har 24 i stedet for 12, altså halve feilen.</li>
   </ul>
 
+  <h3 id="int-bruk">Slik løser du integrasjonsoppgavene</h3>
+  <p>Begge typene kom på Delprøve 3.</p>
+
   <div class="ex">
-    <div class="q">Eksempel 2.1 — Regn ut $T_4$ for $\displaystyle\int_1^2\frac{dx}{x}$ og sammenlign med $\ln2$.</div>
+    <div class="label">Oppgavetype 1 · kom på prøven</div>
+    <div class="q" style="margin-top:4px">«Bruk trapesmetoden på verdiene i tabellen»</div>
+    <p><strong>Du gjør:</strong> finn ut hvilke $x$-verdier du trenger, les av tabellen, regn ut integranden, og bruk formelen.</p>
+    <p><em>Fra prøven:</em> Buelengden $L=\int_{1.28}^{2.48}\sqrt{1+f'(x)^2}\,dx$ med $h=0.4$. Tabellen gir $f'(x)$ for mange $x$-verdier.</p>
     <ol>
-      <li>$h=\dfrac{2-1}{4}=0.25$. Punkter: $1,\;1.25,\;1.5,\;1.75,\;2$.</li>
-      <li>Verdier: $y_0=1$, $y_1=0.8$, $y_2=0.6667$, $y_3=0.5714$, $y_4=0.5$.</li>
-      <li>$T_4=0.25\bigl(\tfrac12\cdot1+0.8+0.6667+0.5714+\tfrac12\cdot0.5\bigr)=0.25\cdot2.7881=0.6970$.</li>
-      <li>$\ln2\approx0.6931$, så feilen er $\approx0.0039$. $T$ overvurderer fordi $1/x$ er konveks.</li>
-      <li>Feilgrense: $f''=2/x^3\le2$ på $[1,2]$, så $|E_T|\le\dfrac{2\cdot1}{12}(0.25)^2\approx0.0104$ ✓</li>
+      <li><strong>Antall biter:</strong> $n=\frac{2.48-1.28}{0.4}=\frac{1.2}{0.4}=3$.</li>
+      <li><strong>Punktene</strong> du trenger: $1.28,\;1.68,\;2.08,\;2.48$. Hopp over alle de andre i tabellen!</li>
+      <li><strong>Les av</strong> $f'$: $\;1.6,\;2.0,\;2.7,\;3.5$.</li>
+      <li><strong>Regn ut integranden</strong> $\sqrt{1+f'^2}$ i hvert punkt:
+        <div class="tscroll"><table class="num" style="margin:6px 0">
+          <tr><th>x</th><th>f′(x)</th><th>√(1+f′²)</th><th>vekt</th></tr>
+          <tr><td>1.28</td><td>1.6</td><td>1.8868</td><td>½</td></tr>
+          <tr><td>1.68</td><td>2.0</td><td>2.2361</td><td>1</td></tr>
+          <tr><td>2.08</td><td>2.7</td><td>2.8792</td><td>1</td></tr>
+          <tr><td>2.48</td><td>3.5</td><td>3.6401</td><td>½</td></tr>
+        </table></div></li>
+      <li><strong>Formelen:</strong> $L\approx0.4\bigl[\tfrac12\cdot1.8868+2.2361+2.8792+\tfrac12\cdot3.6401\bigr]=0.4\cdot7.8788=3.15$.</li>
     </ol>
+    <p class="note">Vanligste feil: å bruke alle verdiene i tabellen. Du skal bare bruke dem som ligger med avstand $h$.</p>
   </div>
 
   <div class="ex">
-    <div class="q">Eksempel 2.2 — Hvor stor må $n$ være for at $|E_T|<10^{-4}$ i samme integral?</div>
+    <div class="label">Oppgavetype 2 · kom på prøven</div>
+    <div class="q" style="margin-top:4px">«Finn minste $n$ slik at feilen er mindre enn …»</div>
+    <p><strong>Du gjør:</strong> finn $K$ (største $|f''|$), sett inn i feilformelen, og løs for $n$.</p>
+    <p><em>Fra prøven:</em> $f'(x)=\dfrac{(3x+1)e^{-3x}}{3}$ på $[0,2]$. Feilen skal være under $0.001$.</p>
     <ol>
-      <li>Krav: $\dfrac{K(b-a)}{12}h^2 = \dfrac{2\cdot1}{12}\cdot\dfrac{1}{n^2}<10^{-4}$.</li>
-      <li>Løs: $n^2>\dfrac{2}{12\cdot10^{-4}}\approx1666.7$, altså $n>40.8$.</li>
-      <li>Svar: $n=41$ holder. (Med Simpson holder $2n=4$ nesten allerede, se labben!)</li>
+      <li><strong>Finn $f''$</strong> ved å derivere det du fikk (produktregel):<br>
+        $f''(x)=\dfrac{3e^{-3x}+(3x+1)(-3)e^{-3x}}{3}=\dfrac{(3-9x-3)e^{-3x}}{3}=-3x\,e^{-3x}$.</li>
+      <li><strong>Finn $K$</strong>, den største verdien av $|f''(x)|=3x\,e^{-3x}$ på $[0,2]$. Sjekk der den deriverte er null, og endepunktene:
+        <ul>
+          <li>Deriverte: $3e^{-3x}(1-3x)=0$ gir $x=\frac13$. Verdi: $3\cdot\frac13\cdot e^{-1}=e^{-1}\approx0.3679$.</li>
+          <li>Endepunkter: $x=0$ gir $0$, og $x=2$ gir $6e^{-6}\approx0.015$.</li>
+          <li>Størst: $K=e^{-1}\approx0.3679$.</li>
+        </ul></li>
+      <li><strong>Sett inn:</strong> $\dfrac{0.3679\cdot2^3}{12n^2}<0.001$.</li>
+      <li><strong>Løs for $n$:</strong> $n^2>\dfrac{0.3679\cdot8}{12\cdot0.001}=245.3$, så $n>15.66$.</li>
+      <li><strong>Rund opp:</strong> $n=16$.</li>
     </ol>
+    <p class="note">Rund alltid <em>opp</em>, selv om desimalen er liten. $n=15$ ville gitt en feilgrense litt over $0.001$.</p>
   </div>
 
   <div class="box key">
     <h4>Huskeliste kapittel 2</h4>
     <ul>
-      <li>Formlene for $T_n$, $M_n$ og $S_{2n}$ med riktige vekter ($\tfrac12,1,\dots,1,\tfrac12$ og $1,4,2,\dots,4,1$).</li>
-      <li>Simpson krever partall antall delintervaller.</li>
-      <li>Feilgrensene: $T$ og $M$ bruker $f''$ og $h^2$, Simpson bruker $f^{(4)}$ og $h^4$.</li>
-      <li>Snu feilgrensen for å finne hvor stor $n$ må være.</li>
+      <li>$h=\frac{b-a}{n}$, eller $n=\frac{b-a}{h}$.</li>
+      <li>Trapes: endene halvt, midten helt, gang med $h$.</li>
+      <li>Midtpunkt: verdien midt i hver bit, gang med $h$.</li>
+      <li>Feilgrense: finn $K=\max|f''|$, sett inn, løs for $n$, rund opp.</li>
+      <li>Simpson: partall $n$, vekter $1,4,2,\dots,4,1$, gang med $h/3$.</li>
     </ul>
   </div>
+
+  <h3>Øv: prøveoppgaver</h3>
+  <div class="roundbar"><button type="button" class="btn" data-xnew="int">Nye tall på alle</button></div>
+  <div class="cards" id="xq-int"></div>
+
+  <h3>Øv: flere oppgaver</h3>
+  <div class="cards" id="ov-int"></div>
 </section>
 
 <!-- ============ 3 EXP & LN ============ -->
@@ -580,10 +699,41 @@ section[id]{scroll-margin-top:60px}
     <h2>Eksponentialfunksjonen, logaritmen og deres Taylorrekker</h2>
   </div>
 
-  <h3>Adams definerer ln som et areal</h3>
-  <p>I videregående lærte du $\ln$ som «omvendt av $e^x$». Adams gjør det motsatt og mer presist: han <em>definerer</em> den naturlige logaritmen som et integral,</p>
-  $$\ln x = \int_1^x\frac{dt}{t},\qquad x>0.$$
-  <p>Altså: $\ln x$ er arealet under kurven $y=1/t$ fra 1 til $x$. For $x<1$ går vi «baklengs», så arealet teller negativt. Fra definisjonen følger det rett ut at $\ln 1=0$ og $\dfrac{d}{dx}\ln x=\dfrac1x$ (analysens fundamentalteorem).</p>
+  <h3>Det viktigste først</h3>
+  <p>$e^x$ og $\ln x$ er hverandres «motsatte»: den ene opphever den andre.</p>
+  $$e^{\ln x}=x\qquad\text{og}\qquad \ln(e^x)=x.$$
+  <p>Så hvis $e^x=5$, er $x=\ln5$. Og hvis $\ln x=2$, er $x=e^2$. Tallet $e\approx2.71828$.</p>
+
+  <div class="box key">
+    <h4>Regnereglene du må kunne</h4>
+    <div class="tscroll">
+    <table class="series">
+      <tr><th>Logaritme</th><th>Eksponential</th></tr>
+      <tr><td>$\ln(ab)=\ln a+\ln b$</td><td>$e^{a+b}=e^a\cdot e^b$</td></tr>
+      <tr><td>$\ln\dfrac ab=\ln a-\ln b$</td><td>$e^{a-b}=\dfrac{e^a}{e^b}$</td></tr>
+      <tr><td>$\ln(a^r)=r\ln a$</td><td>$(e^a)^r=e^{ra}$</td></tr>
+      <tr><td>$\ln1=0$, $\;\ln e=1$</td><td>$e^0=1$</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="box key">
+    <h4>Derivasjon</h4>
+    <div class="tscroll">
+    <table class="series">
+      <tr><th>Funksjon</th><th>Derivert</th><th>Eksempel</th></tr>
+      <tr><td>$e^x$</td><td>$e^x$</td><td>$(e^{3x})'=3e^{3x}$</td></tr>
+      <tr><td>$\ln x$</td><td>$\dfrac1x$</td><td>$(\ln(x^2+1))'=\dfrac{2x}{x^2+1}$</td></tr>
+      <tr><td>$a^x$</td><td>$a^x\ln a$</td><td>$(2^x)'=2^x\ln2$</td></tr>
+    </table>
+    </div>
+    <p class="note">Med noe annet enn $x$ inni bruker du kjerneregelen: gang med den deriverte av det som står inni.</p>
+  </div>
+
+  <h3>Hvordan Adams definerer ln: som et areal</h3>
+  <p>Boka gjør noe litt uvant. Den <em>definerer</em> $\ln x$ som arealet under kurven $y=\frac1t$ fra 1 til $x$:</p>
+  $$\ln x = \int_1^x\frac{dt}{t}.$$
+  <p>Er $x$ mindre enn 1, går vi baklengs, og arealet teller negativt. Tallet $e$ er rett og slett det stedet der arealet blir nøyaktig 1. Prøv selv i labben:</p>
 
   <div class="lab" id="lab-ln">
     <div class="lab-head">
@@ -598,142 +748,53 @@ section[id]{scroll-margin-top:60px}
     </div>
   </div>
 
-  <h3>Tallet $e$ og eksponentialfunksjonen</h3>
-  <p>Tallet $e$ er <strong>definert</strong> som det tallet der arealet blir nøyaktig 1: $\ln e=1$, altså $e\approx2.71828$. Siden $\ln$ er strengt voksende (den deriverte $1/x$ er positiv), har den en omvendt funksjon, og den kaller vi $\exp x=e^x$:</p>
-  $$y=e^x \iff x=\ln y,\qquad e^{\ln x}=x\;(x>0),\qquad \ln(e^x)=x.$$
 
-  <div class="box key">
-    <h4>Regneregler og deriverte</h4>
-    <div class="tscroll">
-    <table class="series">
-      <tr><th>Logaritme</th><th>Eksponential</th></tr>
-      <tr><td>$\ln(xy)=\ln x+\ln y$</td><td>$e^{x+y}=e^xe^y$</td></tr>
-      <tr><td>$\ln\dfrac xy=\ln x-\ln y$</td><td>$e^{x-y}=\dfrac{e^x}{e^y}$</td></tr>
-      <tr><td>$\ln(x^r)=r\ln x$</td><td>$(e^x)^r=e^{rx}$</td></tr>
-      <tr><td>$\dfrac{d}{dx}\ln|x|=\dfrac1x$</td><td>$\dfrac{d}{dx}e^x=e^x$</td></tr>
-    </table>
-    </div>
-    <p>Generelle baser: $a^x=e^{x\ln a}$, så $\dfrac{d}{dx}a^x=a^x\ln a$. Og $\log_a x=\dfrac{\ln x}{\ln a}$, så $\dfrac{d}{dx}\log_a x=\dfrac{1}{x\ln a}$.</p>
-  </div>
 
-  <h3>Vekst: hvem vinner?</h3>
-  <p>For store $x$ gjelder alltid: <span class="hl">ln x ≪ potenser ≪ eksponentialer</span>. Presist, for alle $a>0$:</p>
-  $$\lim_{x\to\infty}\frac{x^a}{e^x}=0,\qquad \lim_{x\to\infty}\frac{\ln x}{x^a}=0,\qquad \lim_{x\to0^+}x^a\ln x=0.$$
-  <p>Og den berømte grensen: $\displaystyle\lim_{n\to\infty}\left(1+\frac1n\right)^n=e$, mer generelt $\displaystyle\lim_{n\to\infty}\left(1+\frac xn\right)^n=e^x$.</p>
+  <h3>Hvem vokser raskest?</h3>
+  <p>Når $x$ blir stor, gjelder alltid: <span class="hl">$\ln x$ er tregest, så kommer potenser som $x^2$ og $x^{100}$, og $e^x$ er raskest.</span> Derfor:</p>
+  $$\lim_{x\to\infty}\frac{x^{100}}{e^x}=0\qquad\text{og}\qquad\lim_{x\to\infty}\frac{\ln x}{x}=0.$$
+
+  <h3>Rekkene for $e^x$ og $\ln(1+x)$</h3>
+  <p><strong>$e^x$:</strong> alle deriverte er $e^x$, og $e^0=1$. Derfor er rekka bare $1$ delt på fakultetene:</p>
+  $$e^x=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\frac{x^4}{4!}+\dots\qquad\text{for alle }x.$$
+  <p>Setter du inn $x=1$, får du en måte å regne ut $e$ på: $1+1+\frac12+\frac16+\frac1{24}+\dots\approx2.718$.</p>
+  <p><strong>$\ln(1+x)$:</strong> Rekka lages om $\ln(1+x)$ og ikke $\ln x$, fordi $\ln 0$ ikke finnes.</p>
+  $$\ln(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\dots\qquad\text{for }-1<x\le1.$$
+  <p class="note">Legg merke til: <em>ingen</em> fakulteter her, bare $2,3,4,\dots$ i nevneren. På formelarket står den som $\ln x$ om $x=1$, med $(x-1)$ i stedet for $x$. Det er samme rekke.</p>
+  <p>Du bruker disse akkurat som i <a href="#taylor-bruk">kapittel 1</a>: bytt ut $x$, og stopp ved graden du trenger.</p>
 
   <div class="ex">
-    <div class="q">Eksempel 3.1 — Logaritmisk derivasjon: deriver $y=x^x$ for $x>0$.</div>
+    <div class="q">Eksempel — Tilnærm $\ln(1.2)$ med tre ledd.</div>
     <ol>
-      <li>Verken potensregelen eller eksponentregelen passer, fordi både grunntall og eksponent varierer.</li>
-      <li>Ta ln: $\ln y = x\ln x$.</li>
-      <li>Deriver begge sider: $\dfrac{y'}{y}=\ln x + x\cdot\dfrac1x=\ln x+1$.</li>
-      <li>$y'=x^x(\ln x+1)$.</li>
+      <li>$\ln(1.2)=\ln(1+0.2)$, så $x=0.2$.</li>
+      <li>$0.2-\frac{0.2^2}{2}+\frac{0.2^3}{3}=0.2-0.02+0.00267=0.18267$.</li>
+      <li>Kalkulatoren: $\ln1.2=0.18232$. Nesten likt.</li>
     </ol>
   </div>
 
-  <h3>Taylorrekka til $e^x$</h3>
-  <p>Alle deriverte av $e^x$ er $e^x$, og $e^0=1$. Derfor er alle Maclaurinkoeffisientene $1/k!$:</p>
-  $$e^x=\sum_{k=0}^\infty\frac{x^k}{k!}=1+x+\frac{x^2}{2}+\frac{x^3}{6}+\frac{x^4}{24}+\dots\qquad\text{for alle } x.$$
-  <p>Hvorfor gjelder den for <em>alle</em> $x$? Restleddet er $R_n=\dfrac{e^s}{(n+1)!}x^{n+1}$, og fakultetet i nevneren vokser raskere enn $x^{n+1}$ uansett hvor stor $x$ er. Så $R_n\to0$, og $e^x$ er analytisk overalt. Setter vi $x=1$, får vi en formel for $e$:</p>
-  $$e=1+1+\frac12+\frac16+\frac1{24}+\frac1{120}+\dots\approx 2.71828.$$
-
-  <h3>Taylorrekka til $\ln(1+x)$</h3>
-  <p>Start med den geometriske rekka $\dfrac{1}{1+t}=1-t+t^2-t^3+\dots$ for $|t|<1$, og integrer fra 0 til $x$:</p>
-  $$\ln(1+x)=\int_0^x\frac{dt}{1+t}=x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\dots\qquad -1<x\le1.$$
-  <p>Merk to ting. Rekka går om $\ln(1+x)$, ikke $\ln x$, fordi $\ln x$ ikke er definert i 0. Og den konvergerer bare for $-1<x\le1$. Med $x=1$ får vi $\ln2=1-\tfrac12+\tfrac13-\tfrac14+\dots$, men den konvergerer veldig sakte.</p>
-
-  <div class="box">
-    <h4>Rask versjon: $\ln\dfrac{1+x}{1-x}$</h4>
-    <p>Trekk rekka for $\ln(1-x)$ fra rekka for $\ln(1+x)$. Alle partallsleddene forsvinner:</p>
-    $$\ln\frac{1+x}{1-x}=2\left(x+\frac{x^3}{3}+\frac{x^5}{5}+\dots\right),\qquad -1<x<1.$$
-    <p class="note">Hvert positive tall kan skrives som $\frac{1+x}{1-x}$ med $|x|<1$, så denne kan brukes til å regne ut $\ln$ av hva som helst.</p>
-  </div>
-
   <div class="ex">
-    <div class="q">Eksempel 3.2 — Regn ut $\ln1.2$ med fire desimaler.</div>
+    <div class="q">Eksempel — Deriver $y=x^x$ (logaritmisk derivasjon)</div>
+    <p>Her varierer både grunntallet og eksponenten, så de vanlige reglene passer ikke. Trikset er å ta $\ln$ først:</p>
     <ol>
-      <li>Løs $\dfrac{1+x}{1-x}=1.2$: $1+x=1.2-1.2x$, så $2.2x=0.2$ og $x=\dfrac1{11}$.</li>
-      <li>$\ln1.2\approx2\left(\dfrac1{11}+\dfrac{1}{3\cdot11^3}\right)=2(0.090909+0.000250)=0.18232$.</li>
-      <li>Faktisk verdi: $0.182322$. To ledd holder!</li>
-      <li>Til sammenligning trenger $\ln(1+0.2)=0.2-0.02+0.00267-0.0004+\dots$ flere ledd for samme nøyaktighet.</li>
+      <li>$\ln y = \ln(x^x)=x\ln x$.</li>
+      <li>Deriver begge sider: $\frac{y'}{y}=\ln x + x\cdot\frac1x=\ln x+1$.</li>
+      <li>Gang med $y$: $\;y'=x^x(\ln x+1)$.</li>
     </ol>
   </div>
 
   <div class="box key">
     <h4>Huskeliste kapittel 3</h4>
     <ul>
-      <li>$\ln x=\int_1^x dt/t$, $\ln e=1$, og $e^x$ er den omvendte av $\ln x$.</li>
-      <li>Regnereglene, $a^x=e^{x\ln a}$ og de deriverte.</li>
-      <li>Vekstrekkefølgen og $(1+1/n)^n\to e$.</li>
-      <li>Logaritmisk derivasjon for uttrykk som $x^x$ eller store produkter.</li>
-      <li>Rekkene for $e^x$ (alle $x$) og $\ln(1+x)$ ($-1<x\le1$), og hvordan du utleder dem.</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ PRØVETRENING ============ -->
-<section class="chap" id="prove">
-  <div class="chap-head">
-    <span class="num">PRØVETRENING · MA-178 DELPRØVE 3 · 60 MIN · KALKULATOR TILLATT</span>
-    <h2>De fem oppgavetypene, med nye tall hver gang</h2>
-  </div>
-  <p>Delprøve 3 hadde fem oppgaver á 3 poeng. Her får du en ny variant av hver type. Skriv svaret slik du ville gjort i Matric, trykk <strong>Sjekk</strong>, og åpne løsningen hvis du står fast. Trykk <strong>Ny runde</strong> for nye tall på alle fem.</p>
-
-  <details class="sheet">
-    <summary>Formelarket du får utdelt på prøven</summary>
-    <div class="in">
-      <p class="label">Taylorrekker</p>
-      $$\begin{aligned}
-      e^x&=\sum_{k=0}^\infty\frac{x^k}{k!} && x\in(-\infty,\infty)\\
-      \cos x&=\sum_{k=0}^\infty\frac{(-1)^k}{(2k)!}x^{2k} && x\in(-\infty,\infty)\\
-      \sin x&=\sum_{k=0}^\infty\frac{(-1)^k}{(2k+1)!}x^{2k+1} && x\in(-\infty,\infty)\\
-      \frac1x&=\sum_{k=0}^\infty(-1)^k(x-1)^k && x\in(0,2)\\
-      \ln x&=\sum_{k=1}^\infty\frac{(-1)^{k-1}}{k}(x-1)^k && x\in(0,2)
-      \end{aligned}$$
-      <p class="note">Merk: arket har $\ln x$ og $1/x$ om $x=1$. Setter du $x=1+u$, får du $\ln(1+u)$ og $\frac1{1+u}$ om $u=0$, som i kapittel 3.</p>
-      <p class="label">Forholdstest (ratiotest)</p>
-      <p>Hvis $\lim_{k\to\infty}\frac{|a_k|}{|a_{k-1}|}=L$, har $\sum a_k(x-c)^k$ konvergensradius $R=1/L$.</p>
-      <p class="label">Alternerende rekker</p>
-      <p>Hvis leddene veksler fortegn, avtar i absoluttverdi og går mot 0, konvergerer rekka, og feilen etter $n$ ledd er mindre enn det første leddet du dropper: $\bigl|L-\sum_{k=0}^{n-1}b_k\bigr|<|b_n|$.</p>
-      <p class="label">Trapes og midtpunkt ($\Delta$ = bredden $h$)</p>
-      $$T_n=\Delta\Bigl[\tfrac12f(x_0)+f(x_1)+\dots+f(x_{n-1})+\tfrac12f(x_n)\Bigr],\qquad \Bigl|\int_a^bf\,dx-T_n\Bigr|\le\frac{K(b-a)^3}{12n^2}$$
-      $$M_n=\Delta\bigl[f(m_0)+f(m_1)+\dots+f(m_{n-1})\bigr],\qquad \Bigl|\int_a^bf\,dx-M_n\Bigr|\le\frac{K(b-a)^3}{24n^2}$$
-      <p class="note">$K$ er en konstant med $|f''(x)|\le K$ på $[a,b]$. Simpson står ikke på arket.</p>
-    </div>
-  </details>
-
-  <div class="box warn">
-    <h4>Skrive svar i Matric (og her)</h4>
-    <ul>
-      <li>Potens med <code>^</code>, gange med <code>*</code>, fakultet med <code>!</code>: <code>(-2^13)*x^53/13!</code></li>
-      <li>Eksponential som <code>e^(-s)</code>, og bruk parenteser rundt tellere og nevnere: <code>e^(-s)/4!*0.5^4</code></li>
-      <li>Ikke regn ut store fakulteter. La <code>13!</code> stå, slik prøven selv anbefaler.</li>
-      <li>Desimaltall med punktum. Her godtas også komma.</li>
+      <li>$e^x$ og $\ln x$ opphever hverandre.</li>
+      <li>Regnereglene og de deriverte.</li>
+      <li>$\ln x$ er arealet under $1/t$ fra 1 til $x$, og $\ln e=1$.</li>
+      <li>$e^x$ vokser raskere enn alle potenser, og $\ln x$ vokser tregere.</li>
+      <li>Rekkene: $e^x$ med fakulteter (alle $x$), $\ln(1+x)$ uten (bare $-1<x\le1$).</li>
     </ul>
   </div>
 
-  <div class="roundbar">
-    <button type="button" class="btn" id="x-new">Ny runde (nye tall på alle fem)</button>
-    <span class="score" id="x-score">0 av 5 riktige denne runden</span>
-  </div>
-  <div class="cards" id="xcards"></div>
-</section>
-
-<!-- ============ ØVING ============ -->
-<section class="chap" id="oving">
-  <div class="chap-head">
-    <span class="num">ØVINGSBANK</span>
-    <h2>Oppgaver med hint og løsning</h2>
-  </div>
-  <p>Prøv selv før du åpner hintet. Kryss av «Kan denne» når du klarer oppgaven uten hjelp. Avkryssingen lagres i nettleseren din.</p>
-  <div class="filters seg" id="filters" role="group" aria-label="Filtrer oppgaver">
-    <button type="button" data-t="all" aria-pressed="true">Alle</button>
-    <button type="button" data-t="taylor" aria-pressed="false">Taylor</button>
-    <button type="button" data-t="int" aria-pressed="false">Integrasjon</button>
-    <button type="button" data-t="exp" aria-pressed="false">exp &amp; ln</button>
-    <button type="button" data-t="todo" aria-pressed="false">Ikke kan ennå</button>
-  </div>
-  <div class="cards" id="cards"></div>
+  <h3>Øv: oppgaver</h3>
+  <div class="cards" id="ov-exp"></div>
 </section>
 
 <footer>
@@ -818,20 +879,17 @@ const TOPIC = {taylor:'Taylor', int:'Integrasjon', exp:'exp & ln'};
 let done = {};
 try { done = JSON.parse(localStorage.getItem('kalk-done') || '{}') || {}; } catch(e) { done = {}; }
 function saveDone(){ try { localStorage.setItem('kalk-done', JSON.stringify(done)); } catch(e){} }
-let filter = 'all';
-
 function renderCards(){
-  const box = document.getElementById('cards');
-  box.innerHTML = '';
-  let i = 0;
-  PROBLEMS.forEach((p, idx) => {
-    const show = filter==='all' || filter===p.t || (filter==='todo' && !done[p.id]);
-    if (!show) return;
-    i++;
+  const counters = {taylor:0, int:0, exp:0};
+  const chapNo = {taylor:1, int:2, exp:3};
+  ['taylor','int','exp'].forEach(t => { const b=document.getElementById('ov-'+t); if (b) b.innerHTML=''; });
+  PROBLEMS.forEach(p => {
+    const box = document.getElementById('ov-'+p.t); if (!box) return;
+    counters[p.t]++;
     const c = document.createElement('article');
     c.className = 'card' + (done[p.id] ? ' done' : '');
     c.innerHTML = `
-      <div class="meta"><span class="num">Oppgave ${idx+1}</span><span class="chip">${TOPIC[p.t]}</span><span class="chip lvl-${p.lvl}">${LVL[p.lvl]}</span></div>
+      <div class="meta"><span class="num">Oppgave ${chapNo[p.t]}.${counters[p.t]}</span><span class="chip lvl-${p.lvl}">${LVL[p.lvl]}</span></div>
       <div class="q">${p.q}</div>
       <div class="actions">
         <button type="button" class="btn" data-a="h">Vis hint</button>
@@ -846,22 +904,16 @@ function renderCards(){
       b.textContent = (r.hidden ? 'Vis ' : 'Skjul ') + (b.dataset.a==='h' ? 'hint' : 'løsning');
     }));
     c.querySelector('input').addEventListener('change', e => {
-      done[p.id] = e.target.checked; if (!e.target.checked) delete done[p.id];
+      if (e.target.checked) done[p.id] = true; else delete done[p.id];
       c.classList.toggle('done', !!done[p.id]); saveDone(); updateProg();
     });
     box.appendChild(c);
   });
-  if (!i) box.innerHTML = '<p class="note">Du kan alle oppgavene i denne kategorien. Bra jobbet!</p>';
-  typeset([box]);
 }
 function updateProg(){
   const n = PROBLEMS.filter(p => done[p.id]).length;
   document.getElementById('prog').textContent = `${n} av ${PROBLEMS.length} kan du`;
 }
-document.querySelectorAll('#filters button').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x===b));
-  filter = b.dataset.t; renderCards();
-}));
 
 function typeset(els){
   if (window.__mjReady && window.MathJax && MathJax.typesetPromise) {
@@ -1365,23 +1417,26 @@ function genQ5(){
 }
 
 /* --- UI for prøvetrening --- */
-const XGENS = [genQ1, genQ2, genQ3, genQ4, genQ5];
-const xsolved = [false,false,false,false,false];
-function xscore(){ document.getElementById('x-score').textContent = `${xsolved.filter(Boolean).length} av 5 riktige denne runden`; }
+const XGENS = [
+  {g:genQ1, box:'xq-taylor', no:'Prøvetype 1'},
+  {g:genQ2, box:'xq-taylor', no:'Prøvetype 2'},
+  {g:genQ3, box:'xq-taylor', no:'Prøvetype 3'},
+  {g:genQ4, box:'xq-int', no:'Prøvetype 1'},
+  {g:genQ5, box:'xq-int', no:'Prøvetype 2'}
+];
 function xrender(i){
-  const q = XGENS[i]();
-  xsolved[i] = false;
+  const X = XGENS[i], q = X.g();
   let card = document.getElementById('xq'+i);
-  if (!card){ card = document.createElement('article'); card.className='card xq'; card.id='xq'+i; document.getElementById('xcards').appendChild(card); }
+  if (!card){ card = document.createElement('article'); card.className='card xq'; card.id='xq'+i; document.getElementById(X.box).appendChild(card); }
   card.classList.remove('done');
   card.innerHTML = `
-    <div class="meta"><span class="num">Spørsmål ${i+1}</span><span class="chip">${q.title}</span><span class="chip">3 poeng</span></div>
+    <div class="meta"><span class="num">${X.no}</span><span class="chip">${q.title}</span><span class="chip">nye tall hver gang</span></div>
     <div class="qtext">${q.q}</div>
     <div class="ans"><label for="xa${i}">${q.label}</label><input id="xa${i}" type="text" autocomplete="off" spellcheck="false" placeholder="${q.ph}"></div>
     <div class="actions">
       <button type="button" class="btn" data-a="check">Sjekk</button>
       <button type="button" class="btn" data-a="sol">Vis løsning</button>
-      <button type="button" class="btn" data-a="new">Ny variant</button>
+      <button type="button" class="btn" data-a="new">Nye tall</button>
     </div>
     <div class="fb" aria-live="polite"></div>
     <div class="reveal" hidden><span class="label">Løsning</span>${q.sol}</div>`;
@@ -1389,17 +1444,18 @@ function xrender(i){
   const doCheck = () => {
     const r = q.check(inp.value);
     fb.textContent = (r.ok ? '✓ ' : '✗ ') + r.msg; fb.className = 'fb ' + (r.ok ? 'ok' : 'bad');
-    if (r.ok){ xsolved[i] = true; card.classList.add('done'); xscore(); }
+    card.classList.toggle('done', r.ok);
   };
   card.querySelector('[data-a="check"]').addEventListener('click', doCheck);
   inp.addEventListener('keydown', e => { if (e.key==='Enter') doCheck(); });
   card.querySelector('[data-a="sol"]').addEventListener('click', e => { sol.hidden = !sol.hidden; e.target.textContent = sol.hidden ? 'Vis løsning' : 'Skjul løsning'; });
-  card.querySelector('[data-a="new"]').addEventListener('click', () => { xrender(i); xscore(); });
+  card.querySelector('[data-a="new"]').addEventListener('click', () => xrender(i));
   typeset([card]);
 }
-function xround(){ for (let i=0;i<5;i++) xrender(i); xscore(); }
-document.getElementById('x-new').addEventListener('click', xround);
-xround();
+XGENS.forEach((_,i) => xrender(i));
+document.querySelectorAll('[data-xnew]').forEach(b => b.addEventListener('click', () => {
+  XGENS.forEach((X,i) => { if (X.box === 'xq-'+b.dataset.xnew) xrender(i); });
+}));
 
 /* ---------------- init & redraw ---------------- */
 function drawAll(){ drawTaylor(); drawInt(); drawLn(); }
