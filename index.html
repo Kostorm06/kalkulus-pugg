@@ -122,6 +122,8 @@ table.series th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;
 .slider output{text-align:right;font-variant-numeric:tabular-nums}
 .readout{font-family:var(--f-mono);font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--ink);display:flex;flex-wrap:wrap;gap:6px 18px}
 .readout b{color:var(--accent);font-weight:600}
+.xin input{flex:0 1 11rem;min-width:0;font-family:var(--f-mono);font-size:.85rem;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.xin label{font-family:var(--f-mono);font-size:.82rem}
 .formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
 .legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
@@ -407,6 +409,12 @@ section[id],h3[id]{scroll-margin-top:70px}
       </div>
       <label class="slider">grad n <input type="range" id="taylor-n" min="0" max="15" value="3"><output id="taylor-n-out">3</output></label>
       <label class="slider">x-verdi <input type="range" id="taylor-x" min="-3" max="3" step="0.05" value="1"><output id="taylor-x-out">1.00</output></label>
+      <div class="row xin">
+        <label for="taylor-xin">Skriv inn egen x:</label>
+        <input id="taylor-xin" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="1" placeholder="f.eks. 0.5 eller pi/4">
+        <button type="button" class="btn" id="taylor-xgo">Regn ut</button>
+        <span class="note" id="taylor-xmsg"></span>
+      </div>
       <div class="readout" id="taylor-read"></div>
       <p class="note" id="taylor-note"></p>
     </div>
@@ -1001,6 +1009,7 @@ const TF = {
        note:'Geometrisk rekke med R = 1: konvergerer bare for |x| < 1. Utenfor intervallet hjelper det ikke å ta med flere ledd.'}
 };
 let tState = {fn:'sin', n:3, x:1};
+const fmtX = n => String(+(+n).toFixed(4)).replace('-','−');
 const tn = document.getElementById('taylor-n'), tx = document.getElementById('taylor-x');
 function tPoly(fn, n){ const c=[]; for(let k=0;k<=n;k++) c.push(TF[fn].c(k)); return x=>{ let s=0, p=1; for(let k=0;k<=n;k++){ s+=c[k]*p; p*=x; } return s; }; }
 function tFormula(){
@@ -1035,7 +1044,7 @@ function drawTaylor(){
   const r = document.getElementById('taylor-read');
   const f6 = n => isFinite(n) ? (Math.abs(n)>1e6? n.toExponential(3) : n.toFixed(6)).replace('-','−') : 'udefinert';
   const err = (isFinite(fx)&&isFinite(px)) ? Math.abs(fx-px) : NaN;
-  r.innerHTML = `<span>f(${x.toFixed(2)}) = <b>${f6(fx)}</b></span><span>P<sub>${tState.n}</sub>(${x.toFixed(2)}) = <b>${f6(px)}</b></span><span>|feil| = <b>${isFinite(err)?(err<1e-4&&err>0?err.toExponential(2):err.toFixed(6)):'—'}</b></span>`;
+  r.innerHTML = `<span>f(${fmtX(x)}) = <b>${f6(fx)}</b></span><span>P<sub>${tState.n}</sub>(${fmtX(x)}) = <b>${f6(px)}</b></span><span>|feil| = <b>${isFinite(err)?(err<1e-4&&err>0?err.toExponential(2):err.toFixed(6)):'—'}</b></span>`;
   document.getElementById('taylor-note').textContent = F.note;
 }
 function setTaylorFn(fn){
@@ -1043,13 +1052,28 @@ function setTaylorFn(fn){
   tx.min = F.xr[0]; tx.max = F.xr[1];
   tState.x = Math.min(Math.max(tState.x, F.xr[0]), F.xr[1]); tx.value = tState.x;
   document.getElementById('taylor-x-out').textContent = (+tState.x).toFixed(2);
+  document.getElementById('taylor-xin').value = fmtX(tState.x); document.getElementById('taylor-xmsg').textContent = '';
   document.querySelectorAll('#taylor-fn button').forEach(b => b.setAttribute('aria-pressed', b.dataset.f===fn));
   drawTaylor(); tFormula();
 }
 document.querySelectorAll('#taylor-fn button').forEach(b => b.addEventListener('click', ()=> setTaylorFn(b.dataset.f)));
 let fTimer;
 tn.addEventListener('input', ()=>{ tState.n=+tn.value; document.getElementById('taylor-n-out').textContent=tn.value; drawTaylor(); clearTimeout(fTimer); fTimer=setTimeout(tFormula,120); });
-tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); drawTaylor(); });
+tx.addEventListener('input', ()=>{ tState.x=+tx.value; document.getElementById('taylor-x-out').textContent=(+tx.value).toFixed(2); document.getElementById('taylor-xin').value=fmtX(tState.x); document.getElementById('taylor-xmsg').textContent=''; drawTaylor(); });
+function setOwnX(){
+  const inp = document.getElementById('taylor-xin'), msg = document.getElementById('taylor-xmsg');
+  let v;
+  try { v = xparse(inp.value)({}); } catch(e){ msg.textContent = e.message; return; }
+  if (!isFinite(v)){ msg.textContent = 'Kunne ikke regne ut den verdien.'; return; }
+  const F = TF[tState.fn];
+  tState.x = v;
+  tx.value = Math.min(Math.max(v, F.xr[0]), F.xr[1]);
+  document.getElementById('taylor-x-out').textContent = v.toFixed(2);
+  msg.textContent = (v < F.win.x0 || v > F.win.x1) ? 'x er utenfor det grafen viser, men tallene under stemmer.' : '';
+  drawTaylor();
+}
+document.getElementById('taylor-xgo').addEventListener('click', setOwnX);
+document.getElementById('taylor-xin').addEventListener('keydown', e => { if (e.key==='Enter') setOwnX(); });
 
 /* ---------------- Integration lab ---------------- */
 const IF = {
