@@ -170,6 +170,12 @@ details.sheet .in{padding:0 18px 12px}
 code{font-family:var(--f-mono);font-size:.85em;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:1px 5px;word-break:break-all}
 .steps{padding-left:1.3em;margin:6px 0} .steps li{margin:6px 0}
 
+nav.bar .pair{display:inline-flex}
+nav.bar .pair a:first-child{border-radius:4px 0 0 4px}
+nav.bar .pair a.sub{border-left:0;border-radius:0 4px 4px 0;color:var(--muted)}
+.jump{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 8px;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.jump a{padding:5px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);text-decoration:none;color:var(--accent)}
+.jump a:hover,.jump a:focus-visible{border-color:var(--accent)}
 footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
 
 @media (max-width:520px){
@@ -181,7 +187,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--line);font-si
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
-section[id]{scroll-margin-top:60px}
+section[id],h3[id]{scroll-margin-top:70px}
 </style>
 
 </head>
@@ -201,9 +207,9 @@ section[id]{scroll-margin-top:60px}
 <nav class="bar" aria-label="Kapitler">
   <div class="in">
     <a href="#formelark">Formelark</a>
-    <a href="#taylor">1 Taylor</a>
-    <a href="#integrasjon">2 Integrasjon</a>
-    <a href="#explog">3 exp &amp; ln</a>
+    <span class="pair"><a href="#taylor">1 Taylor</a><a href="#taylor-ov" class="sub">oppgaver</a></span>
+    <span class="pair"><a href="#integrasjon">2 Integrasjon</a><a href="#int-ov" class="sub">oppgaver</a></span>
+    <span class="pair"><a href="#explog">3 exp &amp; ln</a><a href="#exp-ov" class="sub">oppgaver</a></span>
     <span class="prog" id="prog">0 av 0 kan du</span>
   </div>
 </nav>
@@ -251,6 +257,7 @@ section[id]{scroll-margin-top:60px}
     <span class="num">KAPITTEL 1 · Adams &amp; Essex 4.10 og 9.5–9.7</span>
     <h2>Taylorrekker og analytiske funksjoner</h2>
   </div>
+  <div class="jump">Hopp til: <a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
 
   <h3>Start her: hva prøver vi å gjøre?</h3>
   <p>Kalkulatoren din kan egentlig bare pluss, minus, gange og dele. Likevel gir den deg $e^{0.1}$ eller $\cos(0.5)$ på et øyeblikk. Hvordan? Den regner ut et <strong>polynom</strong> som ligner veldig på funksjonen. Et polynom er bare ledd som $1$, $x$, $x^2$, $x^3$ ganget med tall og lagt sammen, og det kan kalkulatoren regne ut.</p>
@@ -533,7 +540,7 @@ section[id]{scroll-margin-top:60px}
     </ul>
   </div>
 
-  <h3>Øv: prøveoppgaver</h3>
+  <h3 id="taylor-ov">Øv: prøveoppgaver</h3>
   <p>Samme type som på Delprøve 3, med nye tall hver gang. Skriv svaret som i Matric og trykk <strong>Sjekk</strong>.</p>
   <div class="roundbar"><button type="button" class="btn" data-xnew="taylor">Nye tall på alle</button></div>
   <div class="cards" id="xq-taylor"></div>
@@ -548,6 +555,7 @@ section[id]{scroll-margin-top:60px}
     <span class="num">KAPITTEL 2 · Adams &amp; Essex 6.6–6.7</span>
     <h2>Numeriske tilnærminger til det bestemte integralet</h2>
   </div>
+  <div class="jump">Hopp til: <a href="#int-bruk">Slik løser du oppgavene</a><a href="#int-ov">Til oppgavene</a></div>
 
   <h3>Idéen</h3>
   <p>Et bestemt integral $\int_a^b f(x)\,dx$ er arealet under grafen. Noen ganger klarer du ikke å regne det ut nøyaktig. Kanskje finnes det ingen antiderivert (som for $e^{-x^2}$), eller du har bare en tabell med målinger. Da deler vi arealet i smale biter og regner ut arealet av hver bit med enkle figurer.</p>
@@ -684,7 +692,7 @@ section[id]{scroll-margin-top:60px}
     </ul>
   </div>
 
-  <h3>Øv: prøveoppgaver</h3>
+  <h3 id="int-ov">Øv: prøveoppgaver</h3>
   <div class="roundbar"><button type="button" class="btn" data-xnew="int">Nye tall på alle</button></div>
   <div class="cards" id="xq-int"></div>
 
@@ -698,6 +706,7 @@ section[id]{scroll-margin-top:60px}
     <span class="num">KAPITTEL 3 · Adams &amp; Essex 3.2–3.3 og 9.6</span>
     <h2>Eksponentialfunksjonen, logaritmen og deres Taylorrekker</h2>
   </div>
+  <div class="jump">Hopp til: <a href="#exp-ov">Til oppgavene</a></div>
 
   <h3>Det viktigste først</h3>
   <p>$e^x$ og $\ln x$ er hverandres «motsatte»: den ene opphever den andre.</p>
@@ -793,7 +802,7 @@ section[id]{scroll-margin-top:60px}
     </ul>
   </div>
 
-  <h3>Øv: oppgaver</h3>
+  <h3 id="exp-ov">Øv: oppgaver</h3>
   <div class="cards" id="ov-exp"></div>
 </section>
 
