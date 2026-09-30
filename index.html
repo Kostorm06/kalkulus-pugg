@@ -263,8 +263,33 @@ section[id]{scroll-margin-top:60px}
   </div>
   <p class="note">Hvert nytt ledd gjør feilen omtrent 30–40 ganger mindre her.</p>
 
+  <h3>Hva er $k!$ (fakultet)?</h3>
+  <p>Utropstegnet etter et tall betyr <strong>fakultet</strong>, og $k!$ leses «$k$ fakultet». Det betyr at du ganger sammen alle hele tall fra $k$ og ned til 1:</p>
+  $$k! = k\cdot(k-1)\cdot(k-2)\cdots 2\cdot 1.$$
+  <div class="tscroll">
+  <table class="num" style="margin:8px 0 4px">
+    <tr><th>k</th><th>Utregning</th><th>k!</th></tr>
+    <tr><td>0</td><td>(definert)</td><td>1</td></tr>
+    <tr><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td>2</td><td>2 · 1</td><td>2</td></tr>
+    <tr><td>3</td><td>3 · 2 · 1</td><td>6</td></tr>
+    <tr><td>4</td><td>4 · 3 · 2 · 1</td><td>24</td></tr>
+    <tr><td>5</td><td>5 · 4 · 3 · 2 · 1</td><td>120</td></tr>
+    <tr><td>6</td><td>6 · 5 · 4 · 3 · 2 · 1</td><td>720</td></tr>
+    <tr><td>10</td><td>10 · 9 · … · 1</td><td>3 628 800</td></tr>
+  </table>
+  </div>
+  <div class="box">
+    <h4>Tre ting å vite om fakultet</h4>
+    <ul>
+      <li><strong>Du kan bygge videre på forrige:</strong> $k!=k\cdot(k-1)!$. For eksempel er $5!=5\cdot4!=5\cdot24=120$.</li>
+      <li><strong>$0!=1$.</strong> Det virker rart, men regelen over krever det: $1!=1\cdot0!$, og siden $1!=1$ må $0!=1$. Det gjør også at det første leddet i Taylorformelen blir riktig: $\frac{f(a)}{0!}=f(a)$.</li>
+      <li><strong>Det vokser ekstremt fort.</strong> $13!$ er over 6 milliarder. Derfor lar du det stå som <code>13!</code> i Matric i stedet for å regne det ut. På kalkulatoren finner du det som en egen $x!$-knapp eller i sannsynlighetsmenyen (ofte kalt PROB eller PRB).</li>
+    </ul>
+  </div>
+
   <h3>Mønsteret: hvor kommer fakultetet fra?</h3>
-  <p>Se på tallene vi delte på: $1,\;1,\;2,\;6$. Det er $0!,\;1!,\;2!,\;3!$. Det er ingen tilfeldighet. Deriverer du $x^k$ $k$ ganger, får du $k\cdot(k-1)\cdots2\cdot1=k!$. Så for at leddet skal gi riktig $k$-te derivert, må vi dele på $k!$.</p>
+  <p>Se på tallene vi delte på: $1,\;1,\;2,\;6$. Det er $0!,\;1!,\;2!,\;3!$. Det er ingen tilfeldighet. Deriverer du $x^k$ $k$ ganger, får du $k\cdot(k-1)\cdots2\cdot1=k!$. Se for eksempel på $x^3$: $\;x^3\to3x^2\to3\cdot2\,x\to3\cdot2\cdot1=6=3!$. Så for at leddet skal gi riktig $k$-te derivert, må vi dele på $k!$.</p>
   <p>Hvert ledd ser derfor slik ut:</p>
   $$\frac{\text{den }k\text{-te deriverte i punktet}}{k!}\cdot x^k.$$
   <p>Hvis punktet ikke er $0$, men et annet tall $a$, bytter vi $x$ med $(x-a)$, altså avstanden fra punktet. Da får vi den generelle formelen:</p>
