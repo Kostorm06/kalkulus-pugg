@@ -217,19 +217,111 @@ section[id]{scroll-margin-top:60px}
     <h2>Taylorrekker og analytiske funksjoner</h2>
   </div>
 
-  <h3>Idéen: bytt ut en vanskelig funksjon med et polynom</h3>
-  <p>Polynomer er enkle: du kan regne ut verdien med bare pluss og gange, derivere og integrere dem uten problemer. Funksjoner som $\sin x$, $e^x$ og $\ln x$ er vanskeligere. Taylor sin idé er å finne det polynomet som ligner mest mulig på funksjonen <span class="hl">nær et bestemt punkt</span> $x = a$.</p>
-  <p>«Ligner mest mulig» betyr her: polynomet skal ha <em>samme verdi, samme stigning, samme krumning</em> og så videre som funksjonen i punktet $a$. Med andre ord skal alle deriverte opp til orden $n$ stemme:</p>
-  $$P_n(a)=f(a),\quad P_n'(a)=f'(a),\quad P_n''(a)=f''(a),\quad \dots,\quad P_n^{(n)}(a)=f^{(n)}(a).$$
-  <p>Det eneste polynomet av grad $n$ som klarer dette, er <strong>Taylorpolynomet</strong>:</p>
+  <h3>Start her: hva prøver vi å gjøre?</h3>
+  <p>Kalkulatoren din kan egentlig bare pluss, minus, gange og dele. Likevel gir den deg $e^{0.1}$ eller $\cos(0.5)$ på et øyeblikk. Hvordan? Den regner ut et <strong>polynom</strong> som ligner veldig på funksjonen. Et polynom er bare ledd som $1$, $x$, $x^2$, $x^3$ ganget med tall og lagt sammen, og det kan kalkulatoren regne ut.</p>
+  <p>Taylor handler om å finne det polynomet. Idéen er enkel: vi ser på funksjonen i <em>ett punkt</em> og bygger et polynom som oppfører seg likt der.</p>
+
+  <div class="box">
+    <h4>En måte å tenke på det: bilen</h4>
+    <p>Tenk deg at du skal gjette hvor en bil er om ett sekund, og du vet bare hvordan den har det <em>akkurat nå</em>.</p>
+    <ul>
+      <li>Vet du bare <strong>posisjonen</strong>, er beste gjetning: «den er der den er nå». Grei gjetning, men ikke god.</li>
+      <li>Vet du også <strong>farten</strong> (den deriverte), kan du si: «den har kjørt 20 meter framover». Mye bedre.</li>
+      <li>Vet du også om den <strong>akselererer</strong> (den andrederiverte), blir gjetningen enda bedre.</li>
+    </ul>
+    <p class="note">Taylor gjør nøyaktig det samme med en funksjon: verdien, stigningen, krumningen og så videre i ett punkt. Jo flere deriverte du tar med, jo bedre blir gjetningen nær punktet.</p>
+  </div>
+
+  <h3>Steg for steg: $e^x$ rundt $x=0$</h3>
+  <p>La oss bygge polynomet for $f(x)=e^x$ ett ledd om gangen, og teste det ved å regne ut $e^{0.1}$. Fasiten er $e^{0.1}=1.105171\ldots$</p>
+  <p>Vi trenger de deriverte. Det fine med $e^x$ er at den deriverte er seg selv: $f(x)=f'(x)=f''(x)=\dots=e^x$. I $x=0$ blir alle sammen $e^0=1$.</p>
+
+  <p><strong>Steg 0: bare verdien.</strong> Funksjonen er $f(0)=1$ i punktet. Den enkleste gjetningen er en vannrett linje:</p>
+  $$P_0(x)=1\qquad\Rightarrow\qquad e^{0.1}\approx 1.$$
+  <p>Feil med ca. $0.1$. Ikke så bra.</p>
+
+  <p><strong>Steg 1: legg til stigningen.</strong> Stigningen i punktet er $f'(0)=1$. En linje som går gjennom $(0,1)$ med stigning 1, er tangentlinja:</p>
+  $$P_1(x)=1+x\qquad\Rightarrow\qquad e^{0.1}\approx 1.1.$$
+  <p>Feil med ca. $0.005$. Mye bedre! Men en linje kan ikke bøye seg, og det gjør $e^x$.</p>
+
+  <p><strong>Steg 2: legg til krumningen.</strong> Vi legger til et $x^2$-ledd så polynomet bøyer seg like mye som $e^x$ i punktet. Det skal ha riktig andrederivert: $P_2''(0)=f''(0)=1$.</p>
+  <p>Deriverer vi $c\,x^2$ to ganger, får vi $2c$. Da må $2c=1$, altså $c=\frac12$:</p>
+  $$P_2(x)=1+x+\frac{x^2}{2}\qquad\Rightarrow\qquad e^{0.1}\approx 1+0.1+0.005=1.105.$$
+  <p>Feil med ca. $0.0002$.</p>
+
+  <p><strong>Steg 3: ett ledd til.</strong> Deriverer vi $c\,x^3$ tre ganger, får vi $3\cdot2\cdot1\cdot c=6c$. Det skal være lik $f'''(0)=1$, så $c=\frac16$:</p>
+  $$P_3(x)=1+x+\frac{x^2}{2}+\frac{x^3}{6}\qquad\Rightarrow\qquad e^{0.1}\approx 1.1051667.$$
+
+  <div class="tscroll">
+  <table class="num" style="margin:8px 0 4px">
+    <tr><th>Polynom</th><th>Svar for e<sup>0.1</sup></th><th>Feil</th></tr>
+    <tr><td>P₀ = 1</td><td>1</td><td>0.105</td></tr>
+    <tr><td>P₁ = 1 + x</td><td>1.1</td><td>0.0052</td></tr>
+    <tr><td>P₂ = 1 + x + x²/2</td><td>1.105</td><td>0.00017</td></tr>
+    <tr><td>P₃ = 1 + x + x²/2 + x³/6</td><td>1.1051667</td><td>0.0000042</td></tr>
+  </table>
+  </div>
+  <p class="note">Hvert nytt ledd gjør feilen omtrent 30–40 ganger mindre her.</p>
+
+  <h3>Mønsteret: hvor kommer fakultetet fra?</h3>
+  <p>Se på tallene vi delte på: $1,\;1,\;2,\;6$. Det er $0!,\;1!,\;2!,\;3!$. Det er ingen tilfeldighet. Deriverer du $x^k$ $k$ ganger, får du $k\cdot(k-1)\cdots2\cdot1=k!$. Så for at leddet skal gi riktig $k$-te derivert, må vi dele på $k!$.</p>
+  <p>Hvert ledd ser derfor slik ut:</p>
+  $$\frac{\text{den }k\text{-te deriverte i punktet}}{k!}\cdot x^k.$$
+  <p>Hvis punktet ikke er $0$, men et annet tall $a$, bytter vi $x$ med $(x-a)$, altså avstanden fra punktet. Da får vi den generelle formelen:</p>
 
   <div class="box key">
     <h4>Taylorpolynomet av grad $n$ om $x=a$</h4>
     $$P_n(x)=\sum_{k=0}^{n}\frac{f^{(k)}(a)}{k!}(x-a)^k = f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\dots+\frac{f^{(n)}(a)}{n!}(x-a)^n$$
+    <ul>
+      <li>$f^{(k)}(a)$: hva funksjonen gjør i punktet (verdi, stigning, krumning, …).</li>
+      <li>$k!$: rydder opp etter deriveringen, som over.</li>
+      <li>$(x-a)^k$: hvor langt unna punktet du er.</li>
+    </ul>
     <p class="note">Når $a=0$ kalles det et <strong>Maclaurinpolynom</strong>. Husk: $0!=1$, $1!=1$, $2!=2$, $3!=6$, $4!=24$, $5!=120$.</p>
   </div>
 
-  <p>Legg merke til at $P_1(x)=f(a)+f'(a)(x-a)$ er tangentlinja. Taylorpolynomet er altså bare en forlengelse av linearisering: flere ledd gir bedre tilnærming.</p>
+  <div class="box">
+    <h4>Oppskrift</h4>
+    <ol class="steps">
+      <li>Deriver $f$ så mange ganger som graden sier.</li>
+      <li>Sett inn punktet $a$ i hver av dem.</li>
+      <li>Del tall nummer $k$ på $k!$ og gang med $(x-a)^k$.</li>
+      <li>Legg sammen.</li>
+    </ol>
+  </div>
+
+  <div class="ex">
+    <div class="q">Lett eksempel — Finn $P_4(x)$ for $f(x)=\cos x$ rundt $x=0$.</div>
+    <p>Vi følger oppskriften og lager en tabell:</p>
+    <div class="tscroll">
+    <table class="num" style="margin:6px 0">
+      <tr><th>k</th><th>f⁽ᵏ⁾(x)</th><th>f⁽ᵏ⁾(0)</th><th>delt på k!</th></tr>
+      <tr><td>0</td><td>cos x</td><td>1</td><td>1</td></tr>
+      <tr><td>1</td><td>−sin x</td><td>0</td><td>0</td></tr>
+      <tr><td>2</td><td>−cos x</td><td>−1</td><td>−1/2</td></tr>
+      <tr><td>3</td><td>sin x</td><td>0</td><td>0</td></tr>
+      <tr><td>4</td><td>cos x</td><td>1</td><td>1/24</td></tr>
+    </table>
+    </div>
+    <p>Legg sammen, og husk at leddene med 0 forsvinner:</p>
+    $$P_4(x)=1-\frac{x^2}{2}+\frac{x^4}{24}.$$
+    <p>Test: $P_4(0.5)=1-0.125+0.0026=0.8776$. Kalkulatoren sier $\cos(0.5)=0.87758$. Nesten helt likt!</p>
+  </div>
+
+  <div class="ex">
+    <div class="q">Lett eksempel — Finn $P_2(x)$ for $f(x)=\sqrt{x}$ rundt $x=4$, og tilnærm $\sqrt{4.1}$.</div>
+    <p>Her er punktet $a=4$ (fordi vi vet at $\sqrt4=2$), så vi bruker $(x-4)$.</p>
+    <ol>
+      <li>Deriver: $f(x)=x^{1/2}$, $\;f'(x)=\frac12x^{-1/2}$, $\;f''(x)=-\frac14x^{-3/2}$.</li>
+      <li>Sett inn $x=4$: $f(4)=2$, $\;f'(4)=\frac12\cdot\frac12=\frac14$, $\;f''(4)=-\frac14\cdot\frac18=-\frac1{32}$.</li>
+      <li>Del på $k!$: $\;2,\;\;\frac14,\;\;-\frac1{32}\cdot\frac12=-\frac1{64}$.</li>
+      <li>$P_2(x)=2+\frac14(x-4)-\frac1{64}(x-4)^2$.</li>
+      <li>Med $x=4.1$ er $x-4=0.1$: $\;P_2(4.1)=2+0.025-0.000156=2.024844$. Fasit: $\sqrt{4.1}=2.024846$.</li>
+    </ol>
+  </div>
+
+  <p>Nå som du har idéen, kan du leke med den i labben under. Velg en funksjon og øk graden $n$: den blå kurven legger seg tettere og tettere inntil den svarte, i et stadig større område rundt punktet.</p>
+
 
   <div class="lab" id="lab-taylor">
     <div class="lab-head">
@@ -263,7 +355,7 @@ section[id]{scroll-margin-top:60px}
   <p>Legg merke til at restleddet ser ut som «det neste leddet» i polynomet, bare med den deriverte regnet ut i et ukjent punkt $s$ i stedet for i $a$.</p>
 
   <div class="ex">
-    <div class="q">Eksempel 1.1 — Tilnærm $e^{0.1}$ med $P_2$ og finn en feilgrense.</div>
+    <div class="q">Eksempel 1.1 — Over fant vi $P_2(0.1)=1.105$ for $e^{0.1}$. Finn en feilgrense uten å vite fasiten.</div>
     <ol>
       <li>For $f(x)=e^x$ er alle deriverte $e^x$, så $f^{(k)}(0)=1$. Da er $P_2(x)=1+x+\dfrac{x^2}{2}$.</li>
       <li>$P_2(0.1)=1+0.1+0.005=1.105$.</li>
