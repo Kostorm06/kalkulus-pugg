@@ -389,7 +389,13 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
 
   <div class="ex">
     <div class="q">Lett eksempel — Finn $P_2(x)$ for $f(x)=\sqrt{x}$ rundt $x=4$, og tilnærm $\sqrt{4.1}$.</div>
-    <p>Her er punktet $a=4$ (fordi vi vet at $\sqrt4=2$), så vi bruker $(x-4)$.</p>
+    <div class="box warn">
+      <h4>Hvorfor rundt 4 og ikke rundt 0?</h4>
+      <p><strong>1. Vi trenger et punkt der vi vet svaret nøyaktig, og som ligger nær tallet vi vil finne.</strong> Vi vil ha $\sqrt{4.1}$. Det nærmeste tallet der vi vet roten uten kalkulator er $4$, siden $\sqrt4=2$. Så vi bygger polynomet rundt $a=4$.</p>
+      <p class="note">Rundt 0 går det ikke. Den deriverte $\frac{1}{2\sqrt x}$ blir $\frac10$ i $x=0$, så vi får ikke regnet ut leddene. Og 0 ligger dessuten langt unna 4.1.</p>
+      <p><strong>2. $(x-4)$ betyr «hvor langt unna 4 er vi».</strong> I eksemplene rundt 0 skrev vi bare $x$. Det er egentlig $(x-0)$, altså avstanden fra 0. Når senteret er 4, blir avstanden $(x-4)$.</p>
+      <p class="note">Med $x=4.1$ er $(x-4)=0.1$. Det er et lite tall, så $0.1^2=0.01$ og $0.1^3=0.001$ blir fort bittesmå. Derfor holder det med få ledd.</p>
+    </div>
     <ol>
       <li>Deriver: $f(x)=x^{1/2}$, $\;f'(x)=\frac12x^{-1/2}$, $\;f''(x)=-\frac14x^{-3/2}$.</li>
       <li>Sett inn $x=4$: $f(4)=2$, $\;f'(4)=\frac12\cdot\frac12=\frac14$, $\;f''(4)=-\frac14\cdot\frac18=-\frac1{32}$.</li>
