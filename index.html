@@ -198,7 +198,7 @@ footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--line);font-si
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
-section[id],h3[id]{scroll-margin-top:70px}
+section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
 </style>
 
 </head>
@@ -268,7 +268,7 @@ section[id],h3[id]{scroll-margin-top:70px}
     <span class="num">KAPITTEL 1 · Adams &amp; Essex 4.10 og 9.5–9.7</span>
     <h2>Taylorrekker og analytiske funksjoner</h2>
   </div>
-  <div class="jump">Hopp til: <a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
+  <div class="jump">Hopp til: <a href="#taylor-formel">Taylorpolynomet</a><a href="#lab-taylor">Grafen</a><a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
 
   <h3>Start her: hva prøver vi å gjøre?</h3>
   <p>Kalkulatoren din kan egentlig bare pluss, minus, gange og dele. Likevel gir den deg $e^{0.1}$ eller $\cos(0.5)$ på et øyeblikk. Hvordan? Den regner ut et <strong>polynom</strong> som ligner veldig på funksjonen. Et polynom er bare ledd som $1$, $x$, $x^2$, $x^3$ ganget med tall og lagt sammen, og det kan kalkulatoren regne ut.</p>
@@ -341,7 +341,8 @@ section[id],h3[id]{scroll-margin-top:70px}
     </ul>
   </div>
 
-  <h3>Mønsteret: hvor kommer fakultetet fra?</h3>
+  <h3 id="taylor-formel">Taylorpolynomet: formelen og oppskriften</h3>
+  <p><strong>Hvor kommer fakultetet fra?</strong></p>
   <p>Se på tallene vi delte på: $1,\;1,\;2,\;6$. Det er $0!,\;1!,\;2!,\;3!$. Det er ingen tilfeldighet. Deriverer du $x^k$ $k$ ganger, får du $k\cdot(k-1)\cdots2\cdot1=k!$. Se for eksempel på $x^3$: $\;x^3\to3x^2\to3\cdot2\,x\to3\cdot2\cdot1=6=3!$. Så for at leddet skal gi riktig $k$-te derivert, må vi dele på $k!$.</p>
   <p>Hvert ledd ser derfor slik ut:</p>
   $$\frac{\text{den }k\text{-te deriverte i punktet}}{k!}\cdot x^k.$$
@@ -402,6 +403,7 @@ section[id],h3[id]{scroll-margin-top:70px}
 
 
   <div class="lab" id="lab-taylor">
+    
     <div class="lab-head">
       <h4>Lab: se polynomet krype inntil funksjonen</h4>
       <div class="legend"><span><i style="background:var(--ink)"></i>f(x)</span><span><i style="background:var(--accent)"></i>P<sub>n</sub>(x)</span></div>
