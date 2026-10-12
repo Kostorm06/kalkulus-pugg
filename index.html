@@ -133,6 +133,9 @@ details.dtab{padding:0 18px 10px}
 details.dtab summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;color:var(--accent);padding:4px 0}
 .subst{padding:0 18px 8px;overflow-x:auto}
 .subst .label{margin-bottom:-4px}
+h4.sub-h{font-family:var(--f-display);font-size:1.05rem;margin:28px 0 4px}
+.verdict{font-family:var(--f-mono);font-size:.85rem;margin:6px 0 0}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--neg)}
 .formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
 .legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
@@ -268,7 +271,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     <span class="num">KAPITTEL 1 · Adams &amp; Essex 4.10 og 9.5–9.7</span>
     <h2>Taylorrekker og analytiske funksjoner</h2>
   </div>
-  <div class="jump">Hopp til: <a href="#taylor-formel">Taylorpolynomet</a><a href="#lab-taylor">Grafen</a><a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
+  <div class="jump">Hopp til: <a href="#taylor-formel">Taylorpolynomet</a><a href="#lab-taylor">Grafen</a><a href="#taylor-rekker">Taylorrekker og analytiske funksjoner</a><a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
 
   <h3>Start her: hva prøver vi å gjøre?</h3>
   <p>Kalkulatoren din kan egentlig bare pluss, minus, gange og dele. Likevel gir den deg $e^{0.1}$ eller $\cos(0.5)$ på et øyeblikk. Hvordan? Den regner ut et <strong>polynom</strong> som ligner veldig på funksjonen. Et polynom er bare ledd som $1$, $x$, $x^2$, $x^3$ ganget med tall og lagt sammen, og det kan kalkulatoren regne ut.</p>
@@ -549,17 +552,171 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     </ol>
   </div>
 
-  <h3>Litt teori (mindre viktig for delprøven)</h3>
-  <p><strong>Konvergensradius.</strong> Rekkene for $e^x$, $\sin x$ og $\cos x$ virker for <em>alle</em> $x$: tar du med nok ledd, kommer du så nær du vil. Rekkene for $\frac1{1-x}$ og $\ln(1+x)$ virker bare nær 0, for $-1<x<1$. Utenfor blir leddene bare større og større. Avstanden fra senteret der rekka virker, kalles <strong>konvergensradien</strong> $R$. Her er $R=1$. Prøv $\ln(1+x)$ i labben med $x$ over 1!</p>
+  <h3 id="taylor-rekker">Taylorrekker og analytiske funksjoner</h3>
+  <p>Til nå har vi stoppet polynomet etter $n$ ledd. Hva skjer hvis vi <strong>aldri stopper</strong>, men tar med uendelig mange ledd? Da får vi en <strong>Taylorrekke</strong>:</p>
+  $$f(a)+f'(a)(x-a)+\frac{f''(a)}{2!}(x-a)^2+\frac{f'''(a)}{3!}(x-a)^3+\dots=\sum_{k=0}^{\infty}\frac{f^{(k)}(a)}{k!}(x-a)^k.$$
+  <p>Det eneste nye er $\infty$ øverst på summetegnet. Leddene lages på nøyaktig samme måte som før.</p>
+
+  <h4 class="sub-h">Hvordan kan en uendelig sum bli et vanlig tall?</h4>
+  <p>Det høres rart ut, men tenk på dette: du går halve veien til døra, så halvparten av det som er igjen, så halvparten av det igjen, og så videre. Du tar uendelig mange skritt, men du kommer aldri lenger enn til døra:</p>
+  $$1+\frac12+\frac14+\frac18+\frac1{16}+\dots=2.$$
+  <div class="tscroll">
+  <table class="num" style="margin:6px 0">
+    <tr><th>Antall ledd</th><th>Sum så langt</th></tr>
+    <tr><td>1</td><td>1</td></tr>
+    <tr><td>2</td><td>1.5</td></tr>
+    <tr><td>3</td><td>1.75</td></tr>
+    <tr><td>5</td><td>1.9375</td></tr>
+    <tr><td>10</td><td>1.998</td></tr>
+    <tr><td>20</td><td>1.999998</td></tr>
+  </table>
+  </div>
+  <p>Summen så langt kalles en <strong>delsum</strong>. Hvis delsummene nærmer seg ett bestemt tall, sier vi at rekka <strong>konvergerer</strong>, og det tallet er summen av rekka. Hvis delsummene bare vokser, eller hopper fram og tilbake uten å roe seg, <strong>divergerer</strong> rekka.</p>
+  <div class="box key">
+    <h4>Det viktigste å se</h4>
+    <p>Delsummene av en Taylorrekke er akkurat Taylorpolynomene: $P_0,\;P_1,\;P_2,\;P_3,\dots$ Spørsmålet «konvergerer Taylorrekka?» betyr derfor bare: <em>kommer $P_n(x)$ nærmere og nærmere et tall når $n$ øker?</em></p>
+  </div>
+
+  <h4 class="sub-h">To spørsmål du alltid må stille</h4>
+  <ol class="steps">
+    <li><strong>Konvergerer rekka?</strong> Blir delsummene et tall i det hele tatt for denne $x$-en?</li>
+    <li><strong>Blir den lik funksjonen?</strong> Hvis den konvergerer, er tallet faktisk lik $f(x)$?</li>
+  </ol>
+  <p>For nesten alle funksjoner du møter, er svaret på spørsmål 2 «ja» så lenge svaret på spørsmål 1 er «ja». Men spørsmål 1 er ofte «nei» når $x$ ligger for langt unna senteret.</p>
+
+  <h4 class="sub-h">Eksempel: rekka som bare virker nær senteret</h4>
+  <p>Ta $\dfrac{1}{1-x}=1+x+x^2+x^3+\dots$ og prøv to verdier:</p>
+  <div class="tscroll">
+  <table class="num" style="margin:6px 0">
+    <tr><th></th><th>x = 0.5</th><th>x = 2</th></tr>
+    <tr><td>Rekka</td><td>1 + 0.5 + 0.25 + 0.125 + …</td><td>1 + 2 + 4 + 8 + …</td></tr>
+    <tr><td>Delsum, 4 ledd</td><td>1.875</td><td>15</td></tr>
+    <tr><td>Delsum, 10 ledd</td><td>1.998</td><td>1023</td></tr>
+    <tr><td>Fasit 1/(1−x)</td><td>2</td><td>−1</td></tr>
+    <tr><td>Konklusjon</td><td>konvergerer til riktig svar ✓</td><td>divergerer ✗</td></tr>
+  </table>
+  </div>
+  <p>For $x=0.5$ blir leddene mindre og mindre, og summen roer seg. For $x=2$ blir leddene <em>større</em> for hvert steg, og summen eksploderer, selv om funksjonen selv er helt grei ($-1$). Rekka virker altså bare for $x$ mellom $-1$ og $1$.</p>
+
+  <div class="lab" id="lab-delsum">
+    <div class="lab-head"><h4>Lab: se delsummene selv</h4></div>
+    <div class="ctrls" style="border-top:0">
+      <div class="row seg" id="ds-fn" role="group" aria-label="Velg rekke">
+        <button type="button" data-f="geo" aria-pressed="true">1/(1−x)</button>
+        <button type="button" data-f="exp" aria-pressed="false">eˣ</button>
+        <button type="button" data-f="ln" aria-pressed="false">ln(1+x)</button>
+        <button type="button" data-f="sin" aria-pressed="false">sin x</button>
+      </div>
+      <div class="row xin">
+        <label for="ds-x">x =</label>
+        <input id="ds-x" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="0.5">
+        <button type="button" class="btn" id="ds-go">Regn ut</button>
+        <span class="note" id="ds-msg"></span>
+      </div>
+      <p class="note">Prøv x = 0.5, så x = 0.9, så x = 1.1 for 1/(1−x) og ln(1+x). Prøv x = 5 for eˣ og sin x.</p>
+      <div class="tscroll"><table class="num" id="ds-table"></table></div>
+      <p class="verdict" id="ds-verdict"></p>
+    </div>
+  </div>
+
+  <h4 class="sub-h">Konvergensradius: hvor langt ut virker rekka?</h4>
+  <p>En Taylorrekke rundt $a$ virker alltid på et <strong>intervall med $a$ i midten</strong>. Avstanden fra midten til kanten kalles <strong>konvergensradien</strong> $R$:</p>
+  <ul>
+    <li>For $|x-a|<R$ (nær nok senteret): rekka konvergerer.</li>
+    <li>For $|x-a|>R$ (for langt unna): rekka divergerer.</li>
+    <li>Akkurat på kanten, $x=a\pm R$: må sjekkes for seg.</li>
+  </ul>
+  <div class="tscroll">
+  <table class="series">
+    <tr><th>Rekke (senter 0)</th><th>R</th><th>Virker for</th><th>Hvorfor</th></tr>
+    <tr><td>$e^x$, $\sin x$, $\cos x$</td><td>$\infty$</td><td>alle $x$</td><td>fakultetet i nevneren vinner alltid</td></tr>
+    <tr><td>$\dfrac{1}{1-x}$</td><td>1</td><td>$-1<x<1$</td><td>funksjonen sprenges i $x=1$</td></tr>
+    <tr><td>$\ln(1+x)$</td><td>1</td><td>$-1<x\le1$</td><td>funksjonen sprenges i $x=-1$</td></tr>
+  </table>
+  </div>
+  <p class="note">Tommelfingerregel: rekka virker fram til nærmeste punkt der funksjonen «går i stykker» (deler på null, ln av null og lignende). Regelen er ikke alltid nok alene, så bruk forholdstesten når du skal være sikker.</p>
+
   <div class="ex">
-    <div class="q">Slik finner du $R$ (forholdstesten): $\displaystyle\sum_{k=1}^\infty \frac{x^k}{k\,3^k}$</div>
+    <div class="q">Slik finner du $R$ med forholdstesten</div>
+    <p>Oppskrift (står på formelarket som «ratiotest»):</p>
     <ol>
-      <li>Del ledd nummer $k+1$ på ledd nummer $k$: $\;\dfrac{x^{k+1}}{(k+1)3^{k+1}}\cdot\dfrac{k\,3^k}{x^k}=\dfrac{k}{k+1}\cdot\dfrac{x}{3}$.</li>
-      <li>Når $k$ blir stor, er $\frac{k}{k+1}\approx1$. Det står igjen $\frac{|x|}{3}$.</li>
-      <li>Rekka virker når dette er under 1: $|x|<3$. Så $R=3$.</li>
+      <li>Skriv ledd nummer $k+1$ delt på ledd nummer $k$, og ta absoluttverdi.</li>
+      <li>Forkort, og se hva det blir når $k\to\infty$. Du får noe ganger $|x-a|$.</li>
+      <li>Rekka konvergerer når dette er mindre enn 1. Løs for $|x-a|$.</li>
+    </ol>
+    <p><em>Eksempel 1:</em> $\displaystyle\sum_{k=1}^\infty \frac{x^k}{k\,3^k}$.</p>
+    <ol>
+      <li>$\left|\dfrac{x^{k+1}}{(k+1)3^{k+1}}\cdot\dfrac{k\,3^k}{x^k}\right|=\dfrac{k}{k+1}\cdot\dfrac{|x|}{3}$.</li>
+      <li>Når $k$ blir stor, er $\frac{k}{k+1}\to1$. Det står igjen $\frac{|x|}{3}$.</li>
+      <li>$\frac{|x|}{3}<1$ gir $|x|<3$. Så $R=3$.</li>
+      <li>Kantene: $x=3$ gir $\sum\frac1k$, som divergerer. $x=-3$ gir $\sum\frac{(-1)^k}{k}$, som konvergerer (alternerende). Intervallet er $[-3,\,3)$.</li>
+    </ol>
+    <p><em>Eksempel 2:</em> $e^x=\displaystyle\sum\frac{x^k}{k!}$.</p>
+    <ol>
+      <li>$\left|\dfrac{x^{k+1}}{(k+1)!}\cdot\dfrac{k!}{x^k}\right|=\dfrac{|x|}{k+1}$.</li>
+      <li>Når $k\to\infty$, går dette mot $0$ uansett hva $x$ er.</li>
+      <li>$0<1$ alltid, så rekka konvergerer for alle $x$: $R=\infty$.</li>
     </ol>
   </div>
-  <p><strong>Analytisk funksjon.</strong> En funksjon er analytisk hvis Taylorrekka faktisk blir <em>lik</em> funksjonen nær punktet. Nesten alt du møter er analytisk. Et kjent unntak er $f(x)=e^{-1/x^2}$ (med $f(0)=0$): alle deriverte i 0 er 0, så rekka blir bare 0, men funksjonen er ikke 0. Den er derfor ikke analytisk i 0.</p>
+
+  <h4 class="sub-h">Analytiske funksjoner</h4>
+  <div class="box key">
+    <h4>Definisjon</h4>
+    <p>En funksjon $f$ er <strong>analytisk i punktet $a$</strong> hvis Taylorrekka rundt $a$ konvergerer <em>og er lik $f(x)$</em> for alle $x$ i et intervall rundt $a$.</p>
+    <p class="note">Med andre ord: funksjonen kan skrives som et «uendelig langt polynom» nær $a$.</p>
+  </div>
+  <p><strong>Hvordan sjekker man det?</strong> Rekka er lik $f(x)$ nøyaktig når feilen $R_n(x)=f(x)-P_n(x)$ går mot 0 når $n\to\infty$. Feilen kjenner du fra Lagrange (oppgavetype 3).</p>
+
+  <div class="ex">
+    <div class="q">Eksempel — Vis at $e^x$ er lik rekka si for alle $x$</div>
+    <ol>
+      <li>Lagrange: $R_n(x)=\dfrac{e^s}{(n+1)!}x^{n+1}$, der $s$ ligger mellom 0 og $x$.</li>
+      <li>$e^s$ er aldri større enn $e^{|x|}$. Det er et fast tall når $x$ er valgt.</li>
+      <li>$\dfrac{|x|^{n+1}}{(n+1)!}\to0$, fordi fakultetet til slutt vokser mye raskere enn potensen. For eksempel med $x=10$: $\frac{10^{20}}{20!}\approx41$, men $\frac{10^{30}}{30!}\approx0.004$ og $\frac{10^{40}}{40!}\approx1.2\cdot10^{-8}$. Det kan ta litt tid, men fakultetet vinner alltid.</li>
+      <li>Altså går $R_n(x)\to0$, og $e^x$ er lik rekka si overalt. $e^x$ er analytisk i alle punkter.</li>
+    </ol>
+  </div>
+
+  <p><strong>Analytiske funksjoner du kjenner:</strong> polynomer, $e^x$, $\sin x$, $\cos x$ (overalt), $\ln x$ (for $x>0$), $\sqrt x$ (for $x>0$), og brøker som $\frac1{1-x}$ (der nevneren ikke er null). Summer, produkter og sammensetninger av analytiske funksjoner er også analytiske.</p>
+
+  <div class="box warn">
+    <h4>Moteksempel: glatt, men ikke analytisk</h4>
+    <p>La $f(x)=e^{-1/x^2}$ for $x\neq0$, og $f(0)=0$. Grafen er helt flat nær 0, så flat at <em>alle</em> deriverte i 0 er 0.</p>
+    <p>Da blir Taylorrekka $0+0\cdot x+0\cdot x^2+\dots=0$. Den konvergerer fint, men til $0$, mens $f(x)>0$ for alle $x\ne0$. Svaret på spørsmål 1 er «ja», men svaret på spørsmål 2 er «nei». Funksjonen er derfor <strong>ikke analytisk</strong> i 0.</p>
+  </div>
+
+  <h4 class="sub-h">Hvorfor er dette nyttig? Du kan regne med rekker som med polynomer</h4>
+  <p>Innenfor konvergensradien oppfører en Taylorrekke seg som et vanlig polynom. Det betyr at du kan:</p>
+  <div class="ex">
+    <div class="q">1. Derivere ledd for ledd</div>
+    <p>$\sin x = x-\frac{x^3}{3!}+\frac{x^5}{5!}-\dots$ Deriver hvert ledd:</p>
+    $$1-\frac{3x^2}{3!}+\frac{5x^4}{5!}-\dots=1-\frac{x^2}{2!}+\frac{x^4}{4!}-\dots=\cos x\;\checkmark$$
+    <p>Og $\frac{d}{dx}\frac1{1-x}=\frac1{(1-x)^2}$, så $\frac{1}{(1-x)^2}=1+2x+3x^2+4x^3+\dots$</p>
+  </div>
+  <div class="ex">
+    <div class="q">2. Integrere ledd for ledd</div>
+    <p>$\frac1{1+t^2}=1-t^2+t^4-\dots$ (bytt $x$ med $-t^2$ i den geometriske rekka). Integrer fra 0 til $x$:</p>
+    $$\arctan x=x-\frac{x^3}{3}+\frac{x^5}{5}-\frac{x^7}{7}+\dots$$
+    <p class="note">Slik kan du også regne ut integraler som ikke har noen antiderivert, for eksempel $\int_0^1e^{-x^2}dx$ (se oppgave i kapittel 2).</p>
+  </div>
+  <p>Konvergensradien er den samme etter derivering og integrering. Bare kantpunktene kan endre seg.</p>
+
+  <div class="box key">
+    <h4>Derfor er «bytt ut $x$»-trikset lov</h4>
+    <p>En funksjon kan bare ha <strong>én</strong> potensrekke rundt et punkt. Klarer du å skrive $f(x)=c_0+c_1(x-a)+c_2(x-a)^2+\dots$ på <em>en hvilken som helst måte</em>, er det automatisk Taylorrekka, og $c_k=\frac{f^{(k)}(a)}{k!}$.</p>
+    <p class="note">Bonus: dette gir en snarvei til høye deriverte. Fra $e^{x^2}=1+x^2+\frac{x^4}{2!}+\dots$ ser du at $\frac{f^{(4)}(0)}{4!}=\frac1{2}$, så $f^{(4)}(0)=12$, uten å derivere fire ganger.</p>
+  </div>
+
+  <div class="box">
+    <h4>Kort oppsummert</h4>
+    <ul>
+      <li><strong>Taylorrekke</strong> = Taylorpolynom som aldri stopper. Delsummene er $P_0, P_1, P_2,\dots$</li>
+      <li><strong>Konvergerer</strong> = delsummene nærmer seg et tall.</li>
+      <li><strong>Konvergensradius $R$</strong> = hvor langt fra senteret rekka virker. Finn den med forholdstesten.</li>
+      <li><strong>Analytisk</strong> = rekka er lik funksjonen nær punktet. Sjekkes ved at feilen $R_n\to0$.</li>
+      <li>Innenfor $R$ kan du derivere og integrere ledd for ledd.</li>
+    </ul>
+  </div>
 
   <div class="box key">
     <h4>Huskeliste kapittel 1</h4>
@@ -569,6 +726,8 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
       <li>Ledd av høy grad: løs en enkel likning for hvilken potens du trenger.</li>
       <li>Feilleddet = «neste ledd» med $s$ i stedet for $a$.</li>
       <li>Grenseverdier: sett inn rekka og forkort.</li>
+      <li>Taylorrekke = polynomet uten stopp. Konvergensradius med forholdstesten.</li>
+      <li>Analytisk = rekka er lik funksjonen (feilen går mot 0). Moteksempel: $e^{-1/x^2}$.</li>
     </ul>
   </div>
 
@@ -870,6 +1029,26 @@ const PROBLEMS = [
    q:'La $f(x)=e^{-1/x^2}$ for $x\\ne0$ og $f(0)=0$. Alle deriverte i 0 er 0. Er $f$ analytisk i 0? Forklar.',
    h:'Hva blir Maclaurinrekka når alle koeffisientene er 0? Er den lik $f(x)$ for $x\\ne0$?',
    s:'Maclaurinrekka er $0+0\\cdot x+0\\cdot x^2+\\dots=0$ for alle $x$. Men $f(x)=e^{-1/x^2}>0$ for $x\\neq0$. Rekka konvergerer altså, men ikke til $f$ på noe intervall rundt 0. Derfor er $f$ <strong>ikke</strong> analytisk i 0, selv om den kan deriveres uendelig mange ganger.'},
+  {id:'t7', t:'taylor', lvl:1,
+   q:'Finn Maclaurinrekka til $\\dfrac{1}{1+x}$ og si for hvilke $x$ den konvergerer.',
+   h:'Start med $\\frac{1}{1-u}=1+u+u^2+\\dots$ for $|u|<1$, og velg $u$ slik at $1-u=1+x$.',
+   s:'Med $u=-x$: $$\\frac1{1+x}=1-x+x^2-x^3+\\dots=\\sum_{k=0}^\\infty(-1)^kx^k.$$ Den konvergerer når $|u|=|-x|<1$, altså for $-1<x<1$. Konvergensradien er $R=1$.'},
+  {id:'t8', t:'taylor', lvl:1,
+   q:'Finn konvergensradien til $\\displaystyle\\sum_{k=0}^\\infty \\frac{k\\,x^k}{2^k}$.',
+   h:'Forholdstesten: del ledd $k+1$ på ledd $k$. Hva blir $\\frac{k+1}{k}$ når $k$ er stor?',
+   s:'$$\\left|\\frac{(k+1)x^{k+1}}{2^{k+1}}\\cdot\\frac{2^k}{k\\,x^k}\\right|=\\frac{k+1}{k}\\cdot\\frac{|x|}{2}\\to\\frac{|x|}{2}.$$ Rekka konvergerer når $\\frac{|x|}{2}<1$, altså $|x|<2$. Så $R=2$.'},
+  {id:'t9', t:'taylor', lvl:2,
+   q:'Deriver rekka for $\\dfrac{1}{1-x}$ ledd for ledd, og finn rekka til $\\dfrac{1}{(1-x)^2}$. Hva er konvergensradien?',
+   h:'$\\frac{d}{dx}\\frac{1}{1-x}=\\frac{1}{(1-x)^2}$. Deriver $1+x+x^2+x^3+\\dots$ ledd for ledd.',
+   s:'$$\\frac{1}{(1-x)^2}=\\frac{d}{dx}\\bigl(1+x+x^2+x^3+\\dots\\bigr)=1+2x+3x^2+4x^3+\\dots=\\sum_{k=0}^\\infty(k+1)x^k.$$ Derivering endrer ikke konvergensradien, så $R=1$.'},
+  {id:'t10', t:'taylor', lvl:2,
+   q:'Bruk rekka for $e^x$ til å finne summen $\\displaystyle\\sum_{k=0}^\\infty\\frac{3^k}{k!}=1+3+\\frac{9}{2!}+\\frac{27}{3!}+\\dots$',
+   h:'Sammenlign med $e^x=\\sum\\frac{x^k}{k!}$. Hvilken $x$ passer?',
+   s:'Det er rekka for $e^x$ med $x=3$. Siden $e^x$ er lik rekka si for alle $x$, er summen $e^3\\approx20.09$.'},
+  {id:'t11', t:'taylor', lvl:3,
+   q:'Vis at Maclaurinrekka til $\\cos x$ er lik $\\cos x$ for alle $x$ (altså at $\\cos$ er analytisk).',
+   h:'Bruk Lagranges restledd. Hvor stor kan en derivert av $\\cos$ være?',
+   s:'Alle deriverte av $\\cos x$ er $\\pm\\sin x$ eller $\\pm\\cos x$, så $|f^{(n+1)}(s)|\\le1$. Da er $$|R_n(x)|=\\left|\\frac{f^{(n+1)}(s)}{(n+1)!}x^{n+1}\\right|\\le\\frac{|x|^{n+1}}{(n+1)!}.$$ Fakultetet vokser raskere enn potensen, så dette går mot 0 for alle $x$. Altså er rekka lik $\\cos x$ overalt.'},
   {id:'i1', t:'int', lvl:1,
    q:'Bruk trapesmetoden med $n=4$ til å tilnærme $\\displaystyle\\int_0^1\\frac{dx}{1+x^2}$.',
    h:'$h=0.25$. Regn ut $f$ i $0,\\,0.25,\\,0.5,\\,0.75,\\,1$. Endepunktene får vekt $\\tfrac12$.',
@@ -1716,6 +1895,41 @@ XGENS.forEach((_,i) => xrender(i));
 document.querySelectorAll('[data-xnew]').forEach(b => b.addEventListener('click', () => {
   XGENS.forEach((X,i) => { if (X.box === 'xq-'+b.dataset.xnew) xrender(i); });
 }));
+
+
+/* ---------------- Delsum-lab ---------------- */
+let dsFn = 'geo';
+function dsRun(){
+  const msg = document.getElementById('ds-msg'), tab = document.getElementById('ds-table'), ver = document.getElementById('ds-verdict');
+  let x;
+  try { x = xparse(document.getElementById('ds-x').value)({}); } catch(e){ msg.textContent = e.message; return; }
+  if (!isFinite(x)){ msg.textContent = 'Skriv inn et tall.'; return; }
+  msg.textContent = '';
+  const F = TF[dsFn], fx = F.f(x);
+  const N = 15, show = [0,1,2,3,4,5,6,8,10,12,15];
+  let S = 0, p = 1, rows = '<tr><th>ledd nr. k</th><th>leddet</th><th>delsum (= P<sub>k</sub>)</th></tr>', sums = [];
+  const num = v => !isFinite(v) ? '—' : (Math.abs(v) >= 1e7 || (Math.abs(v) < 1e-4 && v !== 0) ? v.toExponential(3) : (+v.toFixed(6)).toString()).replace('-','−');
+  for (let k=0;k<=N;k++){ const t = F.c(k)*p; S += t; p *= x; sums.push(S); if (show.includes(k)) rows += `<tr><td>${k}</td><td>${num(t)}</td><td>${num(S)}</td></tr>`; }
+  rows += `<tr class="sel"><td>fasit f(x)</td><td></td><td>${isFinite(fx) ? num(fx) : 'ikke definert'}</td></tr>`;
+  tab.innerHTML = rows;
+  const last = sums[N], prev = sums[N-1];
+  const R = {geo:1, ln:1, exp:Infinity, sin:Infinity}[dsFn];
+  const within = Math.abs(x) < R || (dsFn === 'ln' && x === 1);
+  if (within){
+    const err = Math.abs(last - fx);
+    ver.className = 'verdict ok';
+    ver.textContent = `|x| = ${num(Math.abs(x))} er innenfor konvergensradien${R===Infinity?' (R = ∞)':' R = 1'}. Delsummene nærmer seg f(x). Etter 15 ledd er feilen ${num(err)}.` + (err > 1e-3 ? ' Det går tregt her fordi x er nær kanten, men det går mot riktig svar.' : '');
+  } else {
+    ver.className = 'verdict bad';
+    ver.textContent = `|x| = ${num(Math.abs(x))} er utenfor konvergensradien R = 1. Leddene blir større og større, og delsummene ${Math.sign(last)!==Math.sign(prev)?'hopper fram og tilbake':'vokser'} uten å nærme seg f(x). Rekka divergerer.`;
+  }
+}
+document.querySelectorAll('#ds-fn button').forEach(b => b.addEventListener('click', () => {
+  dsFn = b.dataset.f; document.querySelectorAll('#ds-fn button').forEach(x => x.setAttribute('aria-pressed', x===b)); dsRun();
+}));
+document.getElementById('ds-go').addEventListener('click', dsRun);
+document.getElementById('ds-x').addEventListener('keydown', e => { if (e.key==='Enter') dsRun(); });
+dsRun();
 
 /* ---------------- init & redraw ---------------- */
 function drawAll(){ drawTaylor(); drawInt(); drawLn(); }
