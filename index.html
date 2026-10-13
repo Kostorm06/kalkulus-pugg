@@ -271,7 +271,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     <span class="num">KAPITTEL 1 · Adams &amp; Essex 4.10 og 9.5–9.7</span>
     <h2>Taylorrekker og analytiske funksjoner</h2>
   </div>
-  <div class="jump">Hopp til: <a href="#taylor-formel">Taylorpolynomet</a><a href="#lab-taylor">Grafen</a><a href="#taylor-rekker">Taylorrekker og analytiske funksjoner</a><a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
+  <div class="jump">Hopp til: <a href="#taylor-formel">Taylorpolynomet</a><a href="#lab-taylor">Grafen</a><a href="#taylor-rekker">Taylorrekker og analytiske funksjoner</a><a href="#konv-div">Konvergerer eller divergerer?</a><a href="#taylor-bruk">Slik løser du oppgavene</a><a href="#taylor-ov">Til oppgavene</a></div>
 
   <h3>Start her: hva prøver vi å gjøre?</h3>
   <p>Kalkulatoren din kan egentlig bare pluss, minus, gange og dele. Likevel gir den deg $e^{0.1}$ eller $\cos(0.5)$ på et øyeblikk. Hvordan? Den regner ut et <strong>polynom</strong> som ligner veldig på funksjonen. Et polynom er bare ledd som $1$, $x$, $x^2$, $x^3$ ganget med tall og lagt sammen, og det kan kalkulatoren regne ut.</p>
@@ -659,6 +659,75 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     </ol>
   </div>
 
+  <h4 class="sub-h" id="konv-div">Konvergerer eller divergerer? Testene du trenger</h4>
+  <p>Forholdstesten gir deg $R$, men den sier <strong>ingenting</strong> når grensen blir nøyaktig 1. Det skjer alltid på kantene $x=a\pm R$. Der setter du inn $x$-verdien, får en vanlig tallrekke, og bruker en av testene under.</p>
+  <div class="tscroll">
+  <table class="series">
+    <tr><th>Test</th><th>Konvergerer</th><th>Divergerer</th><th>Typisk bruk</th></tr>
+    <tr><td><strong>Leddtesten</strong> (divergenstest)</td><td>sier ingenting</td><td>hvis leddene <em>ikke</em> går mot 0</td><td>første sjekk, alltid</td></tr>
+    <tr><td><strong>Geometrisk rekke</strong> $\sum r^k$</td><td>$|r|&lt;1$, summen er $\frac{1}{1-r}$</td><td>$|r|\ge1$</td><td>$\frac1{1-x}$ og varianter</td></tr>
+    <tr><td><strong>$p$-rekke</strong> $\sum\frac{1}{k^p}$</td><td>$p&gt;1$</td><td>$p\le1$ (f.eks. $\sum\frac1k$)</td><td>kanten etter at $(\pm1)^k$ er borte</td></tr>
+    <tr><td><strong>Alternerende rekke</strong></td><td>fortegnet veksler, $|b_k|$ avtar og går mot 0</td><td>(bruk leddtesten)</td><td>kanten der det står $(-1)^k$</td></tr>
+    <tr><td><strong>Forholdstesten</strong></td><td>$L&lt;1$</td><td>$L&gt;1$</td><td>finne $R$ (gir ingen svar når $L=1$)</td></tr>
+  </table>
+  </div>
+
+  <div class="box warn">
+    <h4>Den vanligste feilen</h4>
+    <p>«Leddene går mot 0, altså konvergerer rekka» er <strong>feil</strong>. Den harmoniske rekka $1+\frac12+\frac13+\frac14+\dots$ har ledd som går mot 0, men summen vokser forbi alle grenser (bare veldig sakte: etter en million ledd er den ca. 14,4). Leddtesten kan bare si <em>divergerer</em>, aldri <em>konvergerer</em>.</p>
+  </div>
+
+  <div class="ex">
+    <div class="q">Oppskrift: konvergerer Taylorrekka i en bestemt $x$?</div>
+    <ol>
+      <li>Finn $R$ med forholdstesten (eller fra tabellen over kjente rekker).</li>
+      <li>Er $|x-a|&lt;R$? Da <strong>konvergerer</strong> rekka. Ferdig.</li>
+      <li>Er $|x-a|&gt;R$? Da <strong>divergerer</strong> rekka. Ferdig. (Leddene vokser, så leddtesten slår til.)</li>
+      <li>Er $|x-a|=R$ (på kanten)? Sett inn $x$, forenkle, og bruk $p$-rekke eller alternerende rekketest.</li>
+    </ol>
+  </div>
+
+  <div class="ex">
+    <div class="q">Eksempel — $\ln(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}-\dots$ i tre punkter</div>
+    <p>Fra tabellen: senter $0$, $R=1$.</p>
+    <ol>
+      <li><strong>$x=1$ (kanten):</strong> rekka blir $1-\frac12+\frac13-\frac14+\dots$ Fortegnet veksler, $\frac1k$ avtar og går mot 0. Alternerende rekketest: <span class="hl">konvergerer</span>. Summen er $\ln 2\approx0.693$.</li>
+      <li><strong>$x=-1$ (andre kant):</strong> rekka blir $-1-\frac12-\frac13-\dots=-\sum\frac1k$. Det er minus den harmoniske rekka, $p=1$: <span class="hl">divergerer</span>. Passer med at $\ln 0$ ikke finnes.</li>
+      <li><strong>$x=2$ (utenfor):</strong> leddene er $\frac{2^k}{k}$, som vokser mot uendelig. Leddtesten: <span class="hl">divergerer</span>, selv om $\ln 3$ er et helt vanlig tall.</li>
+    </ol>
+    <p>Konvergensintervallet er altså $(-1,\,1]$.</p>
+  </div>
+
+  <div class="ex">
+    <div class="q">Eksempel — begge kantene konvergerer: $\displaystyle\sum_{k=1}^\infty\frac{x^k}{k^2}$</div>
+    <ol>
+      <li>Forholdstesten: $\dfrac{k^2}{(k+1)^2}\cdot|x|\to|x|$, så $R=1$.</li>
+      <li>$x=1$: $\sum\frac1{k^2}$ er en $p$-rekke med $p=2&gt;1$. Konvergerer.</li>
+      <li>$x=-1$: $\sum\frac{(-1)^k}{k^2}$. Alternerende, og i tillegg konvergerer $\sum\frac1{k^2}$. Konvergerer.</li>
+      <li>Intervallet er $[-1,\,1]$, lukket i begge ender.</li>
+    </ol>
+  </div>
+
+  <div class="box">
+    <h4>Absolutt og betinget konvergens</h4>
+    <p>En rekke konvergerer <strong>absolutt</strong> hvis den konvergerer også når du fjerner alle minustegn: $\sum|b_k|$ konvergerer. Konvergerer den bare <em>takket være</em> fortegnsvekslingen, er den <strong>betinget</strong> konvergent.</p>
+    <ul>
+      <li>$\sum\frac{(-1)^k}{k^2}$: absolutt konvergent, fordi $\sum\frac1{k^2}$ konvergerer.</li>
+      <li>$\sum\frac{(-1)^{k-1}}{k}$ (altså $\ln 2$): betinget konvergent, fordi $\sum\frac1k$ divergerer.</li>
+    </ul>
+    <p class="note">Inne i konvergensradien, $|x-a|&lt;R$, konvergerer en Taylorrekke alltid absolutt. Betinget konvergens kan bare skje på kanten.</p>
+  </div>
+
+  <div class="box key">
+    <h4>Konvergens og analytiske funksjoner: hvordan henger det sammen?</h4>
+    <ul>
+      <li><strong>Innenfor $R$:</strong> rekka konvergerer. Er $f$ analytisk der, er summen nøyaktig $f(x)$.</li>
+      <li><strong>Utenfor $R$:</strong> rekka divergerer, <em>uansett</em> hvor pen funksjonen er. $\ln(1+x)$ er analytisk i $x=2$, men rekka rundt 0 når ikke dit.</li>
+      <li><strong>På kanten:</strong> konvergerer rekka der og $f$ er kontinuerlig i punktet, er summen $f$-verdien. Derfor er $1-\frac12+\frac13-\dots=\ln2$ og $1-\frac13+\frac15-\dots=\arctan1=\frac{\pi}{4}$.</li>
+    </ul>
+    <p class="note">Trenger du en verdi utenfor $R$, bytt senter eller skriv om. For eksempel $\ln3=-\ln\frac13=-\ln\bigl(1-\frac23\bigr)$, og $u=-\frac23$ ligger innenfor $|u|&lt;1$.</p>
+  </div>
+
   <h4 class="sub-h">Analytiske funksjoner</h4>
   <div class="box key">
     <h4>Definisjon</h4>
@@ -713,6 +782,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
       <li><strong>Taylorrekke</strong> = Taylorpolynom som aldri stopper. Delsummene er $P_0, P_1, P_2,\dots$</li>
       <li><strong>Konvergerer</strong> = delsummene nærmer seg et tall.</li>
       <li><strong>Konvergensradius $R$</strong> = hvor langt fra senteret rekka virker. Finn den med forholdstesten.</li>
+      <li><strong>Divergerer</strong> = delsummene nærmer seg ikke et tall. Skjer alltid utenfor $R$. På kanten: sjekk med $p$-rekke eller alternerende rekketest.</li>
       <li><strong>Analytisk</strong> = rekka er lik funksjonen nær punktet. Sjekkes ved at feilen $R_n\to0$.</li>
       <li>Innenfor $R$ kan du derivere og integrere ledd for ledd.</li>
     </ul>
@@ -728,6 +798,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
       <li>Grenseverdier: sett inn rekka og forkort.</li>
       <li>Taylorrekke = polynomet uten stopp. Konvergensradius med forholdstesten.</li>
       <li>Analytisk = rekka er lik funksjonen (feilen går mot 0). Moteksempel: $e^{-1/x^2}$.</li>
+      <li>Kantene sjekkes for seg: $\sum\frac1k$ divergerer, $\sum\frac{(-1)^k}{k}$ og $\sum\frac1{k^2}$ konvergerer. Ledd mot 0 er <em>ikke</em> nok.</li>
     </ul>
   </div>
 
@@ -1049,6 +1120,18 @@ const PROBLEMS = [
    q:'Vis at Maclaurinrekka til $\\cos x$ er lik $\\cos x$ for alle $x$ (altså at $\\cos$ er analytisk).',
    h:'Bruk Lagranges restledd. Hvor stor kan en derivert av $\\cos$ være?',
    s:'Alle deriverte av $\\cos x$ er $\\pm\\sin x$ eller $\\pm\\cos x$, så $|f^{(n+1)}(s)|\\le1$. Da er $$|R_n(x)|=\\left|\\frac{f^{(n+1)}(s)}{(n+1)!}x^{n+1}\\right|\\le\\frac{|x|^{n+1}}{(n+1)!}.$$ Fakultetet vokser raskere enn potensen, så dette går mot 0 for alle $x$. Altså er rekka lik $\\cos x$ overalt.'},
+  {id:'t12', t:'taylor', lvl:1,
+   q:'Avgjør om rekkene konvergerer eller divergerer: (a) $\\displaystyle\\sum_{k=1}^\\infty\\frac{k}{k+1}$ (b) $\\displaystyle\\sum_{k=1}^\\infty\\frac{1}{\\sqrt k}$ (c) $\\displaystyle\\sum_{k=1}^\\infty\\frac{(-1)^k}{\\sqrt k}$',
+   h:'(a) Hva går leddene mot? (b) Skriv som $p$-rekke. (c) Alternerende rekketest.',
+   s:'(a) $\\frac{k}{k+1}\\to1\\ne0$. Leddtesten: <strong>divergerer</strong>.<br>(b) $\\frac1{\\sqrt k}=\\frac1{k^{1/2}}$, $p=\\tfrac12\\le1$: <strong>divergerer</strong>.<br>(c) Fortegnet veksler, $\\frac1{\\sqrt k}$ avtar og går mot 0: <strong>konvergerer</strong> (betinget, siden (b) divergerer).'},
+  {id:'t13', t:'taylor', lvl:2,
+   q:'Finn konvergensintervallet til $\\displaystyle\\sum_{k=1}^\\infty\\frac{(x+1)^k}{k^2\\,3^k}$. Konvergerer rekka i $x=2$? I $x=3$?',
+   h:'Forholdstesten gir $|x+1|/3$. Senteret er $-1$. Sjekk kantene $x=-4$ og $x=2$ med $p$-rekke.',
+   s:'Forholdet går mot $\\frac{|x+1|}{3}$, så $R=3$ med senter $-1$: konvergerer for $-4<x<2$.<br>$x=2$: $\\sum\\frac{3^k}{k^2 3^k}=\\sum\\frac1{k^2}$, $p=2$: konvergerer.<br>$x=-4$: $\\sum\\frac{(-1)^k}{k^2}$: konvergerer.<br>Intervall: $[-4,\\,2]$. Så $x=2$: <strong>konvergerer</strong> (kanten), $x=3$: <strong>divergerer</strong> (utenfor, $|3+1|=4>3$).'},
+  {id:'t14', t:'taylor', lvl:3,
+   q:'$\\ln(1+x)$ er analytisk i $x=3$. Likevel divergerer Maclaurinrekka $x-\\frac{x^2}{2}+\\frac{x^3}{3}-\\dots$ i $x=3$. Forklar hvorfor dette ikke er en motsigelse, og vis hvordan du kan bruke rekka til å regne ut $\\ln4$.',
+   h:'«Analytisk i 3» handler om rekka <em>rundt 3</em>, ikke rekka rundt 0. Skriv $\\ln 4=-\\ln\\frac14$.',
+   s:'Rekka rundt 0 har $R=1$ fordi $\\ln(1+x)$ sprenges i $x=-1$, avstand 1 fra senteret. I $x=3$ vokser leddene $\\frac{3^k}{k}$, så den divergerer. At $f$ er analytisk i 3 betyr bare at <em>rekka rundt 3</em> er lik $f$ nær 3. Ingen motsigelse.<br>$\\ln4=-\\ln\\frac14=-\\ln\\bigl(1+(-\\tfrac34)\\bigr)$, og $u=-\\tfrac34$ har $|u|<1$: $$\\ln4=\\frac34+\\frac{(3/4)^2}{2}+\\frac{(3/4)^3}{3}+\\dots$$'},
   {id:'i1', t:'int', lvl:1,
    q:'Bruk trapesmetoden med $n=4$ til å tilnærme $\\displaystyle\\int_0^1\\frac{dx}{1+x^2}$.',
    h:'$h=0.25$. Regn ut $f$ i $0,\\,0.25,\\,0.5,\\,0.75,\\,1$. Endepunktene får vekt $\\tfrac12$.',

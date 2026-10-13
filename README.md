@@ -4,7 +4,7 @@ Pugge-side for MA-178 ved UiA, med utgangspunkt i Adams & Essex, *Calculus: A Co
 
 ## Innhold
 
-1. **Taylorrekker og analytiske funksjoner**: Taylorpolynom, Lagranges restledd, konvergensradius og standardrekker. Med en interaktiv graf.
+1. **Taylorrekker og analytiske funksjoner**: Taylorpolynom, Lagranges restledd, konvergensradius, konvergens og divergens (testene for kantpunktene) og standardrekker. Med en interaktiv graf.
 2. **Numeriske tilnærminger til det bestemte integralet**: trapes, midtpunkt og Simpson, med feilgrenser. Med en interaktiv sammenligning.
 3. **Eksponentialfunksjonen, logaritmen og deres Taylorrekker**: ln som areal, regneregler og rekkene for eˣ og ln(1+x).
 4. **Prøveoppgaver** i hvert kapittel: de fem oppgavetypene fra Delprøve 3, med nye tall hver gang, svarsjekk i Matric-syntaks og løsning steg for steg.
