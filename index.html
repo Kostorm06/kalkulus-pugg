@@ -825,7 +825,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     <span class="num">KAPITTEL 2 · Adams &amp; Essex 6.6–6.7</span>
     <h2>Numeriske tilnærminger til det bestemte integralet</h2>
   </div>
-  <div class="jump">Hopp til: <a href="#trapes">Trapesmetoden</a><a href="#midtpunkt">Midtpunktmetoden</a><a href="#int-bruk">Slik løser du oppgavene</a><a href="#int-ov">Til oppgavene</a></div>
+  <div class="jump">Hopp til: <a href="#trapes">Trapesmetoden</a><a href="#midtpunkt">Midtpunktmetoden</a><a href="#int-taylor">Med Taylorpolynom</a><a href="#int-bruk">Slik løser du oppgavene</a><a href="#int-ov">Til oppgavene</a></div>
 
   <h3>Idéen</h3>
   <p>Et bestemt integral $\int_a^b f(x)\,dx$ er arealet under grafen. Noen ganger klarer du ikke å regne det ut nøyaktig. Kanskje finnes det ingen antiderivert (som for $e^{-x^2}$), eller du har bare en tabell med målinger. Da deler vi arealet i smale biter og regner ut arealet av hver bit med enkle figurer.</p>
@@ -929,6 +929,65 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
       <li><strong>Glemmer å gange med $h$</strong> til slutt.</li>
       <li><strong>Bruker alle verdiene i en tabell.</strong> Bruk bare dem som ligger med avstand $h$ fra hverandre.</li>
     </ul>
+  </div>
+
+  <h3 id="int-taylor">Midtpunkt og trapes med Taylorpolynom</h3>
+  <p>Hvor kommer formlene og feilgrensene fra? Svaret er Taylorpolynom fra kapittel 1. Vi ser på <strong>én bit</strong> med bredde $h$ og midtpunkt $m$, så biten går fra $m-\frac h2$ til $m+\frac h2$.</p>
+
+  <div class="box key">
+    <h4>Taylorpolynomet rundt midtpunktet</h4>
+    <p>Nær $m$ er funksjonen nesten lik Taylorpolynomet sitt:</p>
+    $$f(x)\approx f(m)+f'(m)(x-m)+\frac{f''(m)}{2}(x-m)^2.$$
+    <p class="note">Første ledd er en konstant, andre ledd er en rett linje gjennom $m$, og tredje ledd er krumningen.</p>
+  </div>
+
+  <h4 class="sub-h">Steg 1: integrer Taylorpolynomet over biten</h4>
+  <p>Vi integrerer ett ledd om gangen fra $m-\frac h2$ til $m+\frac h2$:</p>
+  <div class="tscroll"><table class="series">
+    <tr><th>Ledd</th><th>Integral over biten</th><th>Hvorfor</th></tr>
+    <tr><td>$f(m)$</td><td>$h\,f(m)$</td><td>konstant ganger bredde</td></tr>
+    <tr><td>$f'(m)(x-m)$</td><td>$0$</td><td>linja er like mye over som under, så de opphever hverandre</td></tr>
+    <tr><td>$\dfrac{f''(m)}{2}(x-m)^2$</td><td>$\dfrac{f''(m)}{24}h^3$</td><td>$\int_{-h/2}^{h/2}\frac{t^2}{2}\,dt=\frac{h^3}{24}$</td></tr>
+  </table></div>
+  <p>Så det <strong>eksakte</strong> integralet over én bit er omtrent</p>
+  $$\int_{\text{bit}} f(x)\,dx\approx h\,f(m)+\frac{f''(m)}{24}h^3.$$
+
+  <h4 class="sub-h">Steg 2: midtpunktmetoden</h4>
+  <p>Midtpunktmetoden bruker bare $h\,f(m)$, altså de to første leddene i Taylorpolynomet. Det lineære leddet ga uansett 0. Det den mister, er krumningsleddet:</p>
+  $$\text{eksakt}-\text{midtpunkt}\approx\frac{f''(m)}{24}h^3\quad\text{per bit}.$$
+  <p class="note">Er $f''&gt;0$ (grafen bøyer seg oppover), er dette positivt. Da blir midtpunktsvaret litt <em>for lite</em>.</p>
+
+  <h4 class="sub-h">Steg 3: trapesmetoden</h4>
+  <p>Trapes bruker endepunktene $m-\frac h2$ og $m+\frac h2$. Sett dem inn i Taylorpolynomet:</p>
+  $$f\!\left(m\pm\tfrac h2\right)\approx f(m)\pm f'(m)\frac h2+\frac{f''(m)}{2}\cdot\frac{h^2}{4}.$$
+  <p>Trapeset er bredden ganger gjennomsnittet av de to høydene. I gjennomsnittet forsvinner $\pm$-leddene:</p>
+  $$h\cdot\frac{f(m-\frac h2)+f(m+\frac h2)}{2}\approx h\,f(m)+\frac{f''(m)}{8}h^3.$$
+  <p>Sammenlign med det eksakte:</p>
+  $$\text{trapes}-\text{eksakt}\approx\left(\frac18-\frac1{24}\right)f''(m)h^3=\frac{f''(m)}{12}h^3\quad\text{per bit}.$$
+  <p class="note">Er $f''&gt;0$, blir trapessvaret litt <em>for stort</em>. Det er motsatt side av midtpunkt, og feilen er dobbelt så stor ($\frac1{12}$ mot $\frac1{24}$).</p>
+
+  <h4 class="sub-h">Steg 4: legg sammen alle bitene, og du får feilgrensene</h4>
+  <p>Det er $n$ biter, og $n\cdot h=b-a$. Bytt $f''$ med den største verdien $K$:</p>
+  $$|E_T|\le n\cdot\frac{K}{12}h^3=\frac{K(b-a)}{12}h^2=\frac{K(b-a)^3}{12n^2},\qquad |E_M|\le\frac{K(b-a)^3}{24n^2}.$$
+  <p>Det er akkurat formlene på formelarket. Tallene 12 og 24 kommer altså fra Taylorpolynomet.</p>
+
+  <div class="box">
+    <h4>Hva skjer når du halverer $h$?</h4>
+    <p>Feilen er proporsjonal med $h^2$. Halverer du $h$ (dobler $n$), blir feilen $\left(\frac12\right)^2=\frac14$ så stor. Sjekk med $\int_0^2x^2\,dx=\frac83$:</p>
+    <div class="tscroll"><table class="num" style="margin:6px 0">
+      <tr><th>n</th><th>h</th><th>T<sub>n</sub></th><th>T − fasit</th><th>M<sub>n</sub></th><th>M − fasit</th></tr>
+      <tr><td>2</td><td>1</td><td>3</td><td>0.3333</td><td>2.5</td><td>−0.1667</td></tr>
+      <tr><td>4</td><td>0.5</td><td>2.75</td><td>0.0833</td><td>2.625</td><td>−0.0417</td></tr>
+      <tr><td>8</td><td>0.25</td><td>2.6875</td><td>0.0208</td><td>2.65625</td><td>−0.0104</td></tr>
+    </table></div>
+    <p class="note">Hver gang $h$ halveres, deles feilen på 4. Trapesfeilen er alltid dobbelt så stor som midtpunktfeilen, med motsatt fortegn, akkurat som Taylor sa.</p>
+  </div>
+
+  <div class="box key">
+    <h4>Bonus: Simpson kommer gratis</h4>
+    <p>Siden trapesfeilen er omtrent $-2$ ganger midtpunktfeilen, kan vi kombinere dem så feilene opphever hverandre:</p>
+    $$\frac{T_n+2M_n}{3}.$$
+    <p>Med tallene over: $\frac{2.75+2\cdot2.625}{3}=\frac{8}{3}$. Helt riktig! Dette er Simpsons metode, $S_{2n}=\frac{T_n+2M_n}{3}$.</p>
   </div>
 
   <h3>Simpsons metode (ikke på formelarket)</h3>
