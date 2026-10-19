@@ -136,6 +136,14 @@ details.dtab summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;co
 h4.sub-h{font-family:var(--f-display);font-size:1.05rem;margin:28px 0 4px}
 .verdict{font-family:var(--f-mono);font-size:.85rem;margin:6px 0 0}
 .verdict.ok{color:var(--ok)} .verdict.bad{color:var(--neg)}
+.fig{margin:16px 0;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px 6px}
+.fig svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.fig figcaption{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);text-align:center;margin-top:4px}
+.fig .ax{stroke:var(--muted);stroke-width:1}
+.fig .tk{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.fig .sh{fill:var(--mark);fill-opacity:.35;stroke:var(--accent);stroke-width:1.2}
+.fig .cv{fill:none;stroke:var(--ink);stroke-width:2.2}
+.fig .pt{fill:var(--accent)}
 .formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
 .legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
 .legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
@@ -817,7 +825,7 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     <span class="num">KAPITTEL 2 · Adams &amp; Essex 6.6–6.7</span>
     <h2>Numeriske tilnærminger til det bestemte integralet</h2>
   </div>
-  <div class="jump">Hopp til: <a href="#int-bruk">Slik løser du oppgavene</a><a href="#int-ov">Til oppgavene</a></div>
+  <div class="jump">Hopp til: <a href="#trapes">Trapesmetoden</a><a href="#midtpunkt">Midtpunktmetoden</a><a href="#int-bruk">Slik løser du oppgavene</a><a href="#int-ov">Til oppgavene</a></div>
 
   <h3>Idéen</h3>
   <p>Et bestemt integral $\int_a^b f(x)\,dx$ er arealet under grafen. Noen ganger klarer du ikke å regne det ut nøyaktig. Kanskje finnes det ingen antiderivert (som for $e^{-x^2}$), eller du har bare en tabell med målinger. Da deler vi arealet i smale biter og regner ut arealet av hver bit med enkle figurer.</p>
@@ -830,31 +838,97 @@ section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
     <p class="note">Får du oppgitt $h$ i stedet for $n$, er $n=\dfrac{b-a}{h}$.</p>
   </div>
 
-  <h3>Trapesmetoden</h3>
-  <p>Tegn rette streker mellom punktene på grafen, og regn ut arealet av trapesene. Når du legger dem sammen, blir formelen:</p>
-  $$T_n = h\Bigl[\tfrac12 f(x_0) + f(x_1) + f(x_2) + \dots + f(x_{n-1}) + \tfrac12 f(x_n)\Bigr].$$
-  <p><strong>På norsk:</strong> endepunktene teller halvt, alle punktene i midten teller helt. Gang summen med $h$.</p>
+  <h3 id="trapes">Trapesmetoden, enkelt forklart</h3>
+  <p><strong>Idéen i én setning:</strong> bytt ut den krumme grafen med rette streker mellom punktene, og regn ut arealet av figurene du får.</p>
+  <figure class="fig"><svg viewBox="0 0 320 205" role="img" aria-label="Trapesmetoden, n = 4 for x² fra 0 til 2"><line class="ax" x1="30" y1="180" x2="306" y2="180"/><line class="ax" x1="30" y1="180" x2="30" y2="14"/><text class="tk" x="30" y="195" text-anchor="middle">0</text><text class="tk" x="97.5" y="195" text-anchor="middle">0.5</text><text class="tk" x="165" y="195" text-anchor="middle">1</text><text class="tk" x="232.5" y="195" text-anchor="middle">1.5</text><text class="tk" x="300" y="195" text-anchor="middle">2</text><text class="tk" x="24" y="144" text-anchor="end">1</text><text class="tk" x="24" y="104" text-anchor="end">2</text><text class="tk" x="24" y="64" text-anchor="end">3</text><text class="tk" x="24" y="24" text-anchor="end">4</text><polygon class="sh" points="30.0,180 30.0,180.0 97.5,170.0 97.5,180"/><polygon class="sh" points="97.5,180 97.5,170.0 165.0,140.0 165.0,180"/><polygon class="sh" points="165.0,180 165.0,140.0 232.5,90.0 232.5,180"/><polygon class="sh" points="232.5,180 232.5,90.0 300.0,20.0 300.0,180"/><path class="cv" d="M30.0,180.0 L35.4,179.9 L40.8,179.7 L46.2,179.4 L51.6,179.0 L57.0,178.4 L62.4,177.7 L67.8,176.9 L73.2,175.9 L78.6,174.8 L84.0,173.6 L89.4,172.3 L94.8,170.8 L100.2,169.2 L105.6,167.5 L111.0,165.6 L116.4,163.6 L121.8,161.5 L127.2,159.3 L132.6,156.9 L138.0,154.4 L143.4,151.8 L148.8,149.0 L154.2,146.1 L159.6,143.1 L165.0,140.0 L170.4,136.7 L175.8,133.3 L181.2,129.8 L186.6,126.2 L192.0,122.4 L197.4,118.5 L202.8,114.5 L208.2,110.3 L213.6,106.0 L219.0,101.6 L224.4,97.1 L229.8,92.4 L235.2,87.6 L240.6,82.7 L246.0,77.6 L251.4,72.4 L256.8,67.1 L262.2,61.7 L267.6,56.1 L273.0,50.4 L278.4,44.6 L283.8,38.6 L289.2,32.5 L294.6,26.3 L300.0,20.0"/><circle class="pt" cx="30" cy="180" r="3.5"/><circle class="pt" cx="97.5" cy="170.0" r="3.5"/><circle class="pt" cx="165" cy="140" r="3.5"/><circle class="pt" cx="232.5" cy="90.0" r="3.5"/><circle class="pt" cx="300" cy="20" r="3.5"/></svg><figcaption>Trapesmetoden, n = 4: y = x² fra 0 til 2</figcaption></figure>
+  <p>Hver bit blir et <strong>trapes</strong>: en boks med skrått tak. Arealet av ett trapes er</p>
+  $$\text{bredde}\times\text{gjennomsnittet av de to høydene}=h\cdot\frac{\text{venstre høyde}+\text{høyre høyde}}{2}.$$
 
-  <div class="ex">
-    <div class="q">Lett eksempel — $\displaystyle\int_0^2 x^2\,dx$ med $n=4$</div>
-    <ol>
-      <li>$h=\frac{2-0}{4}=0.5$. Punktene er $0,\;0.5,\;1,\;1.5,\;2$.</li>
-      <li>$f(x)=x^2$ i punktene: $0,\;0.25,\;1,\;2.25,\;4$.</li>
-      <li>$T_4=0.5\bigl[\tfrac12\cdot0+0.25+1+2.25+\tfrac12\cdot4\bigr]=0.5\cdot5.5=2.75$.</li>
-      <li>Fasit: $\frac{2^3}{3}=2.667$. Feilen er $0.083$.</li>
-    </ol>
+  <div class="box">
+    <h4>Hvorfor teller endene bare halvt?</h4>
+    <p>Legg sammen de fire trapesene i figuren:</p>
+    $$h\cdot\frac{f_0+f_1}{2}+h\cdot\frac{f_1+f_2}{2}+h\cdot\frac{f_2+f_3}{2}+h\cdot\frac{f_3+f_4}{2}$$
+    <p>Punktene i midten ($f_1,f_2,f_3$) er med i <em>to</em> trapeser, så de får $\frac12+\frac12=1$. Endepunktene ($f_0$ og $f_4$) er bare med i ett trapes, så de får $\frac12$. Da blir det:</p>
+    $$T_4=h\Bigl[\tfrac12f_0+f_1+f_2+f_3+\tfrac12f_4\Bigr].$$
   </div>
 
-  <h3>Midtpunktmetoden</h3>
-  <p>Lag rektangler der høyden er funksjonsverdien <em>midt</em> i hver bit:</p>
-  $$M_n = h\bigl[f(m_1)+f(m_2)+\dots+f(m_n)\bigr].$$
+  <div class="box key">
+    <h4>Trapesmetoden</h4>
+    $$T_n = h\Bigl[\tfrac12 f(x_0) + f(x_1) + \dots + f(x_{n-1}) + \tfrac12 f(x_n)\Bigr]$$
+    <p><strong>Huskeregel:</strong> halvt på kantene, helt i midten, gang med $h$.</p>
+  </div>
+
   <div class="ex">
-    <div class="q">Samme eksempel med midtpunkt</div>
+    <div class="q">Oppskrift og eksempel — $\displaystyle\int_0^2 x^2\,dx$ med $n=4$</div>
     <ol>
-      <li>Midtpunktene til bitene er $0.25,\;0.75,\;1.25,\;1.75$.</li>
-      <li>$f$ der: $0.0625,\;0.5625,\;1.5625,\;3.0625$. Summen er $5.25$.</li>
-      <li>$M_4=0.5\cdot5.25=2.625$. Feilen er $0.042$, altså halvparten av trapesfeilen, og på motsatt side.</li>
+      <li><strong>Finn bredden:</strong> $h=\dfrac{b-a}{n}=\dfrac{2-0}{4}=0.5$.</li>
+      <li><strong>List opp punktene:</strong> start på $a$ og legg til $h$ hver gang til du når $b$: $\;0,\;0.5,\;1,\;1.5,\;2$. Det blir alltid $n+1$ punkter.</li>
+      <li><strong>Regn ut $f$ og gi vekter</strong> i en tabell:
+        <div class="tscroll"><table class="num" style="margin:6px 0">
+          <tr><th>x</th><th>f(x) = x²</th><th>vekt</th><th>vekt · f(x)</th></tr>
+          <tr><td>0</td><td>0</td><td>½</td><td>0</td></tr>
+          <tr><td>0.5</td><td>0.25</td><td>1</td><td>0.25</td></tr>
+          <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>1.5</td><td>2.25</td><td>1</td><td>2.25</td></tr>
+          <tr><td>2</td><td>4</td><td>½</td><td>2</td></tr>
+          <tr class="sel"><td>sum</td><td></td><td></td><td>5.5</td></tr>
+        </table></div></li>
+      <li><strong>Gang med $h$:</strong> $T_4=0.5\cdot5.5=2.75$.</li>
     </ol>
+    <p class="note">Fasit: $\int_0^2x^2dx=\frac{8}{3}\approx2.667$. Trapesene blir litt for store, fordi de rette strekene ligger <em>over</em> kurven når den bøyer seg oppover. Du ser det i figuren.</p>
+  </div>
+
+  <h3 id="midtpunkt">Midtpunktmetoden, enkelt forklart</h3>
+  <p><strong>Idéen i én setning:</strong> lag rektangler, og la høyden på hvert rektangel være funksjonsverdien <em>midt</em> i biten.</p>
+  <figure class="fig"><svg viewBox="0 0 320 205" role="img" aria-label="Midtpunktmetoden, n = 4 for x² fra 0 til 2"><line class="ax" x1="30" y1="180" x2="306" y2="180"/><line class="ax" x1="30" y1="180" x2="30" y2="14"/><text class="tk" x="30" y="195" text-anchor="middle">0</text><text class="tk" x="97.5" y="195" text-anchor="middle">0.5</text><text class="tk" x="165" y="195" text-anchor="middle">1</text><text class="tk" x="232.5" y="195" text-anchor="middle">1.5</text><text class="tk" x="300" y="195" text-anchor="middle">2</text><text class="tk" x="24" y="144" text-anchor="end">1</text><text class="tk" x="24" y="104" text-anchor="end">2</text><text class="tk" x="24" y="64" text-anchor="end">3</text><text class="tk" x="24" y="24" text-anchor="end">4</text><rect class="sh" x="30.0" y="177.5" width="67.5" height="2.5"/><circle class="pt" cx="63.75" cy="177.5" r="3.5"/><rect class="sh" x="97.5" y="157.5" width="67.5" height="22.5"/><circle class="pt" cx="131.25" cy="157.5" r="3.5"/><rect class="sh" x="165.0" y="117.5" width="67.5" height="62.5"/><circle class="pt" cx="198.75" cy="117.5" r="3.5"/><rect class="sh" x="232.5" y="57.5" width="67.5" height="122.5"/><circle class="pt" cx="266.25" cy="57.5" r="3.5"/><path class="cv" d="M30.0,180.0 L35.4,179.9 L40.8,179.7 L46.2,179.4 L51.6,179.0 L57.0,178.4 L62.4,177.7 L67.8,176.9 L73.2,175.9 L78.6,174.8 L84.0,173.6 L89.4,172.3 L94.8,170.8 L100.2,169.2 L105.6,167.5 L111.0,165.6 L116.4,163.6 L121.8,161.5 L127.2,159.3 L132.6,156.9 L138.0,154.4 L143.4,151.8 L148.8,149.0 L154.2,146.1 L159.6,143.1 L165.0,140.0 L170.4,136.7 L175.8,133.3 L181.2,129.8 L186.6,126.2 L192.0,122.4 L197.4,118.5 L202.8,114.5 L208.2,110.3 L213.6,106.0 L219.0,101.6 L224.4,97.1 L229.8,92.4 L235.2,87.6 L240.6,82.7 L246.0,77.6 L251.4,72.4 L256.8,67.1 L262.2,61.7 L267.6,56.1 L273.0,50.4 L278.4,44.6 L283.8,38.6 L289.2,32.5 L294.6,26.3 L300.0,20.0"/></svg><figcaption>Midtpunktmetoden, n = 4: y = x² fra 0 til 2</figcaption></figure>
+  <p>Hvert rektangel har areal $\text{bredde}\times\text{høyde}=h\cdot f(\text{midtpunktet})$. Det er ingen halve vekter her, fordi hvert rektangel har sin egen høyde.</p>
+  <p class="note">Hvorfor akkurat midten? Rektangelet stikker litt over kurven på den ene siden og litt under på den andre. Bitene som er for mye og for lite, veier nesten opp for hverandre.</p>
+
+  <div class="box key">
+    <h4>Midtpunktmetoden</h4>
+    $$M_n = h\bigl[f(m_1)+f(m_2)+\dots+f(m_n)\bigr],\qquad m=\text{midten av hver bit}$$
+    <p><strong>Huskeregel:</strong> midt i hver bit, legg sammen, gang med $h$.</p>
+  </div>
+
+  <div class="ex">
+    <div class="q">Oppskrift og eksempel — samme integral, $\displaystyle\int_0^2 x^2\,dx$ med $n=4$</div>
+    <ol>
+      <li><strong>Finn bredden:</strong> $h=0.5$, som før.</li>
+      <li><strong>Finn midtpunktene:</strong> det første er $a+\frac h2=0+0.25=0.25$. Legg så til $h$ hver gang: $\;0.25,\;0.75,\;1.25,\;1.75$. Det blir alltid $n$ punkter, og du bruker <em>aldri</em> endepunktene $a$ og $b$.</li>
+      <li><strong>Regn ut $f$</strong> i midtpunktene:
+        <div class="tscroll"><table class="num" style="margin:6px 0">
+          <tr><th>midtpunkt m</th><th>f(m) = m²</th></tr>
+          <tr><td>0.25</td><td>0.0625</td></tr>
+          <tr><td>0.75</td><td>0.5625</td></tr>
+          <tr><td>1.25</td><td>1.5625</td></tr>
+          <tr><td>1.75</td><td>3.0625</td></tr>
+          <tr class="sel"><td>sum</td><td>5.25</td></tr>
+        </table></div></li>
+      <li><strong>Gang med $h$:</strong> $M_4=0.5\cdot5.25=2.625$.</li>
+    </ol>
+    <p class="note">Fasit $2.667$. Feilen er $0.042$, altså halvparten av trapesfeilen ($0.083$), og på motsatt side: midtpunkt ble litt for lite.</p>
+  </div>
+
+  <div class="box">
+    <h4>Trapes og midtpunkt side om side</h4>
+    <div class="tscroll"><table class="series">
+      <tr><th></th><th>Trapes $T_n$</th><th>Midtpunkt $M_n$</th></tr>
+      <tr><td>Figur</td><td>trapeser (skrått tak)</td><td>rektangler (flatt tak)</td></tr>
+      <tr><td>Punkter du bruker</td><td>endepunktene til bitene, $n+1$ stykker</td><td>midten av bitene, $n$ stykker</td></tr>
+      <tr><td>Vekter</td><td>$\tfrac12,1,1,\dots,1,\tfrac12$</td><td>alle $1$</td></tr>
+      <tr><td>Feilgrense</td><td>$\dfrac{K(b-a)^3}{12n^2}$</td><td>$\dfrac{K(b-a)^3}{24n^2}$ (halvparten)</td></tr>
+      <tr><td>Graf som bøyer seg oppover</td><td>for stort svar</td><td>for lite svar</td></tr>
+    </table></div>
+  </div>
+
+  <div class="box warn">
+    <h4>Vanlige feil</h4>
+    <ul>
+      <li><strong>Glemmer halvene</strong> på endepunktene i trapesmetoden.</li>
+      <li><strong>Bruker endepunktene</strong> i midtpunktmetoden. Der skal du bare bruke midtpunktene.</li>
+      <li><strong>Glemmer å gange med $h$</strong> til slutt.</li>
+      <li><strong>Bruker alle verdiene i en tabell.</strong> Bruk bare dem som ligger med avstand $h$ fra hverandre.</li>
+    </ul>
   </div>
 
   <h3>Simpsons metode (ikke på formelarket)</h3>
