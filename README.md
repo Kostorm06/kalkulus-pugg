@@ -1,19 +1,13 @@
-# Taylor, integraler og ln
+# Kalkulus-pugg
 
-Pugge-side for MA-178 ved UiA, med utgangspunkt i Adams & Essex, *Calculus: A Complete Course* (10. utg.).
+Pugge-sider for MA-178 ved UiA, med utgangspunkt i Adams & Essex, *Calculus: A Complete Course* (10. utg.).
 
-## Innhold
+**Nettside:** https://kostorm06.github.io/kalkulus-pugg/
 
-1. **Taylorrekker og analytiske funksjoner**: Taylorpolynom, Lagranges restledd, konvergensradius, konvergens og divergens (testene for kantpunktene) og standardrekker. Med en interaktiv graf.
-2. **Numeriske tilnærminger til det bestemte integralet**: trapes, midtpunkt og Simpson, med feilgrenser. Med en interaktiv sammenligning.
-3. **Eksponentialfunksjonen, logaritmen og deres Taylorrekker**: ln som areal, regneregler og rekkene for eˣ og ln(1+x).
-4. **Prøveoppgaver** i hvert kapittel: de fem oppgavetypene fra Delprøve 3, med nye tall hver gang, svarsjekk i Matric-syntaks og løsning steg for steg.
-5. **«Slik løser du oppgavene»**: oppskrift for hver oppgavetype, med eksempler fra prøven.
+## Sider
 
-## Bruk
+- `index.html`: hovedsiden, der du velger del.
+- `taylor-integraler.html` (**del 1**): Taylorpolynom og -rekker, analytiske funksjoner, konvergens, numerisk integrasjon (trapes, midtpunkt, Simpson) og exp/ln. Den har prøvetrening for Delprøve 3 med nye tall hver gang.
+- `exp-ln-integrasjon.html` (**del 2**): Tema 44–46. Eksponensialfunksjonen og logaritmen med Taylorrekker, asymptotisk oppførsel og integrasjonsteknikker (substitusjon, delvis integrasjon, delbrøk). Den har trenere som sjekker derivasjon, grenseverdier og integraler.
 
-Åpne `index.html` i nettleseren. Hele siden ligger i én fil. Matematikken vises med MathJax, som lastes fra jsDelivr, så du trenger internett.
-
-## Publisere med GitHub Pages
-
-Gå til **Settings → Pages** i repoet. Under *Branch* velger du `main` og `/ (root)`, og trykker **Save**. Etter et minutt eller to ligger siden på `https://<brukernavn>.github.io/<repo-navn>/`.
+Alle sidene er selvstendige HTML-filer. Matematikken vises med MathJax, som lastes fra jsDelivr, så du trenger internett.

@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exp, ln og integrasjon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false },
+  startup: {
+    ready() {
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(() => { window.__mjReady = true; if (window.__onMJ) window.__onMJ(); });
+    }
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async></script>
+<style>
+/* Layout: én lesekolonne som en arbeidsbok — tre kapitler i kursrekkefølge, interaktive grafer som "lab-ark", øvingsbank til slutt */
+:root{
+  --paper:#eef1f6;
+  --surface:#ffffff;
+  --ink:#141d33;
+  --muted:#56617a;
+  --line:#d3d9e6;
+  --accent:#2446d8;
+  --accent-soft:#e3e8fb;
+  --mark:#f2c230;
+  --mark-soft:#fbefc4;
+  --neg:#d2493f;
+  --ok:#1f8a5b;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1321; --surface:#161d2f; --ink:#e5e9f3; --muted:#98a3bb; --line:#2a3452;
+    --accent:#86a0ff; --accent-soft:#1f2a4d; --mark:#e3b634; --mark-soft:#3a3218;
+    --neg:#f07a6f; --ok:#5cc996; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1321; --surface:#161d2f; --ink:#e5e9f3; --muted:#98a3bb; --line:#2a3452;
+  --accent:#86a0ff; --accent-soft:#1f2a4d; --mark:#e3b634; --mark-soft:#3a3218;
+  --neg:#f07a6f; --ok:#5cc996; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.6;padding:0 16px}
+.wrap{max-width:780px;margin:0 auto;padding-block:8px 80px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,6vw,3.1rem);font-weight:800;letter-spacing:-0.02em}
+h2{font-size:clamp(1.6rem,4.4vw,2.2rem);font-weight:800;letter-spacing:-0.01em}
+h3{font-size:1.2rem;font-weight:600;margin-top:36px}
+p{margin:12px 0}
+a{color:var(--accent)}
+.label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+hl, .hl{background:linear-gradient(transparent 55%, var(--mark-soft) 55%);padding:0 2px}
+
+/* header */
+header.top{padding-block:40px 20px}
+header.top p.lead{font-size:1.1rem;color:var(--muted);max-width:60ch}
+.course{margin-top:24px;display:grid;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.course a{display:grid;grid-template-columns:2.4rem 1fr auto;gap:12px;align-items:baseline;padding:12px 16px;text-decoration:none;color:var(--ink);border-top:1px solid var(--line)}
+.course a:first-child{border-top:0}
+.course a:hover{background:var(--accent-soft)}
+.course .n{font-family:var(--f-mono);color:var(--accent);font-weight:600}
+.course .t{font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+.course .s{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);white-space:nowrap}
+
+nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);border-bottom:1px solid var(--line);margin:0 -16px;padding:8px 16px}
+nav.bar .in{max-width:780px;margin:0 auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+nav.bar a{font-family:var(--f-mono);font-size:.78rem;text-decoration:none;color:var(--ink);padding:6px 10px;border-radius:4px;border:1px solid var(--line);background:var(--surface)}
+nav.bar a:hover,nav.bar a:focus-visible{border-color:var(--accent);color:var(--accent)}
+nav.bar .prog{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+
+section.chap{padding-top:56px}
+.chap-head{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:2px solid var(--ink);margin-bottom:8px}
+.chap-head .num{font-family:var(--f-mono);font-size:.8rem;color:var(--accent);font-weight:600}
+
+/* boxes */
+.box{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 20px;margin:20px 0}
+.box.key{border-left:4px solid var(--accent)}
+.box.warn{border-left:4px solid var(--mark)}
+.box h4{margin:0 0 6px;font-family:var(--f-display);font-size:1rem}
+.box ul{margin:6px 0;padding-left:1.2em}
+.box li{margin:4px 0}
+
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:4px 0}
+
+table.series{width:100%;border-collapse:collapse;font-size:.95rem}
+.tscroll{overflow-x:auto}
+table.series td,table.series th{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.series th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400}
+
+/* worked examples */
+.ex{margin:22px 0;padding:16px 20px;border:1px dashed var(--line);border-radius:6px}
+.ex .q{font-weight:600}
+.ex ol{padding-left:1.3em;margin:8px 0}
+.ex li{margin:6px 0}
+
+/* labs */
+.lab{background:var(--surface);border:1px solid var(--line);border-radius:8px;margin:28px 0;overflow:hidden}
+.lab-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.lab-head h4{margin:0;font-family:var(--f-display);font-size:1.05rem}
+.lab canvas{display:block;width:100%;height:320px;background:var(--surface);touch-action:pan-y}
+.ctrls{padding:14px 18px;display:grid;gap:12px;border-top:1px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg button{font-family:var(--f-mono);font-size:.8rem;padding:6px 10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:4px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.seg button:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.slider{display:grid;grid-template-columns:auto 1fr 4.5rem;gap:10px;align-items:center;font-family:var(--f-mono);font-size:.82rem}
+.slider input{width:100%;accent-color:var(--accent)}
+.slider output{text-align:right;font-variant-numeric:tabular-nums}
+.readout{font-family:var(--f-mono);font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--ink);display:flex;flex-wrap:wrap;gap:6px 18px}
+.readout b{color:var(--accent);font-weight:600}
+.xin input{flex:0 1 11rem;min-width:0;font-family:var(--f-mono);font-size:.85rem;padding:7px 9px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.xin label{font-family:var(--f-mono);font-size:.82rem}
+.custom{display:grid;gap:6px}
+.custom label{font-family:var(--f-mono);font-size:.82rem}
+.custom input{flex:1 1 12rem;min-width:0;font-family:var(--f-mono);font-size:.88rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.custom input.short{flex:0 1 5rem}
+.custom .note.err{color:var(--neg)}
+details.dtab{padding:0 18px 10px}
+details.dtab summary{cursor:pointer;font-family:var(--f-mono);font-size:.8rem;color:var(--accent);padding:4px 0}
+.subst{padding:0 18px 8px;overflow-x:auto}
+.subst .label{margin-bottom:-4px}
+h4.sub-h{font-family:var(--f-display);font-size:1.05rem;margin:28px 0 4px}
+.verdict{font-family:var(--f-mono);font-size:.85rem;margin:6px 0 0}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--neg)}
+.fig{margin:16px 0;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px 6px}
+.fig svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.fig figcaption{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);text-align:center;margin-top:4px}
+.fig .ax{stroke:var(--muted);stroke-width:1}
+.fig .tk{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.fig .sh{fill:var(--mark);fill-opacity:.35;stroke:var(--accent);stroke-width:1.2}
+.fig .cv{fill:none;stroke:var(--ink);stroke-width:2.2}
+.fig .pt{fill:var(--accent)}
+.formula{padding:6px 18px 12px;overflow-x:auto;min-height:3.2em}
+.legend{display:flex;gap:14px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px;border-radius:2px}
+.note{font-size:.95rem;color:var(--muted);margin:0}
+table.num{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.8rem;font-variant-numeric:tabular-nums}
+table.num th,table.num td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.num th:first-child,table.num td:first-child{text-align:left}
+table.num th{color:var(--muted);font-weight:400}
+table.num tr.sel td{background:var(--mark-soft)}
+
+.btn{font-family:var(--f-mono);font-size:.8rem;padding:7px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:4px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* practice */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.cards{display:grid;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 20px}
+.card.done{border-color:var(--ok)}
+.card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.chip{font-family:var(--f-mono);font-size:.7rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.chip.lvl-1{border-color:var(--ok);color:var(--ok)}
+.chip.lvl-2{border-color:var(--accent);color:var(--accent)}
+.chip.lvl-3{border-color:var(--neg);color:var(--neg)}
+.card .num{font-family:var(--f-mono);font-weight:600;color:var(--ink);font-size:.8rem}
+.card .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.card .reveal{margin-top:12px;padding:12px 16px;background:var(--paper);border-radius:4px}
+.card label.can{margin-left:auto;font-family:var(--f-mono);font-size:.78rem;display:flex;gap:6px;align-items:center;cursor:pointer}
+.card label.can input{accent-color:var(--ok);width:16px;height:16px}
+
+/* exam trainer */
+.xq .qtext{margin:4px 0 8px}
+.ans{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.ans label{font-family:var(--f-body);white-space:nowrap}
+.ans input{flex:1 1 220px;min-width:0;font-family:var(--f-mono);font-size:.9rem;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.fb{font-family:var(--f-mono);font-size:.82rem;margin-top:8px;min-height:1.2em}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--neg)}
+table.dt{border-collapse:collapse;font-family:var(--f-mono);font-size:.78rem;font-variant-numeric:tabular-nums;margin:6px 0}
+table.dt th,table.dt td{border:1px solid var(--line);padding:4px 6px;text-align:right}
+table.dt th{color:var(--muted);font-weight:400}
+table.dt td.hi{background:var(--mark-soft)}
+.roundbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+.roundbar .score{font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+details.sheet{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:16px 0}
+details.sheet summary{cursor:pointer;padding:12px 18px;font-family:var(--f-display);font-weight:600}
+details.sheet .in{padding:0 18px 12px}
+code{font-family:var(--f-mono);font-size:.85em;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:1px 5px;word-break:break-all}
+.steps{padding-left:1.3em;margin:6px 0} .steps li{margin:6px 0}
+
+nav.bar .pair{display:inline-flex}
+nav.bar .pair a:first-child{border-radius:4px 0 0 4px}
+nav.bar .pair a.sub{border-left:0;border-radius:0 4px 4px 0;color:var(--muted)}
+.jump{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 8px;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.jump a{padding:5px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface);text-decoration:none;color:var(--accent)}
+.jump a:hover,.jump a:focus-visible{border-color:var(--accent)}
+.back{font-family:var(--f-mono);font-size:.8rem;text-decoration:none;color:var(--accent);display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.back:hover,.back:focus-visible{border-color:var(--accent)}
+.custom-row label{font-family:var(--f-mono);font-size:.82rem}
+.custom-row input{flex:1 1 10rem;min-width:0;font-family:var(--f-mono);font-size:.88rem;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.ctrls>*,.cards>*{min-width:0}
+footer{margin-top:64px;padding-top:16px;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+
+@media (max-width:520px){
+  body{font-size:17px}
+  .lab canvas{height:260px}
+  .course a{grid-template-columns:2rem 1fr}
+  .course .s{grid-column:2}
+  .box,.ex,.card{padding:14px 14px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+section[id],h3[id],#lab-taylor{scroll-margin-top:70px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a class="back" href="./">← Hovedside</a>
+  <div class="label" style="margin-top:14px">MA-178 ved UiA · Adams &amp; Essex, 10. utg.</div>
+  <h1 style="margin-top:10px">Exp, ln og integrasjon</h1>
+  <p class="lead">Tema 44, 45 og 46 forklart fra bunnen. Hvert kapittel starter med idéen, viser hvordan du løser hver type oppgave steg for steg, og slutter med en trener som sjekker svarene dine og oppgaver med løsning.</p>
+  <div class="course">
+    <a href="#explog"><span class="n">44</span><span class="t">Eksponensialfunksjonen, logaritmen og deres Taylorrekker</span><span class="s">Adams 3.2–3.4, 9.6</span></a>
+    <a href="#asymp"><span class="n">45</span><span class="t">Asymptotisk oppførsel</span><span class="s">Adams 3.4, 4.3, 4.5, 4.10</span></a>
+    <a href="#integ"><span class="n">46</span><span class="t">Integrasjonsteknikker</span><span class="s">Adams 5.6, 6.1–6.3</span></a>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Kapitler">
+  <div class="in">
+    <a href="./">Hovedside</a>
+    <span class="pair"><a href="#explog">44 exp &amp; ln</a><a href="#explog-ov" class="sub">oppgaver</a></span>
+    <span class="pair"><a href="#asymp">45 Asymptotikk</a><a href="#asymp-ov" class="sub">oppgaver</a></span>
+    <span class="pair"><a href="#integ">46 Integrasjon</a><a href="#integ-ov" class="sub">oppgaver</a></span>
+    <span class="prog" id="prog">0 av 0 kan du</span>
+  </div>
+</nav>
+
+<!-- ============ 44 EXP & LN ============ -->
+<section class="chap" id="explog">
+  <div class="chap-head">
+    <span class="num">TEMA 44 · Adams &amp; Essex 3.2–3.4 og 9.6</span>
+    <h2>Eksponensialfunksjonen, logaritmen og deres Taylorrekker</h2>
+  </div>
+  <div class="jump">Hopp til: <a href="#ln-def">Logaritmen</a><a href="#exp-def">Eksponensialfunksjonen</a><a href="#exp-taylor">Taylorrekkene</a><a href="#explog-bruk">Slik løser du oppgavene</a><a href="#explog-ov">Til oppgavene</a></div>
+
+  <h3>Start her: hvorfor akkurat $e$?</h3>
+  <p>Du setter 1 krone i banken med 100 % rente i året. Får du renta én gang i året, har du 2 kroner etter ett år. Får du halve renta to ganger, har du $(1+\frac12)^2=2.25$. Hva om renta legges til oftere og oftere?</p>
+  <div class="tscroll"><table class="num" style="margin:6px 0">
+    <tr><th>Renten legges til</th><th>Utregning</th><th>Kroner etter ett år</th></tr>
+    <tr><td>1 gang</td><td>(1 + 1/1)¹</td><td>2</td></tr>
+    <tr><td>10 ganger</td><td>(1 + 1/10)¹⁰</td><td>2.5937</td></tr>
+    <tr><td>100 ganger</td><td>(1 + 1/100)¹⁰⁰</td><td>2.7048</td></tr>
+    <tr><td>1000 ganger</td><td>(1 + 1/1000)¹⁰⁰⁰</td><td>2.7169</td></tr>
+    <tr class="sel"><td>uendelig ofte</td><td>grensen</td><td>e ≈ 2.71828</td></tr>
+  </table></div>
+  <p>Tallet $e$ dukker opp overalt der noe vokser i takt med hvor stort det er: renter, bakterier, radioaktivitet, opplading av en kondensator. Og $e^x$ er den eneste funksjonen som er sin egen derivert.</p>
+
+  <h3 id="ln-def">Logaritmen: et areal</h3>
+  <p>Adams bygger alt opp fra én definisjon. Den naturlige logaritmen er arealet under kurven $y=\frac1t$ fra 1 til $x$:</p>
+  <div class="box key">
+    <h4>Definisjon</h4>
+    $$\ln x=\int_1^x\frac{dt}{t},\qquad x&gt;0.$$
+  </div>
+  <p>Alt annet om $\ln$ følger av denne:</p>
+  <ul>
+    <li><strong>$\ln 1=0$</strong>, fordi arealet fra 1 til 1 er null.</li>
+    <li><strong>$\frac{d}{dx}\ln x=\frac1x$</strong>, fordi den deriverte av et areal-integral er funksjonen under (analysens fundamentalteorem).</li>
+    <li><strong>$\ln$ er voksende</strong>, fordi $\frac1x&gt;0$. Den vokser stadig saktere, men når til slutt forbi alle tall.</li>
+    <li><strong>For $0&lt;x&lt;1$ er $\ln x&lt;0$</strong>, fordi vi integrerer baklengs. Når $x\to0^+$, går $\ln x\to-\infty$.</li>
+  </ul>
+  <div class="box">
+    <h4>Hvorfor er $\ln(ab)=\ln a+\ln b$?</h4>
+    <p>Se på $g(x)=\ln(ax)$. Kjerneregelen gir $g'(x)=\frac{a}{ax}=\frac1x$, altså samme derivert som $\ln x$. To funksjoner med samme derivert skiller seg bare med en konstant: $\ln(ax)=\ln x+C$. Sett inn $x=1$: $\ln a=0+C$. Altså $\ln(ax)=\ln x+\ln a$.</p>
+  </div>
+
+  <h3 id="exp-def">Eksponensialfunksjonen: den omvendte av ln</h3>
+  <p>Siden $\ln$ er voksende, har den en omvendt funksjon. Den kaller vi $\exp(x)=e^x$. Den gjør det motsatte av $\ln$:</p>
+  $$y=e^x\iff x=\ln y,\qquad e^{\ln x}=x\;(x&gt;0),\qquad \ln(e^x)=x.$$
+  <p>Tallet $e$ er <strong>definert</strong> som tallet der arealet blir nøyaktig 1: $\ln e=1$. Grafene til $e^x$ og $\ln x$ er speilbilder av hverandre om linja $y=x$.</p>
+  <div class="box">
+    <h4>Hvorfor er $(e^x)'=e^x$?</h4>
+    <p>La $y=e^x$, så $\ln y=x$. Deriver begge sider med hensyn på $x$: $\frac{1}{y}\,y'=1$. Altså $y'=y=e^x$.</p>
+  </div>
+
+  <div class="lab" id="lab-exp">
+    <div class="lab-head">
+      <h4>Lab: aˣ og logₐ x er speilbilder</h4>
+      <div class="legend"><span><i style="background:var(--accent)"></i>aˣ</span><span><i style="background:var(--neg)"></i>logₐ x</span><span><i style="background:var(--mark)"></i>tangent i (0, 1)</span></div>
+    </div>
+    <canvas id="cv-exp" aria-label="Graf av a^x, log_a x og y = x"></canvas>
+    <div class="ctrls">
+      <label class="slider">grunntall a <input type="range" id="exp-a" min="1.3" max="5" step="0.01" value="2"><output id="exp-a-out">2.00</output></label>
+      <div class="row"><button type="button" class="btn" id="exp-e">Sett a = e</button><button type="button" class="btn" id="exp-2">Sett a = 2</button></div>
+      <div class="readout" id="exp-read"></div>
+      <p class="note">Den gule linja er tangenten til aˣ i x = 0. Stigningen er ln a. Bare når a = e er stigningen nøyaktig 1. Derfor er e det «naturlige» grunntallet.</p>
+    </div>
+  </div>
+
+  <div class="box key">
+    <h4>Regneregler og deriverte</h4>
+    <div class="tscroll"><table class="series">
+      <tr><th>Logaritme</th><th>Eksponential</th></tr>
+      <tr><td>$\ln(ab)=\ln a+\ln b$</td><td>$e^{a+b}=e^a e^b$</td></tr>
+      <tr><td>$\ln\frac ab=\ln a-\ln b$</td><td>$e^{a-b}=\frac{e^a}{e^b}$</td></tr>
+      <tr><td>$\ln(a^r)=r\ln a$</td><td>$(e^a)^r=e^{ra}$</td></tr>
+      <tr><td>$\frac{d}{dx}\ln|x|=\frac1x$</td><td>$\frac{d}{dx}e^x=e^x$</td></tr>
+    </table></div>
+    <p><strong>Andre grunntall:</strong> $a^x=e^{x\ln a}$, så $\frac{d}{dx}a^x=a^x\ln a$. Og $\log_a x=\frac{\ln x}{\ln a}$, så $\frac{d}{dx}\log_a x=\frac{1}{x\ln a}$.</p>
+  </div>
+
+  <div class="ex">
+    <div class="q">Eksempler — løs likningene</div>
+    <ol>
+      <li>$e^{2x}=5$: ta $\ln$ på begge sider: $2x=\ln5$, så $x=\frac{\ln5}{2}\approx0.805$.</li>
+      <li>$3\cdot2^x=48$: del på 3: $2^x=16=2^4$, så $x=4$. (Eller: $x=\frac{\ln16}{\ln2}=4$.)</li>
+      <li>$\ln(x-1)+\ln(x+1)=\ln3$: slå sammen: $\ln(x^2-1)=\ln3$, så $x^2=4$. Bare $x=2$ virker, fordi $\ln(x-1)$ krever $x&gt;1$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — logaritmisk derivasjon: deriver $y=x^x$</div>
+    <p>Både grunntall og eksponent varierer, så de vanlige reglene passer ikke. Ta $\ln$ først:</p>
+    <ol>
+      <li>$\ln y=x\ln x$.</li>
+      <li>Deriver begge sider: $\frac{y'}{y}=\ln x+x\cdot\frac1x=\ln x+1$.</li>
+      <li>$y'=x^x(\ln x+1)$.</li>
+    </ol>
+  </div>
+
+  <h3 id="exp-taylor">Taylorrekka til $e^x$</h3>
+  <p>Alle deriverte av $e^x$ er $e^x$, og i $x=0$ er de alle lik 1. Da blir hver koeffisient $\frac{1}{k!}$:</p>
+  <div class="box key">
+    $$e^x=\sum_{k=0}^\infty\frac{x^k}{k!}=1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\frac{x^4}{4!}+\dots\qquad x\in(-\infty,\infty)$$
+  </div>
+  <ul>
+    <li><strong>Konvergensradius $R=\infty$:</strong> forholdstesten gir $\frac{|x|}{k+1}\to0&lt;1$ for alle $x$.</li>
+    <li><strong>Rekka er lik $e^x$ overalt:</strong> restleddet $\frac{e^s}{(n+1)!}x^{n+1}$ går mot 0, fordi fakultetet vokser raskere enn enhver potens.</li>
+    <li><strong>Med $x=1$:</strong> $e=1+1+\frac12+\frac16+\frac1{24}+\dots\approx2.71828$.</li>
+  </ul>
+
+  <div class="ex">
+    <div class="q">Eksempel — Tilnærm $e^{0.5}$ med feil under $0.001$</div>
+    <ol>
+      <li>Feilen med $P_n$ er $\frac{e^s}{(n+1)!}0.5^{n+1}$ der $0&lt;s&lt;0.5$. Siden $e^{0.5}&lt;2$, er feilen under $\frac{2}{(n+1)!}0.5^{n+1}$.</li>
+      <li>$n=3$: $\frac{2}{24}\cdot0.0625\approx0.0052$. For stor.</li>
+      <li>$n=4$: $\frac{2}{120}\cdot0.03125\approx0.00052$. Godt nok.</li>
+      <li>$P_4(0.5)=1+0.5+0.125+0.020833+0.002604=1.6484$. Kalkulatoren gir $1.6487$ ✓</li>
+    </ol>
+  </div>
+
+  <h3>Taylorrekka til $\ln$</h3>
+  <p>$\ln x$ kan ikke ha en rekke rundt 0, fordi $\ln0$ ikke finnes. Derfor bruker vi senter $x=1$. Formelarket har</p>
+  $$\frac1x=\sum_{k=0}^\infty(-1)^k(x-1)^k,\qquad x\in(0,2).$$
+  <p>Integrer begge sider fra 1 til $x$. Venstre side blir $\ln x$, og hvert ledd $(x-1)^k$ blir $\frac{(x-1)^{k+1}}{k+1}$:</p>
+  <div class="box key">
+    $$\ln x=\sum_{k=1}^\infty\frac{(-1)^{k-1}}{k}(x-1)^k=(x-1)-\frac{(x-1)^2}{2}+\frac{(x-1)^3}{3}-\dots\qquad x\in(0,2]$$
+    <p class="note">Med $x=1+u$ er dette den samme rekka som $\ln(1+u)=u-\frac{u^2}{2}+\frac{u^3}{3}-\dots$ for $-1&lt;u\le1$.</p>
+  </div>
+  <ul>
+    <li><strong>Ingen fakulteter</strong>, bare $1,2,3,\dots$ i nevneren. Derfor konvergerer den mye saktere enn rekka for $e^x$.</li>
+    <li><strong>Konvergensradius $R=1$:</strong> funksjonen sprenges i $x=0$, som er avstand 1 fra senteret.</li>
+    <li><strong>Endepunktet $x=2$:</strong> $1-\frac12+\frac13-\dots$ konvergerer (alternerende), og summen er $\ln2$.</li>
+  </ul>
+
+  <div class="box">
+    <h4>Feilen i en alternerende rekke (står på formelarket)</h4>
+    <p>Når leddene veksler fortegn og blir mindre og mindre, er feilen <strong>mindre enn det første leddet du dropper</strong>. Det er mye enklere enn Lagrange.</p>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — Tilnærm $\ln1.2$ med feil under $0.001$</div>
+    <ol>
+      <li>$\ln1.2$: $x-1=0.2$. Leddene er $0.2,\;\frac{0.2^2}{2}=0.02,\;\frac{0.2^3}{3}=0.00267,\;\frac{0.2^4}{4}=0.0004,\dots$</li>
+      <li>Første ledd under $0.001$ er $0.0004$. Ta med alt før det: $0.2-0.02+0.00267=0.18267$.</li>
+      <li>Feilen er under $0.0004$. Kalkulatoren gir $0.18232$, og feilen er $0.00035$ ✓</li>
+    </ol>
+  </div>
+
+  <h3 id="explog-bruk">Slik løser du oppgavene</h3>
+  <div class="ex">
+    <div class="label">Oppgavetype 1</div>
+    <div class="q" style="margin-top:4px">«Løs likningen»</div>
+    <p><strong>Du gjør:</strong> få $e^{\dots}$ eller $\ln(\dots)$ alene på én side. Ta så $\ln$ (eller $e^{\dots}$) på begge sider. <strong>Sjekk alltid</strong> at svaret gir mening: $\ln$ av noe negativt eller null finnes ikke.</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 2</div>
+    <div class="q" style="margin-top:4px">«Deriver»</div>
+    <p><strong>Du gjør:</strong> bruk $(e^u)'=e^u u'$ og $(\ln u)'=\frac{u'}{u}$ (kjerneregelen). Varierer både grunntall og eksponent, bruker du logaritmisk derivasjon. Øv med treneren under.</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 3</div>
+    <div class="q" style="margin-top:4px">«Finn Taylorpolynomet til $e^{\dots}$ eller $\ln(\dots)$»</div>
+    <p><strong>Du gjør:</strong> start med rekka fra formelarket og bytt ut $x$. For eksempel $e^{-x^2}=1-x^2+\frac{x^4}{2!}-\dots$ og $\ln(1+2x)=2x-\frac{(2x)^2}{2}+\frac{(2x)^3}{3}-\dots$</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 4</div>
+    <div class="q" style="margin-top:4px">«Tilnærm verdien med feil mindre enn …»</div>
+    <p><strong>Du gjør:</strong> for $e^x$ bruker du Lagrange og grensen $e^s&lt;3$ (eller mindre). For $\ln$ bruker du feilen i en alternerende rekke: den er mindre enn første ledd du dropper.</p>
+  </div>
+
+  <div class="box key">
+    <h4>Huskeliste tema 44</h4>
+    <ul>
+      <li>$\ln x=\int_1^x\frac{dt}{t}$, og $\ln e=1$. $e^x$ er den omvendte funksjonen.</li>
+      <li>Regnereglene, $a^x=e^{x\ln a}$ og de deriverte.</li>
+      <li>$e^x=\sum\frac{x^k}{k!}$ for alle $x$. Feilgrense med Lagrange.</li>
+      <li>$\ln x=\sum\frac{(-1)^{k-1}}{k}(x-1)^k$ for $0&lt;x\le2$. Feilgrense: første ledd du dropper.</li>
+    </ul>
+  </div>
+
+  <h3 id="explog-ov">Øv: derivasjonstrener</h3>
+  <p>Skriv den deriverte og trykk <strong>Sjekk</strong>. Siden regner ut om svaret ditt er riktig.</p>
+  <div class="cards" id="tr-deriv"></div>
+  <h3>Øv: oppgaver</h3>
+  <div class="cards" id="ov-explog"></div>
+</section>
+
+<!-- ============ 45 ASYMPTOTIKK ============ -->
+<section class="chap" id="asymp">
+  <div class="chap-head">
+    <span class="num">TEMA 45 · Adams &amp; Essex 3.4, 4.3, 4.5 og 4.10</span>
+    <h2>Asymptotisk oppførsel</h2>
+  </div>
+  <div class="jump">Hopp til: <a href="#vekst">Hvem vokser raskest</a><a href="#tilde">Asymptotisk lik</a><a href="#asymptoter">Asymptoter</a><a href="#asymp-bruk">Slik løser du oppgavene</a><a href="#asymp-ov">Til oppgavene</a></div>
+
+  <h3>Start her: hva betyr «asymptotisk»?</h3>
+  <p>Asymptotisk oppførsel handler om hva en funksjon gjør <strong>i ytterkantene</strong>: når $x$ blir veldig stor ($x\to\infty$), eller når $x$ nærmer seg et bestemt punkt (for eksempel $x\to0$). Da bryr vi oss ikke om alle detaljer, bare om <strong>det leddet som bestemmer</strong>.</p>
+  <p class="note">Eksempel: $x^2+3x+1000$. For $x=10$ er 1000 det største leddet. For $x=10\,000$ er $x^2=100\,000\,000$ helt dominerende, og resten betyr nesten ingenting.</p>
+
+  <h3 id="vekst">Hvem vokser raskest?</h3>
+  <p>Når $x\to\infty$, gjelder alltid denne rekkefølgen:</p>
+  <div class="box key">
+    $$\ln x\;\ll\;x^a\;\ll\;e^x\qquad(a&gt;0)$$
+    <p>Logaritmer er tregest, potenser er i midten, og eksponentialfunksjoner er raskest. Presist:</p>
+    $$\lim_{x\to\infty}\frac{\ln x}{x^a}=0,\qquad\lim_{x\to\infty}\frac{x^a}{e^x}=0,\qquad\lim_{x\to0^+}x^a\ln x=0.$$
+  </div>
+  <div class="tscroll"><table class="num" style="margin:6px 0">
+    <tr><th>x</th><th>ln x</th><th>x²</th><th>eˣ</th></tr>
+    <tr><td>10</td><td>2.3</td><td>100</td><td>22 026</td></tr>
+    <tr><td>100</td><td>4.6</td><td>10 000</td><td>2.7 · 10⁴³</td></tr>
+  </table></div>
+  <div class="box warn">
+    <h4>Det kan ta tid før den raskeste vinner</h4>
+    <p>Sammenlign $x^{100}$ og $e^x$. For $x=100$ er $x^{100}=10^{200}$, mens $e^{100}\approx2.7\cdot10^{43}$. Potensen leder stort! Men rundt $x\approx647$ går $e^x$ forbi, og etter det er det ingen konkurranse. Regelen handler om hva som skjer <em>til slutt</em>. Prøv selv i labben.</p>
+  </div>
+
+  <div class="lab" id="lab-race">
+    <div class="lab-head"><h4>Lab: vekstkappløp</h4></div>
+    <div class="ctrls" style="border-top:0">
+      <div class="row seg" id="race-pre" role="group" aria-label="Velg eksempel">
+        <button type="button" data-f="x^100" data-g="e^x" aria-pressed="true">x¹⁰⁰ mot eˣ</button>
+        <button type="button" data-f="ln(x)^3" data-g="x" aria-pressed="false">(ln x)³ mot x</button>
+        <button type="button" data-f="x^2" data-g="2^x" aria-pressed="false">x² mot 2ˣ</button>
+        <button type="button" data-f="x^2+3x+1000" data-g="x^2" aria-pressed="false">x²+3x+1000 mot x²</button>
+      </div>
+      <div class="row custom-row">
+        <label for="race-f">f(x) =</label><input id="race-f" type="text" autocomplete="off" spellcheck="false" value="x^100">
+        <label for="race-g">g(x) =</label><input id="race-g" type="text" autocomplete="off" spellcheck="false" value="e^x">
+        <button type="button" class="btn" id="race-go">Sammenlign</button>
+      </div>
+      <p class="note" id="race-msg"></p>
+      <div class="tscroll"><table class="num" id="race-table"></table></div>
+      <p class="verdict" id="race-verdict"></p>
+    </div>
+  </div>
+
+  <h3 id="tilde">Asymptotisk lik: $f\sim g$</h3>
+  <p>To funksjoner er <strong>asymptotisk like</strong> hvis forholdet mellom dem går mot 1:</p>
+  <div class="box key">
+    $$f(x)\sim g(x)\ \text{ når } x\to a\quad\text{betyr}\quad\lim_{x\to a}\frac{f(x)}{g(x)}=1.$$
+    <p class="note">Med ord: nær $a$ (eller langt ute) er $f$ og $g$ nesten like, målt i prosent.</p>
+  </div>
+  <div class="tscroll"><table class="series">
+    <tr><th>Når $x\to\infty$</th><th>Når $x\to0$ (fra Taylor)</th></tr>
+    <tr><td>$x^2+3x+1000\sim x^2$</td><td>$\sin x\sim x$</td></tr>
+    <tr><td>$\dfrac{3x^2-x}{2x^2+5}\sim\dfrac32$</td><td>$e^x-1\sim x$</td></tr>
+    <tr><td>$\sqrt{x^2+1}\sim x$</td><td>$\ln(1+x)\sim x$</td></tr>
+    <tr><td>$e^x+x^5\sim e^x$</td><td>$1-\cos x\sim\frac{x^2}{2}$</td></tr>
+  </table></div>
+  <p>Kolonnen til høyre er bare <strong>første ledd i Taylorrekka</strong> som ikke er null. Det er hovedgrunnen til at Taylor er så nyttig her.</p>
+
+  <h3>Stor O: «resten er ikke større enn …»</h3>
+  <p>Adams skriver Taylorrekker med en <strong>stor O</strong> på slutten:</p>
+  $$\sin x=x-\frac{x^3}{6}+O(x^5)\quad\text{når } x\to0.$$
+  <p>$O(x^5)$ betyr «noe som ikke er større enn en konstant ganger $x^5$». Når $x$ er liten, er $x^5$ bittelite, så det er resten vi ikke bryr oss om.</p>
+  <ul>
+    <li>Når $x\to0$: den <strong>laveste</strong> potensen vinner. $O(x^3)+O(x^5)=O(x^3)$.</li>
+    <li>Gang med en potens: $x^2\cdot O(x^3)=O(x^5)$.</li>
+  </ul>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\lim_{x\to0}\frac{e^x-1-x}{x^2}$ med stor O</div>
+    <ol>
+      <li>$e^x=1+x+\frac{x^2}{2}+O(x^3)$.</li>
+      <li>$e^x-1-x=\frac{x^2}{2}+O(x^3)$.</li>
+      <li>Del på $x^2$: $\frac12+O(x)$. Når $x\to0$, forsvinner $O(x)$, og grensen er $\frac12$.</li>
+    </ol>
+  </div>
+
+  <h3>Grenseverdier når $x\to\infty$</h3>
+  <div class="box key">
+    <h4>Oppskrift: del på det som vokser raskest</h4>
+    <ol class="steps">
+      <li>Finn leddet som vokser raskest i <em>nevneren</em>.</li>
+      <li>Del både teller og nevner på det.</li>
+      <li>Alle ledd som vokser saktere, går mot 0.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempler</div>
+    <ol>
+      <li>$\dfrac{3x^2-x}{2x^2+5}=\dfrac{3-\frac1x}{2+\frac5{x^2}}\to\dfrac32$.</li>
+      <li>$\dfrac{x+1}{x^2+1}=\dfrac{\frac1x+\frac1{x^2}}{1+\frac1{x^2}}\to0$. Nevneren vokser raskest.</li>
+      <li>$\dfrac{2e^x+x^5}{e^x+1}=\dfrac{2+x^5e^{-x}}{1+e^{-x}}\to\dfrac{2+0}{1+0}=2$. Her deler vi på $e^x$.</li>
+      <li>$\sqrt{x^2+x}-x$: gang med den konjugerte: $\dfrac{x}{\sqrt{x^2+x}+x}=\dfrac{1}{\sqrt{1+\frac1x}+1}\to\dfrac12$.</li>
+    </ol>
+  </div>
+  <div class="box">
+    <h4>L'Hôpitals regel</h4>
+    <p>Gir grensen $\frac00$ eller $\frac\infty\infty$, kan du derivere teller og nevner hver for seg: $\lim\frac{f}{g}=\lim\frac{f'}{g'}$. Eksempel: $\lim_{x\to\infty}\frac{\ln x}{x}=\lim\frac{1/x}{1}=0$.</p>
+    <p class="note">Nær 0 er Taylor ofte raskere og tryggere enn L'Hôpital, spesielt hvis du må derivere flere ganger.</p>
+  </div>
+
+  <h3 id="asymptoter">Asymptoter: linjer grafen nærmer seg</h3>
+  <div class="tscroll"><table class="series">
+    <tr><th>Type</th><th>Hvordan du finner den</th></tr>
+    <tr><td><strong>Loddrett</strong> $x=a$</td><td>der funksjonen går mot $\pm\infty$, typisk der nevneren er 0 (og telleren ikke er 0)</td></tr>
+    <tr><td><strong>Vannrett</strong> $y=L$</td><td>$L=\lim_{x\to\pm\infty}f(x)$, hvis grensen er et tall</td></tr>
+    <tr><td><strong>Skrå</strong> $y=ax+b$</td><td>$a=\lim\frac{f(x)}{x}$ og $b=\lim\bigl(f(x)-ax\bigr)$. For brøker: polynomdivisjon</td></tr>
+  </table></div>
+  <div class="ex">
+    <div class="q">Eksempel — Finn asymptotene til $f(x)=\dfrac{x^2+1}{x-1}$</div>
+    <ol>
+      <li><strong>Loddrett:</strong> nevneren er 0 i $x=1$, og telleren er $2\ne0$ der. Så $x=1$ er en loddrett asymptote.</li>
+      <li><strong>Vannrett:</strong> telleren har høyere grad enn nevneren, så $f\to\pm\infty$. Ingen vannrett asymptote.</li>
+      <li><strong>Skrå:</strong> polynomdivisjon gir $\dfrac{x^2+1}{x-1}=x+1+\dfrac{2}{x-1}$. Brøken går mot 0, så $y=x+1$ er en skrå asymptote.</li>
+    </ol>
+    <p class="note">Sjekk med formlene: $a=\lim\frac{x^2+1}{x(x-1)}=1$ og $b=\lim\bigl(\frac{x^2+1}{x-1}-x\bigr)=\lim\frac{x+1}{x-1}=1$ ✓</p>
+  </div>
+
+  <h3 id="asymp-bruk">Slik løser du oppgavene</h3>
+  <div class="ex">
+    <div class="label">Oppgavetype 1</div>
+    <div class="q" style="margin-top:4px">«Finn grensen når $x\to\infty$»</div>
+    <p><strong>Du gjør:</strong> finn det som vokser raskest ($\ln\ll x^a\ll e^x$), del på det, og la resten gå mot 0. Ved $\infty-\infty$ med kvadratrøtter: gang med den konjugerte.</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 2</div>
+    <div class="q" style="margin-top:4px">«Finn grensen når $x\to0$» og du får $\frac00$</div>
+    <p><strong>Du gjør:</strong> sett inn Taylorrekkene med $O(\dots)$, forkort, og la $x\to0$. Alternativt L'Hôpital.</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 3</div>
+    <div class="q" style="margin-top:4px">«Finn en enkel funksjon $g$ slik at $f\sim g$»</div>
+    <p><strong>Du gjør:</strong> ved $\infty$: behold bare det raskeste leddet i teller og nevner. Ved 0: bruk første Taylorledd som ikke er null.</p>
+  </div>
+  <div class="ex">
+    <div class="label">Oppgavetype 4</div>
+    <div class="q" style="margin-top:4px">«Finn alle asymptoter»</div>
+    <p><strong>Du gjør:</strong> sjekk loddrett (nevner 0), vannrett (grense ved $\pm\infty$) og skrå (polynomdivisjon eller formlene for $a$ og $b$).</p>
+  </div>
+
+  <div class="box key">
+    <h4>Huskeliste tema 45</h4>
+    <ul>
+      <li>$\ln x\ll x^a\ll e^x$ når $x\to\infty$.</li>
+      <li>$f\sim g$ betyr $\frac fg\to1$. Nær 0: første Taylorledd.</li>
+      <li>$O(x^n)$ = resten, som ikke er større enn en konstant ganger $x^n$.</li>
+      <li>Grenser ved $\infty$: del på det raskeste leddet.</li>
+      <li>Asymptoter: loddrett, vannrett og skrå.</li>
+    </ul>
+  </div>
+
+  <h3 id="asymp-ov">Øv: grenseverditrener</h3>
+  <p>Skriv grensen som et tall, en brøk som <code>1/6</code>, et uttrykk som <code>e^2</code>, eller <code>uendelig</code>.</p>
+  <div class="cards" id="tr-limit"></div>
+  <h3>Øv: oppgaver</h3>
+  <div class="cards" id="ov-asymp"></div>
+</section>
+
+<!-- ============ 46 INTEGRASJON ============ -->
+<section class="chap" id="integ">
+  <div class="chap-head">
+    <span class="num">TEMA 46 · Adams &amp; Essex 5.6 og 6.1–6.3</span>
+    <h2>Integrasjonsteknikker</h2>
+  </div>
+  <div class="jump">Hopp til: <a href="#sub">Substitusjon</a><a href="#delvis">Delvis integrasjon</a><a href="#delbrok">Delbrøk</a><a href="#velg">Hvilken metode?</a><a href="#integ-ov">Til oppgavene</a></div>
+
+  <h3>Start her: integrasjon er derivasjon baklengs</h3>
+  <p>Å finne $\int f(x)\,dx$ betyr å finne en funksjon $F$ som har $f$ som derivert. Derfor kan du <strong>alltid sjekke svaret ditt ved å derivere det</strong>. Får du $f$ tilbake, er svaret riktig. Labben under gjør dette for deg.</p>
+  <div class="box key">
+    <h4>Grunnintegralene</h4>
+    <div class="tscroll"><table class="series">
+      <tr><th>$f(x)$</th><th>$\int f(x)\,dx$</th><th>$f(x)$</th><th>$\int f(x)\,dx$</th></tr>
+      <tr><td>$x^n\;(n\ne-1)$</td><td>$\frac{x^{n+1}}{n+1}+C$</td><td>$\frac1x$</td><td>$\ln|x|+C$</td></tr>
+      <tr><td>$e^{x}$</td><td>$e^{x}+C$</td><td>$a^x$</td><td>$\frac{a^x}{\ln a}+C$</td></tr>
+      <tr><td>$\sin x$</td><td>$-\cos x+C$</td><td>$\cos x$</td><td>$\sin x+C$</td></tr>
+      <tr><td>$\frac{1}{1+x^2}$</td><td>$\arctan x+C$</td><td>$\frac{1}{\sqrt{1-x^2}}$</td><td>$\arcsin x+C$</td></tr>
+    </table></div>
+    <p class="note">Nyttig snarvei: $\int f(ax+b)\,dx=\frac1a F(ax+b)+C$. For eksempel $\int e^{3x}dx=\frac13e^{3x}+C$.</p>
+  </div>
+
+  <h3 id="sub">Substitusjon: kjerneregelen baklengs</h3>
+  <p><strong>Idéen:</strong> ser du en funksjon <em>inni</em> en annen, og den deriverte av den indre også står der, kan du bytte den indre ut med én bokstav $u$.</p>
+  <div class="box key">
+    <h4>Oppskrift</h4>
+    <ol class="steps">
+      <li>Velg $u$ = det som står inni (i en parentes, en eksponent eller under en rot).</li>
+      <li>Regn ut $du=u'\,dx$.</li>
+      <li>Bytt ut alt med $u$ og $du$. Det skal ikke være noen $x$ igjen.</li>
+      <li>Integrer i $u$, og sett $x$ tilbake til slutt.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int2x\cos(x^2)\,dx$</div>
+    <ol>
+      <li>Det som står inni cos, er $x^2$. Velg $u=x^2$.</li>
+      <li>$du=2x\,dx$. Det står akkurat $2x\,dx$ i integralet!</li>
+      <li>$\int\cos u\,du=\sin u+C$.</li>
+      <li>Sett tilbake: $\sin(x^2)+C$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int x\,e^{x^2}\,dx$ (mangler en faktor)</div>
+    <ol>
+      <li>$u=x^2$, $du=2x\,dx$. Vi har bare $x\,dx$, altså $x\,dx=\frac12du$.</li>
+      <li>$\int e^u\cdot\frac12du=\frac12e^u+C=\frac12e^{x^2}+C$.</li>
+    </ol>
+    <p class="note">Mangler du en <em>konstant</em>, kan du justere med en brøk. Mangler du et <em>uttrykk med $x$</em>, virker ikke substitusjonen, og du må prøve noe annet.</p>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int\frac{\ln x}{x}\,dx$</div>
+    <ol>
+      <li>$u=\ln x$, $du=\frac1x\,dx$.</li>
+      <li>$\int u\,du=\frac{u^2}{2}+C=\frac{(\ln x)^2}{2}+C$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Bestemt integral — $\displaystyle\int_0^2\frac{x}{x^2+1}\,dx$: bytt grensene også</div>
+    <ol>
+      <li>$u=x^2+1$, $du=2x\,dx$, så $x\,dx=\frac12du$.</li>
+      <li>Nye grenser: $x=0$ gir $u=1$, og $x=2$ gir $u=5$.</li>
+      <li>$\frac12\int_1^5\frac{du}{u}=\frac12\bigl[\ln u\bigr]_1^5=\frac12\ln5\approx0.805$.</li>
+    </ol>
+  </div>
+
+  <h3 id="delvis">Delvis integrasjon: produktregelen baklengs</h3>
+  <p><strong>Idéen:</strong> når du har et <em>produkt</em> av to ulike typer funksjoner, for eksempel $x\cdot e^x$, kan du flytte derivasjonen fra den ene til den andre.</p>
+  <div class="box key">
+    <h4>Formelen</h4>
+    $$\int u\,v'\,dx=u\,v-\int u'\,v\,dx$$
+    <p><strong>Hvordan velge $u$?</strong> Velg $u$ som den som blir <em>enklere</em> når du deriverer. Huskeregel <strong>LIATE</strong>: velg $u$ fra den første typen på lista:</p>
+    <p style="font-family:var(--f-mono);font-size:.9rem">Logaritme → Invers trig (arctan) → Algebraisk (x, x²) → Trig (sin, cos) → Eksponential (eˣ)</p>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int x\,e^x\,dx$</div>
+    <ol>
+      <li>$x$ er algebraisk, $e^x$ er eksponential. LIATE: $u=x$ og $v'=e^x$.</li>
+      <li>Da er $u'=1$ og $v=e^x$.</li>
+      <li>$\int x e^x\,dx=x e^x-\int1\cdot e^x\,dx=x e^x-e^x+C$.</li>
+      <li>Sjekk: $(x e^x-e^x)'=e^x+x e^x-e^x=x e^x$ ✓</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int\ln x\,dx$ (trikset med $v'=1$)</div>
+    <ol>
+      <li>Skriv $\ln x=\ln x\cdot1$. Velg $u=\ln x$ og $v'=1$.</li>
+      <li>$u'=\frac1x$ og $v=x$.</li>
+      <li>$\int\ln x\,dx=x\ln x-\int\frac1x\cdot x\,dx=x\ln x-x+C$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int x^2\sin x\,dx$ (to ganger)</div>
+    <ol>
+      <li>$u=x^2$, $v'=\sin x$: $\;-x^2\cos x+\int2x\cos x\,dx$.</li>
+      <li>Ny runde med $u=2x$, $v'=\cos x$: $\;\int2x\cos x\,dx=2x\sin x-\int2\sin x\,dx=2x\sin x+2\cos x$.</li>
+      <li>Til sammen: $-x^2\cos x+2x\sin x+2\cos x+C$.</li>
+    </ol>
+    <p class="note">Hver runde gjør potensen av $x$ én mindre. Med $x^2$ trenger du to runder.</p>
+  </div>
+
+  <h3 id="delbrok">Delbrøkoppspalting: del opp en brøk</h3>
+  <p><strong>Idéen:</strong> en vanskelig brøk med et produkt i nevneren kan skrives som en sum av enkle brøker, og de er lette å integrere: $\int\frac{dx}{x-a}=\ln|x-a|+C$.</p>
+  <div class="box key">
+    <h4>Oppskrift</h4>
+    <ol class="steps">
+      <li><strong>Er graden i telleren minst like stor som i nevneren?</strong> Gjør polynomdivisjon først.</li>
+      <li><strong>Faktoriser nevneren</strong>, for eksempel $x^2+x-2=(x+2)(x-1)$.</li>
+      <li><strong>Skriv</strong> $\dfrac{\text{teller}}{(x-a)(x-b)}=\dfrac{A}{x-a}+\dfrac{B}{x-b}$.</li>
+      <li><strong>Finn $A$ og $B$</strong> med «dekk-over»-trikset: for å finne $A$, dekk over $(x-a)$ og sett inn $x=a$ i resten.</li>
+      <li><strong>Integrer</strong> hver brøk til $\ln$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int\frac{x+5}{x^2+x-2}\,dx$</div>
+    <ol>
+      <li>Nevneren: $x^2+x-2=(x-1)(x+2)$.</li>
+      <li>$\dfrac{x+5}{(x-1)(x+2)}=\dfrac{A}{x-1}+\dfrac{B}{x+2}$.</li>
+      <li>$A$: dekk over $(x-1)$, sett inn $x=1$: $A=\frac{1+5}{1+2}=2$.<br>$B$: dekk over $(x+2)$, sett inn $x=-2$: $B=\frac{-2+5}{-2-1}=-1$.</li>
+      <li>$\int\Bigl(\dfrac{2}{x-1}-\dfrac{1}{x+2}\Bigr)dx=2\ln|x-1|-\ln|x+2|+C$.</li>
+    </ol>
+  </div>
+  <div class="ex">
+    <div class="q">Eksempel — $\displaystyle\int\frac{x^2}{x+1}\,dx$ (polynomdivisjon først)</div>
+    <ol>
+      <li>Graden i telleren (2) er større enn i nevneren (1). Del: $\dfrac{x^2}{x+1}=x-1+\dfrac{1}{x+1}$.</li>
+      <li>Sjekk: $(x-1)(x+1)+1=x^2$ ✓</li>
+      <li>$\int\Bigl(x-1+\dfrac1{x+1}\Bigr)dx=\dfrac{x^2}{2}-x+\ln|x+1|+C$.</li>
+    </ol>
+  </div>
+  <div class="box">
+    <h4>Når nevneren ikke kan faktoriseres</h4>
+    <p>Da ender du ofte med arctan: $\displaystyle\int\frac{dx}{x^2+a^2}=\frac1a\arctan\frac xa+C$. For eksempel $\int\frac{dx}{x^2+4}=\frac12\arctan\frac x2+C$.</p>
+  </div>
+
+  <h3 id="velg">Hvilken metode skal jeg bruke?</h3>
+  <div class="tscroll"><table class="series">
+    <tr><th>Ser du …</th><th>Prøv</th><th>Eksempel</th></tr>
+    <tr><td>noe inni noe, og den deriverte av det indre står der også</td><td>substitusjon</td><td>$\int2x\,e^{x^2}dx$</td></tr>
+    <tr><td>et produkt av to ulike typer funksjoner</td><td>delvis integrasjon</td><td>$\int x\cos x\,dx$</td></tr>
+    <tr><td>$\ln x$ eller $\arctan x$ alene</td><td>delvis med $v'=1$</td><td>$\int\ln x\,dx$</td></tr>
+    <tr><td>en brøk med polynomer, og nevneren kan faktoriseres</td><td>delbrøk</td><td>$\int\frac{dx}{x^2-1}$</td></tr>
+    <tr><td>$\frac{1}{x^2+a^2}$</td><td>arctan</td><td>$\int\frac{dx}{x^2+9}$</td></tr>
+  </table></div>
+  <p class="note">Står du fast, prøv substitusjon først. Det løser flest oppgaver.</p>
+
+  <div class="lab" id="lab-anti">
+    <div class="lab-head"><h4>Lab: sjekk antideriverten din</h4></div>
+    <div class="ctrls" style="border-top:0">
+      <div class="row custom-row">
+        <label for="ad-f">f(x) =</label><input id="ad-f" type="text" autocomplete="off" spellcheck="false" value="x*e^x">
+      </div>
+      <div class="row custom-row">
+        <label for="ad-F">Ditt svar F(x) =</label><input id="ad-F" type="text" autocomplete="off" spellcheck="false" value="x*e^x - e^x">
+        <button type="button" class="btn" id="ad-go">Sjekk</button>
+      </div>
+      <p class="verdict" id="ad-verdict"></p>
+      <p class="note">Siden deriverer svaret ditt og sammenligner med f(x) i flere punkter. +C trenger du ikke skrive. Bruk abs( ) for absoluttverdi, for eksempel ln(abs(x-1)).</p>
+    </div>
+  </div>
+
+  <div class="box key">
+    <h4>Huskeliste tema 46</h4>
+    <ul>
+      <li>Sjekk alltid ved å derivere svaret.</li>
+      <li>Substitusjon: $u$ = det indre, $du=u'dx$, ingen $x$ igjen. Bytt grensene i bestemte integraler.</li>
+      <li>Delvis: $\int uv'=uv-\int u'v$. Velg $u$ med LIATE.</li>
+      <li>Delbrøk: polynomdivisjon først, faktoriser, dekk-over, integrer til $\ln$.</li>
+      <li>$\frac{1}{x^2+a^2}$ gir $\frac1a\arctan\frac xa$.</li>
+    </ul>
+  </div>
+
+  <h3 id="integ-ov">Øv: integrasjonstrener</h3>
+  <p>Finn $\int f(x)\,dx$, skriv svaret og trykk <strong>Sjekk</strong>. Siden deriverer svaret ditt for å se om det stemmer.</p>
+  <div class="cards" id="tr-integ"></div>
+  <h3>Øv: oppgaver</h3>
+  <div class="cards" id="ov-integ"></div>
+</section>
+
+<footer>
+  Seksjonsnumrene er fra Adams &amp; Essex, <em>Calculus: A Complete Course</em>, 10. utgave. Sjekk innholdsfortegnelsen hvis noe ikke stemmer med din utgave. <a href="./">Tilbake til hovedsiden</a>.
+</footer>
+</div>
+
+<script>
+/* ================= Parser ================= */
+const FNS = {sin:Math.sin,cos:Math.cos,tan:Math.tan,exp:Math.exp,ln:Math.log,log:Math.log,sqrt:Math.sqrt,arctan:Math.atan,atan:Math.atan,arcsin:Math.asin,asin:Math.asin,abs:Math.abs};
+function pparse(src){
+  let s = String(src).replace(/[·×]/g,'*').replace(/[−–]/g,'-').replace(/,/g,'.').replace(/\*\*/g,'^').replace(/√/g,'sqrt').replace(/π/g,'pi').replace(/∞/g,'inf').trim();
+  s = s.replace(/\+\s*[cC]\s*$/,'').trim();
+  if (!s) throw new Error('Skriv inn et svar.');
+  const names = Object.keys(FNS).sort((a,b)=>b.length-a.length);
+  const raw = []; let i = 0;
+  while (i < s.length){
+    const c = s[i];
+    if (/\s/.test(c)){ i++; continue; }
+    if (/[0-9.]/.test(c)){ let j=i; while(j<s.length && /[0-9.]/.test(s[j])) j++; const t=s.slice(i,j); if(!/^(\d+\.?\d*|\.\d+)$/.test(t)) throw new Error(`Kan ikke lese tallet «${t}».`); raw.push({t:'num',v:parseFloat(t)}); i=j; continue; }
+    if (/[a-zA-Z]/.test(c)){ let j=i; while(j<s.length && /[a-zA-Z]/.test(s[j])) j++; raw.push({t:'id',v:s.slice(i,j).toLowerCase()}); i=j; continue; }
+    if ('+-*/^()!|'.includes(c)){ raw.push({t:c}); i++; continue; }
+    throw new Error(`Ukjent tegn «${c}».`);
+  }
+  const toks = [];
+  raw.forEach(t => {
+    if (t.t!=='id' || FNS[t.v] || ['x','e','pi','inf','uendelig'].includes(t.v)) { toks.push(t); return; }
+    let w = t.v;
+    while (w.length){
+      const f = names.find(k => w.startsWith(k)); if (f){ toks.push({t:'id',v:f}); w=w.slice(f.length); continue; }
+      const m = ['pi','x','e'].find(k => w.startsWith(k));
+      if (!m) throw new Error(`Ukjent symbol «${t.v}». Bruk x som variabel.`);
+      toks.push({t:'id',v:m}); w = w.slice(m.length);
+    }
+  });
+  let p = 0;
+  const peek = () => toks[p], eat = t => { if (toks[p] && toks[p].t===t){ p++; return true; } return false; };
+  function expr(){ let a = term(); for(;;){ if (eat('+')) a={t:'bin',op:'+',l:a,r:term()}; else if (eat('-')) a={t:'bin',op:'-',l:a,r:term()}; else return a; } }
+  function term(){ let a = unary(); for(;;){
+    if (eat('*')) a={t:'bin',op:'*',l:a,r:unary()};
+    else if (eat('/')) a={t:'bin',op:'/',l:a,r:unary()};
+    else if (peek() && (peek().t==='num'||peek().t==='id'||peek().t==='(')) a={t:'bin',op:'*',l:a,r:power()};
+    else return a; } }
+  function unary(){ if (eat('-')) return {t:'neg',a:unary()}; if (eat('+')) return unary(); return power(); }
+  function power(){ const b = postfix(); if (eat('^')) return {t:'bin',op:'^',l:b,r:unary()}; return b; }
+  function postfix(){ let a = primary(); while (eat('!')) a={t:'fact',a}; return a; }
+  function primary(){
+    const t = peek(); if (!t) throw new Error('Uttrykket slutter for tidlig.');
+    if (t.t==='num'){ p++; return {t:'num',v:t.v}; }
+    if (eat('(')){ const a=expr(); if(!eat(')')) throw new Error('Mangler en sluttparentes.'); return a; }
+    if (eat('|')){ const a=expr(); if(!eat('|')) throw new Error('Mangler en avsluttende |.'); return {t:'fn',f:'abs',a}; }
+    if (t.t==='id'){
+      p++;
+      if (FNS[t.v]){ if(!eat('(')) throw new Error(`Skriv ${t.v}(...) med parentes, f.eks. ${t.v}(x).`); const a=expr(); if(!eat(')')) throw new Error('Mangler en sluttparentes.'); return {t:'fn',f:t.v,a}; }
+      if (t.v==='e') return {t:'num',v:Math.E};
+      if (t.v==='pi') return {t:'num',v:Math.PI};
+      if (t.v==='inf' || t.v==='uendelig') return {t:'num',v:Infinity};
+      return {t:'var'};
+    }
+    throw new Error('Uventet tegn i uttrykket.');
+  }
+  const ast = expr();
+  if (p < toks.length) throw new Error('Kan ikke lese hele uttrykket. Sjekk parentesene.');
+  return x => ev(ast, x);
+}
+function pfact(n){ if (n<0||n>170||Math.round(n)!==n) return NaN; let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+function ev(a, x){
+  switch(a.t){
+    case 'num': return a.v; case 'var': return x;
+    case 'neg': return -ev(a.a,x);
+    case 'fact': return pfact(ev(a.a,x));
+    case 'bin': { const l=ev(a.l,x), r=ev(a.r,x);
+      return a.op==='+'?l+r : a.op==='-'?l-r : a.op==='*'?l*r : a.op==='/'?l/r : Math.pow(l,r); }
+    case 'fn': return FNS[a.f](ev(a.a,x));
+  }
+}
+const nd = (F, x) => { const h = 1e-5*Math.max(1, Math.abs(x)); return (F(x+h) - F(x-h)) / (2*h); };
+function closeTo(a, b, tol=2e-5){ return isFinite(a) && isFinite(b) && Math.abs(a-b) <= tol*Math.max(1, Math.abs(b)); }
+function usesX(F, pts=[0.37, 1.91]){ return pts.some(v => { const a=F(v), b=F(v+0.53); return isFinite(a)&&isFinite(b)&&Math.abs(a-b)>1e-12; }); }
+
+/* ================= Felles: MathJax ================= */
+function typeset(els){
+  if (window.__mjReady && window.MathJax && MathJax.typesetPromise) { MathJax.typesetClear(els); return MathJax.typesetPromise(els).catch(()=>{}); }
+}
+
+/* ================= Oppgavekort ================= */
+const PROBLEMS = [
+  {id:'e1', t:'explog', lvl:1, q:'Løs likningen $e^{3x-1}=7$.',
+   h:'Ta $\\ln$ på begge sider.',
+   s:'$3x-1=\\ln7$, så $x=\\dfrac{1+\\ln7}{3}\\approx0.982$.'},
+  {id:'e2', t:'explog', lvl:1, q:'Løs likningen $\\ln x+\\ln(x-2)=\\ln 3$.',
+   h:'Slå sammen til én logaritme. Husk at $\\ln$ bare er definert for positive tall.',
+   s:'$\\ln(x(x-2))=\\ln3$, så $x^2-2x-3=0$, altså $(x-3)(x+1)=0$. $x=-1$ går ikke (da er $\\ln x$ udefinert), så <strong>$x=3$</strong>.'},
+  {id:'e3', t:'explog', lvl:2, q:'Finn Taylorpolynomet $P_3(x)$ til $f(x)=e^{-2x}$ med senter i 0.',
+   h:'Bytt $x$ med $-2x$ i rekka for $e^x$.',
+   s:'$$e^{-2x}=1+(-2x)+\\frac{(-2x)^2}{2!}+\\frac{(-2x)^3}{3!}+\\dots$$ $$P_3(x)=1-2x+2x^2-\\frac43x^3.$$'},
+  {id:'e4', t:'explog', lvl:2, q:'Bruk rekka for $\\ln x$ om $x=1$ til å finne $\\ln(0.9)$ med feil mindre enn $0.0001$.',
+   h:'$x-1=-0.1$. Alle leddene blir negative her, så rekka er ikke alternerende. Se på hvor fort leddene blir små.',
+   s:'Med $x-1=-0.1$: $(-0.1)-\\frac{0.01}{2}+\\frac{-0.001}{3}-\\frac{0.0001}{4}-\\dots=-0.1-0.005-0.000333-0.000025-\\dots$<br>Leddene avtar raskt (hvert er under en tidel av forrige), så resten etter fire ledd er godt under $0.0001$: $\\ln0.9\\approx-0.10536$. (Kalkulator: $-0.105361$.)'},
+  {id:'e5', t:'explog', lvl:3, q:'Hvor mange ledd av rekka for $e^x$ trengs for å regne ut $e^{-1}$ med feil mindre enn $0.001$?',
+   h:'Med $x=-1$ blir rekka alternerende. Feilen er mindre enn første ledd du dropper: $\\frac{1}{k!}$.',
+   s:'Rekka er $1-1+\\frac12-\\frac16+\\frac1{24}-\\frac1{120}+\\frac1{720}-\\dots$ Første ledd under $0.001$ er $\\frac1{7!}=\\frac1{5040}\\approx0.0002$. Ta med leddene til og med $\\frac1{6!}$, altså <strong>7 ledd</strong> ($k=0,\\dots,6$): summen er $0.36806$. (Kalkulator: $e^{-1}=0.36788$.)'},
+  {id:'a1', t:'asymp', lvl:1, q:'Finn alle asymptotene til $f(x)=\\dfrac{2x^2+3}{x^2-4}$.',
+   h:'Loddrett: der nevneren er 0. Vannrett: del på $x^2$.',
+   s:'Loddrette: $x=2$ og $x=-2$ (nevneren er 0, telleren er $11\\ne0$).<br>Vannrett: $\\dfrac{2+3/x^2}{1-4/x^2}\\to2$, så $y=2$. Ingen skrå asymptote.'},
+  {id:'a2', t:'asymp', lvl:2, q:'Finn den skrå asymptoten til $f(x)=\\dfrac{x^3+1}{x^2+1}$.',
+   h:'Polynomdivisjon: $x^3+1=x(x^2+1)+(\\dots)$.',
+   s:'$x^3+1=x(x^2+1)-x+1$, så $f(x)=x+\\dfrac{1-x}{x^2+1}$. Brøken går mot 0, så <strong>$y=x$</strong> er skrå asymptote.'},
+  {id:'a3', t:'asymp', lvl:2, q:'Finn en enkel funksjon $g$ slik at $\\sqrt{x+1}-\\sqrt{x}\\sim g(x)$ når $x\\to\\infty$.',
+   h:'Gang med den konjugerte $\\sqrt{x+1}+\\sqrt x$ over og under.',
+   s:'$$\\sqrt{x+1}-\\sqrt x=\\frac{1}{\\sqrt{x+1}+\\sqrt x}.$$ For store $x$ er nevneren nesten $2\\sqrt x$, så $g(x)=\\dfrac{1}{2\\sqrt x}$.'},
+  {id:'a4', t:'asymp', lvl:3, q:'Skriv $\\dfrac{\\sin x}{x}$ som $1+(\\dots)+O(x^4)$ når $x\\to0$, og bruk det til å finne $\\displaystyle\\lim_{x\\to0}\\frac{1}{x^2}\\Bigl(1-\\frac{\\sin x}{x}\\Bigr)$.',
+   h:'$\\sin x=x-\\frac{x^3}{6}+O(x^5)$. Del på $x$.',
+   s:'$\\dfrac{\\sin x}{x}=1-\\dfrac{x^2}{6}+O(x^4)$. Da er $1-\\dfrac{\\sin x}{x}=\\dfrac{x^2}{6}+O(x^4)$, og delt på $x^2$ blir det $\\dfrac16+O(x^2)\\to\\dfrac16$.'},
+  {id:'i1', t:'integ', lvl:1, q:'Regn ut $\\displaystyle\\int_0^1 x\\,e^{-x^2}\\,dx$.',
+   h:'$u=-x^2$, og bytt grensene.',
+   s:'$u=-x^2$, $du=-2x\\,dx$. Grenser: $0\\to0$ og $1\\to-1$. $$-\\frac12\\int_0^{-1}e^u\\,du=-\\frac12(e^{-1}-1)=\\frac12\\bigl(1-e^{-1}\\bigr)\\approx0.316.$$'},
+  {id:'i2', t:'integ', lvl:2, q:'Regn ut $\\displaystyle\\int_1^e x\\ln x\\,dx$.',
+   h:'Delvis integrasjon. LIATE: $u=\\ln x$, $v\'=x$.',
+   s:'$u=\\ln x$, $v=\\frac{x^2}{2}$: $\\;\\int x\\ln x\\,dx=\\frac{x^2}{2}\\ln x-\\int\\frac{x}{2}dx=\\frac{x^2}{2}\\ln x-\\frac{x^2}{4}$.<br>Fra 1 til $e$: $\\bigl(\\frac{e^2}{2}-\\frac{e^2}{4}\\bigr)-\\bigl(0-\\frac14\\bigr)=\\dfrac{e^2+1}{4}\\approx2.097$.'},
+  {id:'i3', t:'integ', lvl:2, q:'Finn $\\displaystyle\\int\\frac{5x-1}{x^2-x-2}\\,dx$.',
+   h:'$x^2-x-2=(x-2)(x+1)$. Bruk dekk-over-trikset.',
+   s:'$A$ (for $x-2$): $\\frac{5\\cdot2-1}{2+1}=3$. $B$ (for $x+1$): $\\frac{-5-1}{-1-2}=2$.<br>$$\\int\\Bigl(\\frac{3}{x-2}+\\frac{2}{x+1}\\Bigr)dx=3\\ln|x-2|+2\\ln|x+1|+C.$$'},
+  {id:'i4', t:'integ', lvl:3, q:'Finn $\\displaystyle\\int e^x\\sin x\\,dx$.',
+   h:'Delvis integrasjon to ganger. Da kommer det opprinnelige integralet tilbake, og du kan løse for det som en likning.',
+   s:'Kall integralet $I$. Med $u=\\sin x$, $v\'=e^x$: $I=e^x\\sin x-\\int e^x\\cos x\\,dx$.<br>Igjen med $u=\\cos x$: $\\int e^x\\cos x\\,dx=e^x\\cos x+\\int e^x\\sin x\\,dx=e^x\\cos x+I$.<br>Altså $I=e^x\\sin x-e^x\\cos x-I$, så $2I=e^x(\\sin x-\\cos x)$ og $$I=\\frac{e^x(\\sin x-\\cos x)}{2}+C.$$'}
+];
+const LVL = {1:'Lett',2:'Middels',3:'Eksamensnivå'};
+const CHNO = {explog:44, asymp:45, integ:46};
+let done = {};
+try { done = JSON.parse(localStorage.getItem('kalk2-done') || '{}') || {}; } catch(e) { done = {}; }
+function saveDone(){ try { localStorage.setItem('kalk2-done', JSON.stringify(done)); } catch(e){} }
+function updateProg(){ const n = PROBLEMS.filter(p => done[p.id]).length; document.getElementById('prog').textContent = `${n} av ${PROBLEMS.length} kan du`; }
+function renderCards(){
+  const cnt = {explog:0, asymp:0, integ:0};
+  PROBLEMS.forEach(p => {
+    const box = document.getElementById('ov-'+p.t); if (!box) return;
+    cnt[p.t]++;
+    const c = document.createElement('article');
+    c.className = 'card' + (done[p.id] ? ' done' : '');
+    c.innerHTML = `
+      <div class="meta"><span class="num">Oppgave ${CHNO[p.t]}.${cnt[p.t]}</span><span class="chip lvl-${p.lvl}">${LVL[p.lvl]}</span></div>
+      <div class="q">${p.q}</div>
+      <div class="actions">
+        <button type="button" class="btn" data-a="h">Vis hint</button>
+        <button type="button" class="btn" data-a="s">Vis løsning</button>
+        <label class="can"><input type="checkbox" id="can-${p.id}" ${done[p.id]?'checked':''}> Kan denne</label>
+      </div>
+      <div class="reveal" data-r="h" hidden><span class="label">Hint</span><div>${p.h}</div></div>
+      <div class="reveal" data-r="s" hidden><span class="label">Løsning</span><div>${p.s}</div></div>`;
+    c.querySelectorAll('button[data-a]').forEach(b => b.addEventListener('click', () => {
+      const r = c.querySelector(`[data-r="${b.dataset.a}"]`); r.hidden = !r.hidden;
+      b.textContent = (r.hidden ? 'Vis ' : 'Skjul ') + (b.dataset.a==='h' ? 'hint' : 'løsning');
+    }));
+    c.querySelector('input').addEventListener('change', e => {
+      if (e.target.checked) done[p.id] = true; else delete done[p.id];
+      c.classList.toggle('done', !!done[p.id]); saveDone(); updateProg();
+    });
+    box.appendChild(c);
+  });
+}
+
+/* ================= Trenere ================= */
+const BANK = {
+  deriv: [
+    {f:'e^(3x)', tex:'e^{3x}', pts:[0.3,1.1,-0.7], h:'Kjerneregelen: $(e^u)\'=e^u\\cdot u\'$.', s:'$f\'(x)=3e^{3x}$', a:'3e^(3x)'},
+    {f:'ln(x^2+1)', tex:'\\ln(x^2+1)', pts:[0.5,1.7,-2.2], h:'$(\\ln u)\'=\\frac{u\'}{u}$.', s:'$f\'(x)=\\dfrac{2x}{x^2+1}$', a:'2x/(x^2+1)'},
+    {f:'x*e^(-x)', tex:'x\\,e^{-x}', pts:[0.4,1.3,2.9], h:'Produktregelen, og $(e^{-x})\'=-e^{-x}$.', s:'$f\'(x)=e^{-x}-xe^{-x}=(1-x)e^{-x}$', a:'(1-x)e^(-x)'},
+    {f:'2^x', tex:'2^x', pts:[0.5,1.5,-1], h:'$a^x=e^{x\\ln a}$, så $(a^x)\'=a^x\\ln a$.', s:'$f\'(x)=2^x\\ln2$', a:'2^x*ln(2)'},
+    {f:'ln(ln(x))', tex:'\\ln(\\ln x)', pts:[1.5,2.7,5], h:'Kjerneregelen to ganger: ytre $\\ln u$, indre $u=\\ln x$.', s:'$f\'(x)=\\dfrac{1}{\\ln x}\\cdot\\dfrac1x=\\dfrac{1}{x\\ln x}$', a:'1/(x*ln(x))'},
+    {f:'x^x', tex:'x^x', pts:[0.5,1.2,2.3], h:'Logaritmisk derivasjon: $\\ln y=x\\ln x$.', s:'$f\'(x)=x^x(\\ln x+1)$', a:'x^x*(ln(x)+1)'},
+    {f:'e^(sin(x))', tex:'e^{\\sin x}', pts:[0.3,1.4,-2], h:'$(e^u)\'=e^u u\'$ med $u=\\sin x$.', s:'$f\'(x)=\\cos x\\;e^{\\sin x}$', a:'cos(x)e^(sin(x))'},
+    {f:'ln((x+1)/(x-1))', tex:'\\ln\\dfrac{x+1}{x-1}', pts:[1.5,2.5,4], h:'Skriv om først: $\\ln(x+1)-\\ln(x-1)$.', s:'$f\'(x)=\\dfrac1{x+1}-\\dfrac1{x-1}=\\dfrac{-2}{x^2-1}$', a:'-2/(x^2-1)'},
+    {f:'x^2*ln(x)', tex:'x^2\\ln x', pts:[0.5,1.5,3], h:'Produktregelen.', s:'$f\'(x)=2x\\ln x+x$', a:'2x*ln(x)+x'},
+    {f:'ln(x)/ln(10)', tex:'\\log_{10}x', pts:[0.5,2,7], h:'$\\log_{10}x=\\frac{\\ln x}{\\ln10}$.', s:'$f\'(x)=\\dfrac{1}{x\\ln10}$', a:'1/(x*ln(10))'}
+  ],
+  limit: [
+    {tex:'\\lim_{x\\to\\infty}\\frac{3x^2-x}{2x^2+5}', v:1.5, h:'Del teller og nevner på $x^2$.', s:'$\\frac{3-1/x}{2+5/x^2}\\to\\frac32$'},
+    {tex:'\\lim_{x\\to\\infty}x^5e^{-x}', v:0, h:'Eksponentialer vinner over potenser.', s:'$\\frac{x^5}{e^x}\\to0$, fordi $e^x$ vokser raskere enn alle potenser.'},
+    {tex:'\\lim_{x\\to0}\\frac{e^x-1-x}{x^2}', v:0.5, h:'$e^x=1+x+\\frac{x^2}{2}+O(x^3)$.', s:'Telleren er $\\frac{x^2}{2}+O(x^3)$. Delt på $x^2$: $\\frac12+O(x)\\to\\frac12$.'},
+    {tex:'\\lim_{x\\to0}\\frac{1-\\cos x}{x^2}', v:0.5, h:'$\\cos x=1-\\frac{x^2}{2}+O(x^4)$.', s:'$1-\\cos x=\\frac{x^2}{2}+O(x^4)$, så grensen er $\\frac12$.'},
+    {tex:'\\lim_{x\\to\\infty}\\frac{(\\ln x)^3}{x}', v:0, h:'Logaritmer (også opphøyd) taper mot potenser.', s:'$(\\ln x)^3\\ll x$, så grensen er 0.'},
+    {tex:'\\lim_{x\\to\\infty}\\frac{2e^x+x^5}{e^x+1}', v:2, h:'Del teller og nevner på $e^x$.', s:'$\\frac{2+x^5e^{-x}}{1+e^{-x}}\\to\\frac{2+0}{1+0}=2$'},
+    {tex:'\\lim_{x\\to0}\\frac{x-\\sin x}{x^3}', v:1/6, h:'$\\sin x=x-\\frac{x^3}{6}+O(x^5)$.', s:'$x-\\sin x=\\frac{x^3}{6}+O(x^5)$, så grensen er $\\frac16$.'},
+    {tex:'\\lim_{x\\to\\infty}\\left(\\sqrt{x^2+x}-x\\right)', v:0.5, h:'Gang med den konjugerte.', s:'$\\frac{x}{\\sqrt{x^2+x}+x}=\\frac{1}{\\sqrt{1+1/x}+1}\\to\\frac12$'},
+    {tex:'\\lim_{x\\to0^+}x\\ln x', v:0, h:'Standardgrense: $x^a\\ln x\\to0$.', s:'Potensen vinner over logaritmen, så grensen er 0. (Eller L\'Hôpital på $\\frac{\\ln x}{1/x}$.)'},
+    {tex:'\\lim_{x\\to\\infty}\\left(1+\\frac2x\\right)^x', v:Math.exp(2), h:'Husk $\\left(1+\\frac{a}{x}\\right)^x\\to e^a$.', s:'$e^2\\approx7.389$'},
+    {tex:'\\lim_{x\\to0}\\frac{\\ln(1+3x)}{x}', v:3, h:'$\\ln(1+u)=u+O(u^2)$ med $u=3x$.', s:'$\\ln(1+3x)=3x+O(x^2)$, så grensen er 3.'},
+    {tex:'\\lim_{x\\to\\infty}\\frac{x^2+1}{x+1}', v:Infinity, h:'Hvilken grad er høyest, teller eller nevner?', s:'Telleren har høyere grad, så brøken vokser uten grense: $\\infty$.'}
+  ],
+  integ: [
+    {f:'3x^2+2x', tex:'3x^2+2x', pts:[0.5,1.3,-1.1], h:'Grunnintegral for potenser.', s:'$x^3+x^2+C$'},
+    {f:'cos(3x)', tex:'\\cos(3x)', pts:[0.2,1.1,-0.8], h:'$\\int f(ax)\\,dx=\\frac1aF(ax)$.', s:'$\\frac13\\sin(3x)+C$'},
+    {f:'x*e^(x^2)', tex:'x\\,e^{x^2}', pts:[0.3,0.9,-0.6], h:'Substitusjon $u=x^2$.', s:'$\\frac12e^{x^2}+C$'},
+    {f:'2x/(x^2+1)', tex:'\\dfrac{2x}{x^2+1}', pts:[0.5,1.7,-2], h:'Telleren er den deriverte av nevneren.', s:'$\\ln(x^2+1)+C$'},
+    {f:'x*cos(x)', tex:'x\\cos x', pts:[0.4,1.2,2.5], h:'Delvis: $u=x$, $v\'=\\cos x$.', s:'$x\\sin x+\\cos x+C$'},
+    {f:'x*e^(2x)', tex:'x\\,e^{2x}', pts:[0.2,0.8,-0.5], h:'Delvis: $u=x$, $v\'=e^{2x}$, så $v=\\frac12e^{2x}$.', s:'$\\frac{x}{2}e^{2x}-\\frac14e^{2x}+C$'},
+    {f:'ln(x)', tex:'\\ln x', pts:[0.5,1.5,3], h:'Delvis med $v\'=1$.', s:'$x\\ln x-x+C$'},
+    {f:'1/(x^2-4)', tex:'\\dfrac{1}{x^2-4}', pts:[2.5,3.4,5], h:'Delbrøk: $x^2-4=(x-2)(x+2)$.', s:'$\\frac14\\ln|x-2|-\\frac14\\ln|x+2|+C$'},
+    {f:'ln(x)/x', tex:'\\dfrac{\\ln x}{x}', pts:[0.5,1.5,3], h:'Substitusjon $u=\\ln x$.', s:'$\\frac12(\\ln x)^2+C$'},
+    {f:'1/(x^2+9)', tex:'\\dfrac{1}{x^2+9}', pts:[0.5,1.5,-2], h:'$\\int\\frac{dx}{x^2+a^2}=\\frac1a\\arctan\\frac xa$.', s:'$\\frac13\\arctan\\frac x3+C$'},
+    {f:'x^2*e^x', tex:'x^2e^x', pts:[0.3,1.1,-0.9], h:'Delvis integrasjon to ganger.', s:'$e^x(x^2-2x+2)+C$'},
+    {f:'sin(x)^2*cos(x)', tex:'\\sin^2x\\,\\cos x', pts:[0.3,1.1,2.2], h:'Substitusjon $u=\\sin x$.', s:'$\\frac13\\sin^3x+C$'},
+    {f:'x/sqrt(x^2+1)', tex:'\\dfrac{x}{\\sqrt{x^2+1}}', pts:[0.3,1.1,-1.7], h:'Substitusjon $u=x^2+1$.', s:'$\\sqrt{x^2+1}+C$'},
+    {f:'(3x+1)/(x^2-1)', tex:'\\dfrac{3x+1}{x^2-1}', pts:[1.5,2.5,4], h:'Delbrøk med $(x-1)(x+1)$.', s:'$2\\ln|x-1|+\\ln|x+1|+C$'}
+  ]
+};
+const TR = {deriv:{box:'tr-deriv', n:3, label:"$f'(x)=$", ph:'f.eks. 3e^(3x)'},
+            limit:{box:'tr-limit', n:3, label:'Grense $=$', ph:'f.eks. 1/2, e^2 eller uendelig'},
+            integ:{box:'tr-integ', n:3, label:'$\\int f(x)\\,dx=$', ph:'f.eks. x*e^x - e^x'}};
+const trUsed = {deriv:[], limit:[], integ:[]};
+function pickItem(kind, avoid){
+  const bank = BANK[kind]; const free = bank.map((_,i)=>i).filter(i => !avoid.includes(i));
+  return free[Math.floor(Math.random()*free.length)];
+}
+function checkTrainer(kind, item, input){
+  let F;
+  try { F = pparse(input); } catch(e){ return {ok:false, msg:e.message}; }
+  if (kind === 'limit'){
+    let v; try { v = F(1); } catch(e){ return {ok:false, msg:e.message}; }
+    if (usesX(F)) return {ok:false, msg:'Svaret skal være et tall, ikke et uttrykk med x.'};
+    if (item.v === Infinity) return v === Infinity ? {ok:true,msg:'Riktig!'} : {ok:false,msg:'Ikke riktig ennå. Vokser brøken, eller går den mot et tall?'};
+    if (v === Infinity) return {ok:false, msg:'Grensen er et vanlig tall, ikke uendelig.'};
+    return closeTo(v, item.v, 1e-3) ? {ok:true,msg:'Riktig!'} : {ok:false,msg:'Ikke riktig ennå. Prøv hintet.'};
+  }
+  const f = pparse(item.f);
+  if (!usesX(F, item.pts)) return {ok:false, msg:'Svaret skal inneholde x.'};
+  let ok = true;
+  for (const x of item.pts){
+    let got, want;
+    try {
+      if (kind === 'deriv'){ got = F(x); want = nd(f, x); }
+      else { got = nd(F, x); want = f(x); }
+    } catch(e){ return {ok:false, msg:e.message}; }
+    if (!isFinite(got)) return {ok:false, msg:`Svaret ditt kan ikke regnes ut for x = ${x}. Mangler du abs( ) inni ln?`};
+    if (!closeTo(got, want)) { ok = false; break; }
+  }
+  if (ok) return {ok:true, msg: kind==='integ' ? 'Riktig! Den deriverte av svaret ditt er f(x).' : 'Riktig!'};
+  return {ok:false, msg: kind==='integ' ? 'Ikke riktig ennå. Deriver svaret ditt og se om du får f(x).' : 'Ikke riktig ennå. Sjekk kjerneregelen og fortegnene.'};
+}
+function renderTrainerCard(kind, slot, idx){
+  const T = TR[kind], item = BANK[kind][idx];
+  const id = `${kind}-${slot}`;
+  let card = document.getElementById('trc-'+id);
+  if (!card){ card = document.createElement('article'); card.className='card xq'; card.id='trc-'+id; document.getElementById(T.box).appendChild(card); }
+  card.classList.remove('done');
+  const q = kind==='deriv' ? `<p>Deriver $f(x)=${item.tex}$.</p>` : kind==='integ' ? `<p>Finn $\\displaystyle\\int ${item.tex}\\,dx$.</p>` : `<p>Finn $\\displaystyle ${item.tex}$.</p>`;
+  card.innerHTML = `
+    <div class="meta"><span class="num">${kind==='deriv'?'Deriver':kind==='integ'?'Integrer':'Grenseverdi'}</span><span class="chip">trener</span></div>
+    <div class="qtext">${q}</div>
+    <div class="ans"><label for="tri-${id}">${T.label}</label><input id="tri-${id}" type="text" autocomplete="off" spellcheck="false" placeholder="${T.ph}"></div>
+    <div class="actions">
+      <button type="button" class="btn" data-a="check">Sjekk</button>
+      <button type="button" class="btn" data-a="h">Vis hint</button>
+      <button type="button" class="btn" data-a="s">Vis løsning</button>
+      <button type="button" class="btn" data-a="new">Ny oppgave</button>
+    </div>
+    <div class="fb" aria-live="polite"></div>
+    <div class="reveal" data-r="h" hidden><span class="label">Hint</span><div>${item.h}</div></div>
+    <div class="reveal" data-r="s" hidden><span class="label">Løsning</span><div>${item.s}</div></div>`;
+  const inp = card.querySelector('input'), fb = card.querySelector('.fb');
+  const doCheck = () => { const r = checkTrainer(kind, item, inp.value); fb.textContent = (r.ok?'✓ ':'✗ ')+r.msg; fb.className = 'fb '+(r.ok?'ok':'bad'); card.classList.toggle('done', r.ok); };
+  card.querySelector('[data-a="check"]').addEventListener('click', doCheck);
+  inp.addEventListener('keydown', e => { if (e.key==='Enter') doCheck(); });
+  ['h','s'].forEach(a => card.querySelector(`[data-a="${a}"]`).addEventListener('click', e => {
+    const r = card.querySelector(`[data-r="${a}"]`); r.hidden = !r.hidden;
+    e.target.textContent = (r.hidden?'Vis ':'Skjul ') + (a==='h'?'hint':'løsning');
+  }));
+  card.querySelector('[data-a="new"]').addEventListener('click', () => {
+    const nx = pickItem(kind, trUsed[kind]); trUsed[kind][slot] = nx; renderTrainerCard(kind, slot, nx);
+  });
+  typeset([card]);
+}
+function initTrainer(kind){
+  for (let s=0; s<TR[kind].n; s++){ const i = pickItem(kind, trUsed[kind]); trUsed[kind][s] = i; renderTrainerCard(kind, s, i); }
+}
+
+/* ================= Plot helpers ================= */
+function tok(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function setup(cv){
+  const dpr = window.devicePixelRatio || 1; const w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx,w,h};
+}
+function view(w,h,win){ return { X: x => (x-win.x0)/(win.x1-win.x0)*w, Y: y => h - (y-win.y0)/(win.y1-win.y0)*h, inv: px => win.x0 + px/w*(win.x1-win.x0), win, w, h }; }
+function axes(ctx, v, sx=1, sy=1){
+  const {win,w,h} = v; ctx.font = '11px "JetBrains Mono", monospace'; ctx.lineWidth = 1;
+  ctx.strokeStyle = tok('--line'); ctx.globalAlpha = .6;
+  for (let x=Math.ceil(win.x0/sx)*sx; x<=win.x1; x+=sx){ ctx.beginPath(); ctx.moveTo(v.X(x),0); ctx.lineTo(v.X(x),h); ctx.stroke(); }
+  for (let y=Math.ceil(win.y0/sy)*sy; y<=win.y1; y+=sy){ ctx.beginPath(); ctx.moveTo(0,v.Y(y)); ctx.lineTo(w,v.Y(y)); ctx.stroke(); }
+  ctx.globalAlpha = 1; ctx.strokeStyle = tok('--muted');
+  ctx.beginPath(); ctx.moveTo(0,v.Y(0)); ctx.lineTo(w,v.Y(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(v.X(0),0); ctx.lineTo(v.X(0),h); ctx.stroke();
+  ctx.fillStyle = tok('--muted'); ctx.textAlign='center'; ctx.textBaseline='top';
+  for (let x=Math.ceil(win.x0/sx)*sx; x<=win.x1-0.3; x+=sx){ if (Math.abs(x)<1e-9) continue; ctx.fillText(String(x).replace('-','−'), v.X(x), v.Y(0)+4); }
+  ctx.textAlign='right'; ctx.textBaseline='middle';
+  for (let y=Math.ceil(win.y0/sy)*sy; y<=win.y1-0.3; y+=sy){ if (Math.abs(y)<1e-9) continue; ctx.fillText(String(y).replace('-','−'), v.X(0)-5, v.Y(y)); }
+}
+function curve(ctx, v, fn, color, width=2.4, dash){
+  const {w,h} = v; ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash||[]);
+  let down=false; ctx.beginPath();
+  for (let px=0; px<=w; px++){
+    const y = fn(v.inv(px)); if (!isFinite(y)){ down=false; continue; }
+    const py = v.Y(y); if (py < -h || py > 2*h){ down=false; continue; }
+    if (!down){ ctx.moveTo(px,py); down=true; } else ctx.lineTo(px,py);
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+
+/* ================= Lab: a^x og log_a x ================= */
+const expA = document.getElementById('exp-a');
+function drawExp(){
+  const cv = document.getElementById('cv-exp'); const {ctx,w,h} = setup(cv);
+  const yspan = 7.5, xspan = yspan*w/h;
+  const v = view(w,h,{x0:-3.4,x1:-3.4+xspan,y0:-2.5,y1:5});
+  axes(ctx, v, 1, 1);
+  const a = +expA.value, L = Math.log(a);
+  curve(ctx, v, x => x, tok('--muted'), 1.2, [5,5]);
+  curve(ctx, v, x => Math.pow(a,x), tok('--accent'));
+  curve(ctx, v, x => x>0 ? Math.log(x)/L : NaN, tok('--neg'));
+  curve(ctx, v, x => 1 + L*x, tok('--mark'), 1.8);
+  ctx.fillStyle = tok('--muted'); ctx.font='11px "JetBrains Mono", monospace'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+  ctx.fillText('y = x', v.X(3.6)+4, v.Y(3.6));
+  const isE = Math.abs(a-Math.E) < 0.006;
+  document.getElementById('exp-a-out').textContent = a.toFixed(2);
+  document.getElementById('exp-read').innerHTML = `<span>a = <b>${a.toFixed(3)}</b></span><span>stigning i x = 0: ln a = <b>${L.toFixed(3)}</b></span>${isE?'<span><b>a = e, stigningen er 1!</b></span>':''}`;
+}
+expA.addEventListener('input', drawExp);
+document.getElementById('exp-e').addEventListener('click', () => { expA.value = Math.E.toFixed(2); drawExp(); });
+document.getElementById('exp-2').addEventListener('click', () => { expA.value = 2; drawExp(); });
+
+/* ================= Lab: vekstkappløp ================= */
+function fmtBig(v){
+  if (!isFinite(v)) return isNaN(v) ? 'for stort' : (v>0?'for stort':'−for stort');
+  const a = Math.abs(v);
+  if (a !== 0 && (a >= 1e6 || a < 1e-4)) { const s = v.toExponential(2).split('e'); return `${s[0]} · 10<sup>${String(+s[1]).replace('-','−')}</sup>`; }
+  return (+v.toPrecision(5)).toString().replace('-','−');
+}
+function runRace(){
+  const msg = document.getElementById('race-msg'), tab = document.getElementById('race-table'), ver = document.getElementById('race-verdict');
+  let f, g, fs = document.getElementById('race-f').value, gs = document.getElementById('race-g').value;
+  try { f = pparse(fs); g = pparse(gs); } catch(e){ msg.textContent = e.message; return; }
+  msg.textContent = '';
+  const xs = [2,10,100,300,500,647,700,1000,10000];
+  let rows = '<tr><th>x</th><th>f(x)</th><th>g(x)</th><th>f(x) / g(x)</th></tr>', last = null;
+  xs.forEach(x => {
+    const a = f(x), b = g(x); let r = a/b;
+    if (!isFinite(a) && isFinite(b)) r = Infinity;
+    if (isFinite(a) && !isFinite(b)) r = 0;
+    if (!isFinite(a) && !isFinite(b)) r = NaN;
+    if (isFinite(r) || r===Infinity) last = r;
+    rows += `<tr><td>${x}</td><td>${fmtBig(a)}</td><td>${fmtBig(b)}</td><td>${isNaN(r)?'begge for store':fmtBig(r)}</td></tr>`;
+  });
+  tab.innerHTML = rows;
+  ver.className = 'verdict';
+  if (last === null) ver.textContent = '';
+  else if (last === 0 || (isFinite(last) && Math.abs(last) < 1e-6)) ver.textContent = `Forholdet går mot 0: g vokser raskest til slutt, altså f ≪ g.`;
+  else if (last === Infinity || Math.abs(last) > 1e6) ver.textContent = `Forholdet vokser uten grense: f vokser raskest til slutt, altså f ≫ g.`;
+  else ver.textContent = `Forholdet nærmer seg ca. ${fmtBig(last)}. Funksjonene vokser like fort${Math.abs(last-1)<0.01?', så f ∼ g':''}.`;
+}
+document.querySelectorAll('#race-pre button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('#race-pre button').forEach(x => x.setAttribute('aria-pressed', x===b));
+  document.getElementById('race-f').value = b.dataset.f; document.getElementById('race-g').value = b.dataset.g; runRace();
+}));
+document.getElementById('race-go').addEventListener('click', runRace);
+['race-f','race-g'].forEach(id => document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') runRace(); }));
+
+/* ================= Lab: sjekk antideriverte ================= */
+function runAnti(){
+  const ver = document.getElementById('ad-verdict');
+  let f, F;
+  try { f = pparse(document.getElementById('ad-f').value); } catch(e){ ver.className='verdict bad'; ver.textContent = 'f(x): ' + e.message; return; }
+  try { F = pparse(document.getElementById('ad-F').value); } catch(e){ ver.className='verdict bad'; ver.textContent = 'Svaret: ' + e.message; return; }
+  const cand = [0.37,0.83,1.29,1.77,2.41,3.13,-0.61,-1.47,-2.33,4.6];
+  const pts = cand.filter(x => isFinite(f(x)) && isFinite(F(x)) && isFinite(F(x+1e-4)) && isFinite(F(x-1e-4))).slice(0,5);
+  if (pts.length < 2){ ver.className='verdict bad'; ver.textContent = 'Fant ingen x-verdier der både f og svaret ditt kan regnes ut. Mangler du abs( ) inni ln?'; return; }
+  const bad = pts.find(x => !closeTo(nd(F,x), f(x)));
+  if (bad === undefined){ ver.className='verdict ok'; ver.textContent = `✓ Riktig! Den deriverte av svaret ditt er lik f(x) i alle ${pts.length} testpunktene.`; }
+  else { ver.className='verdict bad'; ver.textContent = `✗ Ikke riktig. I x = ${bad} er F′(x) ≈ ${(+nd(F,bad).toPrecision(5))}, men f(x) = ${(+f(bad).toPrecision(5))}.`; }
+}
+document.getElementById('ad-go').addEventListener('click', runAnti);
+['ad-f','ad-F'].forEach(id => document.getElementById(id).addEventListener('keydown', e => { if (e.key==='Enter') runAnti(); }));
+
+/* ================= Init ================= */
+renderCards(); updateProg();
+initTrainer('deriv'); initTrainer('limit'); initTrainer('integ');
+drawExp(); runRace(); runAnti();
+let rT; window.addEventListener('resize', ()=>{ clearTimeout(rT); rT=setTimeout(drawExp,100); });
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawExp); } catch(e){}
+new MutationObserver(drawExp).observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawExp);
+</script>
+
+</body>
+</html>
